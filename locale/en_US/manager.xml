@@ -296,6 +296,9 @@
 	<message key="manager.setup.gettingDownTheDetails">Step 1. Getting Down the Details</message>
 	<message key="manager.setup.guidelines">Guidelines</message>
 	<message key="manager.setup.guidingSubmissions">Step 3. Guiding Submissions</message>
+	<message key="manager.setup.hideHeaders">Hide homepage content</message>
+	<message key="manager.setup.hideBreadcrumbOnHomepage">Remove breadcrumb links from homepage</message>
+	<message key="manager.setup.hideTitleOnHomepage">Remove title text from homepage</message>
 	<message key="manager.setup.homepageImage">Homepage image</message>
 	<message key="manager.setup.homepageImageDescription">Add an image or graphic file to the middle of the page.</message>
 	<message key="manager.setup.includeCreativeCommons">For journals that offer immediate or delayed open access, include a Creative Commons license with all published work at the appropriate time.</message>

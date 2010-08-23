@@ -36,6 +36,8 @@ class JournalSetupStep5Form extends JournalSetupForm {
 				'journalPageFooter' => 'string',
 				'displayCurrentIssue' => 'bool',
 				'additionalHomeContent' => 'string',
+				'hideBreadcrumbOnHomepage' => 'bool',
+				'hideTitleOnHomepage' => 'bool',
 				'description' => 'string',
 				'navItems' => 'object',
 				'itemsPerPage' => 'int',

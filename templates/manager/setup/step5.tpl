@@ -225,6 +225,22 @@ function prepBlockFields() {
 	</tr>
 </table>
 </div>
+
+<div id="hideHeaders">
+<h4>{translate key="manager.setup.hideHeaders"}</h4>
+
+<table width="100%" class="data">
+	<tr valign="top">
+		<td width="5%" class="label"><input type="checkbox" name="hideBreadcrumbOnHomepage" id="hideBreadcrumbOnHomepage" value="1" {if $hideBreadcrumbOnHomepage} checked="checked"{/if} /></td>
+		<td width="95%" class="value"><label for="hideBreadcrumbOnHomepage">{translate key="manager.setup.hideBreadcrumbOnHomepage"}</label></td>
+	</tr>
+	<tr valign="top">
+		<td width="5%" class="label"><input type="checkbox" name="hideTitleOnHomepage" id="hideTitleOnHomepage" value="1" {if $hideTitleOnHomepage} checked="checked"{/if} /></td>
+		<td width="95%" class="value"><label for="hideTitleOnHomepage">{translate key="manager.setup.hideTitleOnHomepage"}</label></td>
+	</tr>
+</table>
+</div>
+
 <div id="additionalContent">
 
 <h4>{translate key="manager.setup.additionalContent"}</h4>
@@ -233,6 +249,7 @@ function prepBlockFields() {
 
 <p><textarea name="additionalHomeContent[{$formLocale|escape}]" id="additionalHomeContent" rows="12" cols="60" class="textArea">{$additionalHomeContent[$formLocale]|escape}</textarea></p>
 </div>
+
 </div>
 <div class="separator"></div>
 
@@ -461,7 +478,7 @@ function prepBlockFields() {
 					<option value=""></option>
 				{/foreach}
 			</select>
-		</td> 
+		</td>
 		<td>
 			<input class="button defaultButton" style="width: 30px;" type="button" value="&larr;" onclick="jumpList(this.form.elements['blockSelectRightWidget'],this.form.elements['blockUnselectedWidget']);" /><br/>
 			<input class="button defaultButton" style="width: 30px;" type="button" value="&rarr;" onclick="jumpList(this.form.elements['blockUnselectedWidget'],this.form.elements['blockSelectRightWidget']);" />
