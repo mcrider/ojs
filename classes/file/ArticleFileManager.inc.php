@@ -60,7 +60,7 @@ class ArticleFileManager extends FileManager {
 	 * @return int file ID, is false if failure
 	 */
 	function uploadSubmissionFile($fileName, $fileId = null, $overwrite = false) {
-		return $this->handleUpload($fileName, ARTICLE_FILE_SUBMISSION, $fileId, $overwrite);
+		return $this->handleUpload($fileName, ARTICLE_FILE_USE_CASE_SUBMISSION, $fileId, $overwrite);
 	}
 
 	/**
@@ -70,7 +70,7 @@ class ArticleFileManager extends FileManager {
 	 * @return int file ID, is false if failure
 	 */
 	function uploadReviewFile($fileName, $fileId = null) {
-		return $this->handleUpload($fileName, ARTICLE_FILE_REVIEW, $fileId);
+		return $this->handleUpload($fileName, ARTICLE_FILE_USE_CASE_REVIEW, $fileId);
 	}
 
 	/**
@@ -80,7 +80,7 @@ class ArticleFileManager extends FileManager {
 	 * @return int file ID, is false if failure
 	 */
 	function uploadEditorDecisionFile($fileName, $fileId = null) {
-		return $this->handleUpload($fileName, ARTICLE_FILE_EDITOR, $fileId);
+		return $this->handleUpload($fileName, ARTICLE_FILE_USE_CASE_EDITOR, $fileId);
 	}
 
 	/**
@@ -90,7 +90,7 @@ class ArticleFileManager extends FileManager {
 	 * @return int file ID, is false if failure
 	 */
 	function uploadCopyeditFile($fileName, $fileId = null) {
-		return $this->handleUpload($fileName, ARTICLE_FILE_COPYEDIT, $fileId);
+		return $this->handleUpload($fileName, ARTICLE_FILE_USE_CASE_COPYEDIT, $fileId);
 	}
 
 	/**
@@ -101,7 +101,7 @@ class ArticleFileManager extends FileManager {
 	 * @return int file ID, is null if failure
 	 */
 	function uploadLayoutFile($fileName, $fileId = null, $overwrite = true) {
-		return $this->handleUpload($fileName, ARTICLE_FILE_LAYOUT, $fileId, $overwrite);
+		return $this->handleUpload($fileName, ARTICLE_FILE_USE_CASE_LAYOUT, $fileId, $overwrite);
 	}
 
 	/**
@@ -112,7 +112,7 @@ class ArticleFileManager extends FileManager {
 	 * @return int file ID, is false if failure
 	 */
 	function uploadSuppFile($fileName, $fileId = null, $overwrite = true) {
-		return $this->handleUpload($fileName, ARTICLE_FILE_SUPP, $fileId, $overwrite);
+		return $this->handleUpload($fileName, ARTICLE_FILE_USE_CASE_SUPP, $fileId, $overwrite);
 	}
 
 	/**
@@ -123,7 +123,7 @@ class ArticleFileManager extends FileManager {
 	 * @return int file ID, is false if failure
 	 */
 	function uploadPublicFile($fileName, $fileId = null, $overwrite = true) {
-		return $this->handleUpload($fileName, ARTICLE_FILE_PUBLIC, $fileId, $overwrite);
+		return $this->handleUpload($fileName, ARTICLE_FILE_USE_CASE_PUBLIC, $fileId, $overwrite);
 	}
 
 	/**
@@ -134,7 +134,7 @@ class ArticleFileManager extends FileManager {
 	 * @return int file ID, is false if failure
 	 */
 	function uploadSubmissionNoteFile($fileName, $fileId = null, $overwrite = true) {
-		return $this->handleUpload($fileName, ARTICLE_FILE_NOTE, $fileId, $overwrite);
+		return $this->handleUpload($fileName, ARTICLE_FILE_USE_CASE_NOTE, $fileId, $overwrite);
 	}
 
 	/**
@@ -146,7 +146,7 @@ class ArticleFileManager extends FileManager {
 	 * @param $overwrite boolean
 	 */
 	function writePublicFile($fileName, &$contents, $mimeType, $fileId = null, $overwrite = true) {
-		return $this->handleWrite($fileName, $contents, $mimeType, ARTICLE_FILE_PUBLIC, $fileId, $overwrite);
+		return $this->handleWrite($fileName, $contents, $mimeType, ARTICLE_FILE_USE_CASE_PUBLIC, $fileId, $overwrite);
 	}
 
 	/**
@@ -157,7 +157,7 @@ class ArticleFileManager extends FileManager {
 	 * @param $overwrite boolean
 	 */
 	function copyPublicFile($url, $mimeType, $fileId = null, $overwrite = true) {
-		return $this->handleCopy($url, $mimeType, ARTICLE_FILE_PUBLIC, $fileId, $overwrite);
+		return $this->handleCopy($url, $mimeType, ARTICLE_FILE_USE_CASE_PUBLIC, $fileId, $overwrite);
 	}
 
 	/**
@@ -169,7 +169,7 @@ class ArticleFileManager extends FileManager {
 	 * @param $overwrite boolean
 	 */
 	function writeSuppFile($fileName, &$contents, $mimeType, $fileId = null, $overwrite = true) {
-		return $this->handleWrite($fileName, $contents, $mimeType, ARTICLE_FILE_SUPP, $fileId, $overwrite);
+		return $this->handleWrite($fileName, $contents, $mimeType, ARTICLE_FILE_USE_CASE_SUPP, $fileId, $overwrite);
 	}
 
 	/**
@@ -180,7 +180,7 @@ class ArticleFileManager extends FileManager {
 	 * @param $overwrite boolean
 	 */
 	function copySuppFile($url, $mimeType, $fileId = null, $overwrite = true) {
-		return $this->handleCopy($url, $mimeType, ARTICLE_FILE_SUPP, $fileId, $overwrite);
+		return $this->handleCopy($url, $mimeType, ARTICLE_FILE_USE_CASE_SUPP, $fileId, $overwrite);
 	}
 
 	/**
@@ -191,7 +191,7 @@ class ArticleFileManager extends FileManager {
 	 * @param $overwrite boolean
 	 */
 	function copyAttachmentFile($url, $mimeType, $fileId = null, $overwrite = true, $assocId = null) {
-		return $this->handleCopy($url, $mimeType, ARTICLE_FILE_ATTACHMENT, $fileId, $overwrite, $assocId);
+		return $this->handleCopy($url, $mimeType, ARTICLE_FILE_USE_CASE_ATTACHMENT, $fileId, $overwrite, $assocId);
 	}
 
 	/**
@@ -213,7 +213,7 @@ class ArticleFileManager extends FileManager {
 		$articleFile =& $this->getFile($fileId, $revision);
 
 		if (isset($articleFile)) {
-			$filePath = $this->filesDir .  $this->typeToPath($articleFile->getType()) . '/' . $articleFile->getFileName();
+			$filePath = $this->filesDir .  $this->useCaseToPath($articleFile->getUseCase()) . '/' . $articleFile->getFileName();
 
 			return parent::readFile($filePath, $output);
 		} else {
@@ -243,7 +243,7 @@ class ArticleFileManager extends FileManager {
 		}
 
 		foreach ($files as $f) {
-			parent::deleteFile($this->filesDir . $this->typeToPath($f->getType()) . '/' . $f->getFileName());
+			parent::deleteFile($this->filesDir . $this->useCaseToPath($f->getUseCase()) . '/' . $f->getFileName());
 		}
 
 		$articleFileDao->deleteArticleFileById($fileId, $revision);
@@ -269,7 +269,7 @@ class ArticleFileManager extends FileManager {
 		$articleFile =& $this->getFile($fileId, $revision);
 		if (isset($articleFile)) {
 			$fileType = $articleFile->getFileType();
-			$filePath = $this->filesDir .  $this->typeToPath($articleFile->getType()) . '/' . $articleFile->getFileName();
+			$filePath = $this->filesDir .  $this->useCaseToPath($articleFile->getUseCase()) . '/' . $articleFile->getFileName();
 
 			return parent::downloadFile($filePath, $fileType, $inline);
 
@@ -294,7 +294,7 @@ class ArticleFileManager extends FileManager {
 	 * @return int the file id of the new file.
 	 */
 	function copyToReviewFile($fileId, $revision = null, $destFileId = null) {
-		return $this->copyAndRenameFile($fileId, $revision, ARTICLE_FILE_REVIEW, $destFileId);
+		return $this->copyAndRenameFile($fileId, $revision, ARTICLE_FILE_USE_CASE_REVIEW, $destFileId);
 	}
 
 	/**
@@ -305,7 +305,7 @@ class ArticleFileManager extends FileManager {
 	 * @return int the file id of the new file.
 	 */
 	function copyToEditorFile($fileId, $revision = null, $destFileId = null) {
-		return $this->copyAndRenameFile($fileId, $revision, ARTICLE_FILE_EDITOR, $destFileId);
+		return $this->copyAndRenameFile($fileId, $revision, ARTICLE_FILE_USE_CASE_EDITOR, $destFileId);
 	}
 
 	/**
@@ -315,7 +315,7 @@ class ArticleFileManager extends FileManager {
 	 * @return int the file id of the new file.
 	 */
 	function copyToCopyeditFile($fileId, $revision = null) {
-		return $this->copyAndRenameFile($fileId, $revision, ARTICLE_FILE_COPYEDIT);
+		return $this->copyAndRenameFile($fileId, $revision, ARTICLE_FILE_USE_CASE_COPYEDIT);
 	}
 
 	/**
@@ -325,62 +325,62 @@ class ArticleFileManager extends FileManager {
 	 * @return int the file id of the new file.
 	 */
 	function copyToLayoutFile($fileId, $revision = null) {
-		return $this->copyAndRenameFile($fileId, $revision, ARTICLE_FILE_LAYOUT);
+		return $this->copyAndRenameFile($fileId, $revision, ARTICLE_FILE_USE_CASE_LAYOUT);
 	}
 
 	/**
-	 * Return type path associated with a type code.
-	 * @param $type string
+	 * Return path associated with a use case code.
+	 * @param $useCase int
 	 * @return string
 	 */
-	function typeToPath($type) {
-		switch ($type) {
-			case ARTICLE_FILE_PUBLIC: return 'public';
-			case ARTICLE_FILE_SUPP: return 'supp';
-			case ARTICLE_FILE_NOTE: return 'note';
-			case ARTICLE_FILE_REVIEW: return 'submission/review';
-			case ARTICLE_FILE_EDITOR: return 'submission/editor';
-			case ARTICLE_FILE_COPYEDIT: return 'submission/copyedit';
-			case ARTICLE_FILE_LAYOUT: return 'submission/layout';
-			case ARTICLE_FILE_ATTACHMENT: return 'attachment';
-			case ARTICLE_FILE_SUBMISSION: default: return 'submission/original';
+	function useCaseToPath($useCase) {
+		switch ($useCase) {
+			case ARTICLE_FILE_USE_CASE_PUBLIC: return 'public';
+			case ARTICLE_FILE_USE_CASE_SUPP: return 'supp';
+			case ARTICLE_FILE_USE_CASE_NOTE: return 'note';
+			case ARTICLE_FILE_USE_CASE_REVIEW: return 'submission/review';
+			case ARTICLE_FILE_USE_CASE_EDITOR: return 'submission/editor';
+			case ARTICLE_FILE_USE_CASE_COPYEDIT: return 'submission/copyedit';
+			case ARTICLE_FILE_USE_CASE_LAYOUT: return 'submission/layout';
+			case ARTICLE_FILE_USE_CASE_ATTACHMENT: return 'attachment';
+			case ARTICLE_FILE_USE_CASE_SUBMISSION: default: return 'submission/original';
 		}
 	}
 
- /**
-   * Return type abbreviation associated with a type code (used for naming files).
-   * @param $type string
-   * @return string
-   */
-  function typeToAbbrev($type) {
-    switch ($type) {
-      case ARTICLE_FILE_PUBLIC: return 'PB';
-      case ARTICLE_FILE_SUPP: return 'SP';
-      case ARTICLE_FILE_NOTE: return 'NT';
-      case ARTICLE_FILE_REVIEW: return 'RV';
-      case ARTICLE_FILE_EDITOR: return 'ED';
-      case ARTICLE_FILE_COPYEDIT: return 'CE';
-      case ARTICLE_FILE_LAYOUT: return 'LE';
-      case ARTICLE_FILE_ATTACHMENT: return 'AT';
-      case ARTICLE_FILE_SUBMISSION: default: return 'SM';
-    }
-  }
+	/**
+	 * Return abbreviation associated with a use case code (used for naming files).
+	 * @param $useCase int
+	 * @return string
+	 */
+	function useCaseToAbbrev($useCase) {
+		switch ($useCase) {
+			case ARTICLE_FILE_USE_CASE_PUBLIC: return 'PB';
+			case ARTICLE_FILE_USE_CASE_SUPP: return 'SP';
+			case ARTICLE_FILE_USE_CASE_NOTE: return 'NT';
+			case ARTICLE_FILE_USE_CASE_REVIEW: return 'RV';
+			case ARTICLE_FILE_USE_CASE_EDITOR: return 'ED';
+			case ARTICLE_FILE_USE_CASE_COPYEDIT: return 'CE';
+			case ARTICLE_FILE_USE_CASE_LAYOUT: return 'LE';
+			case ARTICLE_FILE_USE_CASE_ATTACHMENT: return 'AT';
+			case ARTICLE_FILE_USE_CASE_SUBMISSION: default: return 'SM';
+		}
+	}
 
 	/**
 	 * Copies an existing ArticleFile and renames it.
 	 * @param $sourceFileId int
 	 * @param $sourceRevision int
-	 * @param $destType string
+	 * @param $useCase int
 	 * @param $destFileId int (optional)
 	 */
-	function copyAndRenameFile($sourceFileId, $sourceRevision, $destType, $destFileId = null) {
-		if (HookRegistry::call('ArticleFileManager::copyAndRenameFile', array(&$sourceFileId, &$sourceRevision, &$destType, &$destFileId, &$result))) return $result;
+	function copyAndRenameFile($sourceFileId, $sourceRevision, $useCase, $destFileId = null) {
+		if (HookRegistry::call('ArticleFileManager::copyAndRenameFile', array(&$sourceFileId, &$sourceRevision, &$useCase, &$destFileId, &$result))) return $result;
 
 		$articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
 		$articleFile = new ArticleFile();
 
-		$destTypePath = $this->typeToPath($destType);
-		$destDir = $this->filesDir . $destTypePath . '/';
+		$useCasePath = $this->useCaseToPath($useCase);
+		$destDir = $this->filesDir . $useCasePath . '/';
 
 		if ($destFileId != null) {
 			$currentRevision = $articleFileDao->getRevisionNumber($destFileId);
@@ -395,7 +395,7 @@ class ArticleFileManager extends FileManager {
 			return false;
 		}
 
-		$sourceDir = $this->filesDir .  $this->typeToPath($sourceArticleFile->getType()) . '/';
+		$sourceDir = $this->filesDir .  $this->useCaseToPath($sourceArticleFile->getUseCase()) . '/';
 
 		if ($destFileId != null) {
 			$articleFile->setFileId($destFileId);
@@ -407,7 +407,7 @@ class ArticleFileManager extends FileManager {
 		$articleFile->setFileType($sourceArticleFile->getFileType());
 		$articleFile->setFileSize($sourceArticleFile->getFileSize());
 		$articleFile->setOriginalFileName($sourceArticleFile->getFileName());
-		$articleFile->setType($destType);
+		$articleFile->setUseCase($useCase);
 		$articleFile->setDateUploaded(Core::getCurrentDate());
 		$articleFile->setDateModified(Core::getCurrentDate());
 		$articleFile->setRound($this->article->getCurrentRound()); // FIXME This field is only applicable for review files?
@@ -417,7 +417,7 @@ class ArticleFileManager extends FileManager {
 
 		// Rename the file.
 		$fileExtension = $this->parseFileExtension($sourceArticleFile->getFileName());
-		$newFileName = $this->articleId.'-'.$fileId.'-'.$revision.'-'.$this->typeToAbbrev($destType).'.'.$fileExtension;
+		$newFileName = $this->articleId.'-'.$fileId.'-'.$revision.'-'.$this->useCaseToAbbrev($useCase).'.'.$fileExtension;
 
 		if (!$this->fileExists($destDir, 'dir')) {
 			// Try to create destination directory
@@ -445,7 +445,7 @@ class ArticleFileManager extends FileManager {
 		$articleFile->setOriginalFileName('temp');
 		$articleFile->setFileType('temp');
 		$articleFile->setFileSize(0);
-		$articleFile->setType('temp');
+		$articleFile->setUseCase(1);
 		$articleFile->setDateUploaded(Core::getCurrentDate());
 		$articleFile->setDateModified(Core::getCurrentDate());
 		$articleFile->setRound(0);
@@ -473,12 +473,12 @@ class ArticleFileManager extends FileManager {
 	 * PRIVATE routine to generate a filename for an article file. Sets the filename
 	 * field in the articleFile to the generated value.
 	 * @param $articleFile The article to generate a filename for
-	 * @param $type The type of the article (e.g. as supplied to handleUpload)
+	 * @param $useCase The type of the article (e.g. as supplied to handleUpload)
 	 * @param $originalName The name of the original file
 	 */
-	function generateFilename(&$articleFile, $type, $originalName) {
+	function generateFilename(&$articleFile, $useCase, $originalName) {
 		$extension = $this->parseFileExtension($originalName);
-		$newFileName = $articleFile->getArticleId().'-'.$articleFile->getFileId().'-'.$articleFile->getRevision().'-'.$this->typeToAbbrev($type).'.'.$extension;
+		$newFileName = $articleFile->getArticleId().'-'.$articleFile->getFileId().'-'.$articleFile->getRevision().'-'.$this->useCaseToAbbrev($useCase).'.'.$extension;
 		$articleFile->setFileName($newFileName);
 		return $newFileName;
 	}
@@ -486,18 +486,18 @@ class ArticleFileManager extends FileManager {
 	/**
 	 * PRIVATE routine to upload the file and add it to the database.
 	 * @param $fileName string index into the $_FILES array
-	 * @param $type int identifying type
+	 * @param $useCase int identifying use case (defined in ArticleFile)
 	 * @param $fileId int ID of an existing file to update
 	 * @param $overwrite boolean overwrite all previous revisions of the file (revision number is still incremented)
 	 * @return int the file ID (false if upload failed)
 	 */
-	function handleUpload($fileName, $type, $fileId = null, $overwrite = false) {
-		if (HookRegistry::call('ArticleFileManager::handleUpload', array(&$fileName, &$type, &$fileId, &$overwrite, &$result))) return $result;
+	function handleUpload($fileName, $useCase, $fileId = null, $overwrite = false) {
+		if (HookRegistry::call('ArticleFileManager::handleUpload', array(&$fileName, &$useCase, &$fileId, &$overwrite, &$result))) return $result;
 
 		$articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
 
-		$typePath = $this->typeToPath($type);
-		$dir = $this->filesDir . $typePath . '/';
+		$useCasePath = $this->useCaseToPath($useCase);
+		$dir = $this->filesDir . $useCasePath . '/';
 
 		if (!$fileId) {
 			// Insert dummy file to generate file id FIXME?
@@ -516,10 +516,10 @@ class ArticleFileManager extends FileManager {
 		$articleFile->setFileType($_FILES[$fileName]['type']);
 		$articleFile->setFileSize($_FILES[$fileName]['size']);
 		$articleFile->setOriginalFileName(ArticleFileManager::truncateFileName($_FILES[$fileName]['name'], 127));
-		$articleFile->setType($type);
+		$articleFile->setUseCase($useCase);
 		$articleFile->setRound($this->article->getCurrentRound());
 
-		$newFileName = $this->generateFilename($articleFile, $type, $this->getUploadedFileName($fileName));
+		$newFileName = $this->generateFilename($articleFile, $useCase, $this->getUploadedFileName($fileName));
 
 		if (!$this->uploadFile($fileName, $dir.$newFileName)) {
 			// Delete the dummy file we inserted
@@ -541,18 +541,18 @@ class ArticleFileManager extends FileManager {
 	 * @param $fileName original filename of the file
 	 * @param $contents string contents of the file to write
 	 * @param $mimeType string the mime type of the file
-	 * @param $type string identifying type
+	 * @param $useCase string identifying type
 	 * @param $fileId int ID of an existing file to update
 	 * @param $overwrite boolean overwrite all previous revisions of the file (revision number is still incremented)
 	 * @return int the file ID (false if upload failed)
 	 */
-	function handleWrite($fileName, &$contents, $mimeType, $type, $fileId = null, $overwrite = false) {
+	function handleWrite($fileName, &$contents, $mimeType, $useCase, $fileId = null, $overwrite = false) {
 		if (HookRegistry::call('ArticleFileManager::handleWrite', array(&$fileName, &$contents, &$mimeType, &$fileId, &$overwrite, &$result))) return $result;
 
 		$articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
 
-		$typePath = $this->typeToPath($type);
-		$dir = $this->filesDir . $typePath . '/';
+		$useCasePath = $this->useCaseToPath($useCase);
+		$dir = $this->filesDir . $useCasePath . '/';
 
 		if (!$fileId) {
 			// Insert dummy file to generate file id FIXME?
@@ -571,10 +571,10 @@ class ArticleFileManager extends FileManager {
 		$articleFile->setFileType($mimeType);
 		$articleFile->setFileSize(strlen($contents));
 		$articleFile->setOriginalFileName(ArticleFileManager::truncateFileName($fileName, 127));
-		$articleFile->setType($type);
+		$articleFile->setUseCase($useCase);
 		$articleFile->setRound($this->article->getCurrentRound());
 
-		$newFileName = $this->generateFilename($articleFile, $type, $fileName);
+		$newFileName = $this->generateFilename($articleFile, $useCase, $fileName);
 
 		if (!$this->writeFile($dir.$newFileName, $contents)) {
 			// Delete the dummy file we inserted
@@ -595,18 +595,18 @@ class ArticleFileManager extends FileManager {
 	 * PRIVATE routine to copy an article file and add it to the database.
 	 * @param $url original filename/url of the file
 	 * @param $mimeType string the mime type of the file
-	 * @param $type string identifying type
+	 * @param $useCase string identifying type
 	 * @param $fileId int ID of an existing file to update
 	 * @param $overwrite boolean overwrite all previous revisions of the file (revision number is still incremented)
 	 * @return int the file ID (false if upload failed)
 	 */
-	function handleCopy($url, $mimeType, $type, $fileId = null, $overwrite = false) {
-		if (HookRegistry::call('ArticleFileManager::handleCopy', array(&$url, &$mimeType, &$type, &$fileId, &$overwrite, &$result))) return $result;
+	function handleCopy($url, $mimeType, $useCase, $fileId = null, $overwrite = false) {
+		if (HookRegistry::call('ArticleFileManager::handleCopy', array(&$url, &$mimeType, &$useCase, &$fileId, &$overwrite, &$result))) return $result;
 
 		$articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
 
-		$typePath = $this->typeToPath($type);
-		$dir = $this->filesDir . $typePath . '/';
+		$useCasePath = $this->useCaseToPath($useCase);
+		$dir = $this->filesDir . $useCasePath . '/';
 
 		if (!$fileId) {
 			// Insert dummy file to generate file id FIXME?
@@ -624,10 +624,10 @@ class ArticleFileManager extends FileManager {
 
 		$articleFile->setFileType($mimeType);
 		$articleFile->setOriginalFileName(ArticleFileManager::truncateFileName(basename($url), 127));
-		$articleFile->setType($type);
+		$articleFile->setUseCase($useCase);
 		$articleFile->setRound($this->article->getCurrentRound());
 
-		$newFileName = $this->generateFilename($articleFile, $type, $articleFile->getOriginalFileName());
+		$newFileName = $this->generateFilename($articleFile, $useCase, $articleFile->getOriginalFileName());
 
 		if (!$this->copyFile($url, $dir.$newFileName)) {
 			// Delete the dummy file we inserted
@@ -651,22 +651,22 @@ class ArticleFileManager extends FileManager {
 	 * @param TemporaryFile
 	 * @return int the file ID (false if upload failed)
 	 */
-	function temporaryFileToArticleFile(&$temporaryFile, $type, $assocId = null) {
-		if (HookRegistry::call('ArticleFileManager::temporaryFileToArticleFile', array(&$temporaryFile, &$type, &$assocId, &$result))) return $result;
+	function temporaryFileToArticleFile(&$temporaryFile, $useCase, $assocId = null) {
+		if (HookRegistry::call('ArticleFileManager::temporaryFileToArticleFile', array(&$temporaryFile, &$useCase, &$assocId, &$result))) return $result;
 
 		$articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
 
-		$typePath = $this->typeToPath($type);
-		$dir = $this->filesDir . $typePath . '/';
+		$useCasePath = $this->useCaseToPath($useCase);
+		$dir = $this->filesDir . $useCasePath . '/';
 
 		$articleFile =& $this->generateDummyFile($this->article);
 		$articleFile->setFileType($temporaryFile->getFileType());
 		$articleFile->setOriginalFileName($temporaryFile->getOriginalFileName());
-		$articleFile->setType($type);
+		$articleFile->setUseCase($useCase);
 		$articleFile->setRound($this->article->getCurrentRound());
 		$articleFile->setAssocId($assocId);
 
-		$newFileName = $this->generateFilename($articleFile, $type, $articleFile->getOriginalFileName());
+		$newFileName = $this->generateFilename($articleFile, $useCase, $articleFile->getOriginalFileName());
 
 		if (!$this->copyFile($temporaryFile->getFilePath(), $dir.$newFileName)) {
 			// Delete the dummy file we inserted

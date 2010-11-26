@@ -257,7 +257,7 @@ class QuickSubmitForm extends Form {
 			$temporaryFile = $temporaryFileManager->getFile($tempFileIds[$locale], $user->getId());
 			$fileId = null;
 			if ($temporaryFile) {
-				$fileId = $articleFileManager->temporaryFileToArticleFile($temporaryFile, ARTICLE_FILE_SUBMISSION);
+				$fileId = $articleFileManager->temporaryFileToArticleFile($temporaryFile, ARTICLE_FILE_USE_CASE_SUBMISSION);
 				$fileType = $temporaryFile->getFileType();
 
 				if (strstr($fileType, 'html')) {

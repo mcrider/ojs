@@ -27,6 +27,11 @@
 		<query>ALTER TABLE article_files MODIFY type BIGINT(20)</query>
 	</sql>
 
+	<!-- Bug #6128: Change article_files 'type' column to 'use_case' -->
+	<sql>
+		<rename table="article_files" column="type" to="use_case" />
+	</sql>
+
 	<!-- Bug #6021: port logs to pkp-lib -->
 	<sql>
 		<!-- article_event_log -->
