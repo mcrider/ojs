@@ -134,6 +134,11 @@
 		<!-- 2.x to 2.3.4 -->
 		<data file="dbscripts/xml/upgrade/2.3.4_preupdate.xml" />
 	</upgrade>
+	
+	<upgrade minversion="2.0.0.0" maxversion="2.3.4.9">
+		<!-- 2.x to 2.3.5 -->
+		<data file="dbscripts/xml/upgrade/2.3.5_preupdate.xml" />
+	</upgrade>
 
 	<!-- PKP schema components -->
 	<schema file="lib/pkp/xml/schema/common.xml" />

@@ -225,9 +225,15 @@ class QuickSubmitForm extends Form {
 
 			if ($author != null) {
 				$author->setSubmissionId($articleId);
-				$author->setFirstName($authors[$i]['firstName']);
-				$author->setMiddleName($authors[$i]['middleName']);
-				$author->setLastName($authors[$i]['lastName']);
+				if (array_key_exists('firstName', $authors[$i])) {
+					$author->setFirstName($authors[$i]['firstName'], null);
+				}
+				if (array_key_exists('middleName', $authors[$i])) {
+					$author->setMiddleName($authors[$i]['middleName'], null);
+				}
+				if (array_key_exists('lastName', $authors[$i])) {
+					$author->setLastName($authors[$i]['lastName'], null);
+				}
 				if (array_key_exists('affiliation', $authors[$i])) {
 					$author->setAffiliation($authors[$i]['affiliation'], null);
 				}

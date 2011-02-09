@@ -62,9 +62,9 @@ class NativeExportDom {
 				$coverNode =& XMLCustomWriter::createElement($doc, 'cover');
 				XMLCustomWriter::appendChild($root, $coverNode);
 				XMLCustomWriter::setAttribute($coverNode, 'locale', $locale);
-				
+
 				XMLCustomWriter::createChildWithText($doc, $coverNode, 'caption', $issue->getCoverPageDescription($locale), false);
-				
+
 				$coverFile = $issue->getFileName($locale);
 				if ($coverFile != '') {
 					$imageNode =& XMLCustomWriter::createElement($doc, 'image');
@@ -77,8 +77,8 @@ class NativeExportDom {
 					XMLCustomWriter::setAttribute($embedNode, 'filename', $issue->getOriginalFileName($locale));
 					XMLCustomWriter::setAttribute($embedNode, 'encoding', 'base64');
 					XMLCustomWriter::setAttribute($embedNode, 'mime_type', String::mime_content_type($coverPagePath));
-				}				
-				
+				}
+
 				unset($coverNode);
 			}
 		}
@@ -104,7 +104,7 @@ class NativeExportDom {
 			XMLCustomWriter::appendChild($root, $sectionNode);
 			unset($sectionNode);
 		}
-		
+
 		return $root;
 	}
 
@@ -122,7 +122,7 @@ class NativeExportDom {
 			if ($abbrevNode) XMLCustomWriter::setAttribute($abbrevNode, 'locale', $locale);
 			unset($abbrevNode);
 		}
-		
+
 		if (is_array($section->getIdentifyType(null))) foreach ($section->getIdentifyType(null) as $locale => $identifyType) {
 			$identifyTypeNode =& XMLCustomWriter::createChildWithText($doc, $root, 'identify_type', $identifyType, false);
 			if ($identifyTypeNode) XMLCustomWriter::setAttribute($identifyTypeNode, 'locale', $locale);
@@ -254,9 +254,9 @@ class NativeExportDom {
 				$coverNode =& XMLCustomWriter::createElement($doc, 'cover');
 				XMLCustomWriter::appendChild($root, $coverNode);
 				XMLCustomWriter::setAttribute($coverNode, 'locale', $locale);
-				
+
 				XMLCustomWriter::createChildWithText($doc, $coverNode, 'altText', $issue->getCoverPageDescription($locale), false);
-				
+
 				$coverFile = $article->getFileName($locale);
 				if ($coverFile != '') {
 					$imageNode =& XMLCustomWriter::createElement($doc, 'image');
@@ -269,8 +269,8 @@ class NativeExportDom {
 					XMLCustomWriter::setAttribute($embedNode, 'filename', $article->getOriginalFileName($locale));
 					XMLCustomWriter::setAttribute($embedNode, 'encoding', 'base64');
 					XMLCustomWriter::setAttribute($embedNode, 'mime_type', String::mime_content_type($coverPagePath));
-				}				
-				
+				}
+
 				unset($coverNode);
 			}
 		}
@@ -299,7 +299,7 @@ class NativeExportDom {
 		foreach ($article->getSuppFiles() as $suppFile) {
 			$suppNode =& NativeExportDom::generateSuppFileDom($doc, $journal, $issue, $article, $suppFile);
 			if ($suppNode !== null) XMLCustomWriter::appendChild($root, $suppNode);
-			unset($suppNode);			
+			unset($suppNode);
 		}
 
 		return $root;
@@ -309,10 +309,25 @@ class NativeExportDom {
 		$root =& XMLCustomWriter::createElement($doc, 'author');
 		if ($author->getPrimaryContact()) XMLCustomWriter::setAttribute($root, 'primary_contact', 'true');
 
-		XMLCustomWriter::createChildWithText($doc, $root, 'firstname', $author->getFirstName());
-		XMLCustomWriter::createChildWithText($doc, $root, 'middlename', $author->getMiddleName(), false);
-		XMLCustomWriter::createChildWithText($doc, $root, 'lastname', $author->getLastName());
 
+		$firstnames = $author->getFirstName(null);
+		if (is_array($firstnames)) foreach ($firstnames as $locale => $firstname) {
+			$n =& XMLCustomWriter::createChildWithText($doc, $root, 'firstname', $firstname, false);
+			XMLCustomWriter::setAttribute($n, 'locale', $locale);
+			unset($n);
+		}
+		$middlenames = $author->getMiddleName(null);
+		if (is_array($middlenames)) foreach ($middlenames as $locale => $middlename) {
+			$n =& XMLCustomWriter::createChildWithText($doc, $root, 'middlename', $middlename, false);
+			XMLCustomWriter::setAttribute($n, 'locale', $locale);
+			unset($n);
+		}
+		$lastnames = $author->getLastName(null);
+		if (is_array($lastnames)) foreach ($lastnames as $locale => $lastname) {
+			$n =& XMLCustomWriter::createChildWithText($doc, $root, 'lastname', $lastname, false);
+			XMLCustomWriter::setAttribute($n, 'locale', $locale);
+			unset($n);
+		}
 		$affiliations = $author->getAffiliation(null);
 		if (is_array($affiliations)) foreach ($affiliations as $locale => $affiliation) {
 			$n =& XMLCustomWriter::createChildWithText($doc, $root, 'affiliation', $author->getAffiliation(), false);
@@ -385,7 +400,7 @@ class NativeExportDom {
 
 		return $root;
 	}
-	
+
 	function &generateSuppFileDom(&$doc, &$journal, &$issue, &$article, &$suppFile) {
 		$root =& XMLCustomWriter::createElement($doc, 'supplemental_file');
 
@@ -441,7 +456,7 @@ class NativeExportDom {
 				$typeOtherNode =& XMLCustomWriter::createChildWithText($doc, $root, 'type_other', $typeOther, false);
 				if ($typeOtherNode) XMLCustomWriter::setAttribute($typeOtherNode, 'locale', $locale);
 				unset($typeOtherNode);
-			}		
+			}
 		}
 		if (is_array($suppFile->getDescription(null))) foreach ($suppFile->getDescription(null) as $locale => $description) {
 			$descriptionNode =& XMLCustomWriter::createChildWithText($doc, $root, 'description', $description, false);
@@ -464,7 +479,7 @@ class NativeExportDom {
 			if ($sourceNode) XMLCustomWriter::setAttribute($sourceNode, 'locale', $locale);
 			unset($sourceNode);
 		}
-		
+
 		import('classes.file.ArticleFileManager');
 		$articleFileManager = new ArticleFileManager($article->getId());
 		$fileNode =& XMLCustomWriter::createElement($doc, 'file');
@@ -473,7 +488,7 @@ class NativeExportDom {
 		XMLCustomWriter::setAttribute($embedNode, 'filename', $suppFile->getOriginalFileName());
 		XMLCustomWriter::setAttribute($embedNode, 'encoding', 'base64');
 		XMLCustomWriter::setAttribute($embedNode, 'mime_type', $suppFile->getFileType());
-		
+
 		return $root;
 	}
 

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE data SYSTEM "../../../lib/pkp/dtd/xmlData.dtd">
+
+<!--
+  * 2.3.5_preupdate.xml
+  *
+  * Copyright (c) 2003-2011 John Willinsky
+  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+  *
+  * 2.3.5 author name update XML file, run prior to schema sync.
+  *
+  * $Id$
+  -->
+
+<data>
+	<!-- Bug #5550: make affiliations localized -->
+	<sql>
+		<!-- Make the process idempotent -->
+		<query>DELETE FROM author_settings WHERE setting_name = 'firstName'</query>
+		<query>DELETE FROM author_settings WHERE setting_name = 'middleName'</query>
+		<query>DELETE FROM author_settings WHERE setting_name = 'lastName'</query>
+		<query>INSERT INTO author_settings (author_id, setting_name, setting_type, setting_value, locale) SELECT a.author_id, 'firstName', 'string', a.first_name, s.primary_locale FROM authors a, site s</query>
+		<query>INSERT INTO author_settings (author_id, setting_name, setting_type, setting_value, locale) SELECT a.author_id, 'middleName', 'string', a.middle_name, s.primary_locale FROM authors a, site s</query>
+		<query>INSERT INTO author_settings (author_id, setting_name, setting_type, setting_value, locale) SELECT a.author_id, 'lastName', 'string', a.last_name, s.primary_locale FROM authors a, site s</query>
+	</sql>
+</data>

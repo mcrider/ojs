@@ -331,6 +331,12 @@ class SectionEditorSubmissionDAO extends DAO {
 		$locale = Locale::getLocale();
 
 		$params = array(
+			$locale,
+			'firstName',
+			$locale,
+			'middleName',
+			$locale,
+			'lastName',
 			ASSOC_TYPE_ARTICLE,
 			'SIGNOFF_COPYEDITING_FINAL',
 			ASSOC_TYPE_ARTICLE,
@@ -368,18 +374,18 @@ class SectionEditorSubmissionDAO extends DAO {
 				$params[] = $search;
 				break;
 			case SUBMISSION_FIELD_AUTHOR:
-				$first_last = $this->_dataSource->Concat('aa.first_name', '\' \'', 'aa.last_name');
-				$first_middle_last = $this->_dataSource->Concat('aa.first_name', '\' \'', 'aa.middle_name', '\' \'', 'aa.last_name');
-				$last_comma_first = $this->_dataSource->Concat('aa.last_name', '\', \'', 'aa.first_name');
-				$last_comma_first_middle = $this->_dataSource->Concat('aa.last_name', '\', \'', 'aa.first_name', '\' \'', 'aa.middle_name');
+				$first_last = $this->_dataSource->Concat('aslfn.setting_value', '\' \'', 'aslln.setting_value');
+				$first_middle_last = $this->_dataSource->Concat('aslfn.setting_value', '\' \'', 'aslmn.setting_value', '\' \'', 'aslln.setting_value');
+				$last_comma_first = $this->_dataSource->Concat('aslln.setting_value', '\', \'', 'aslfn.setting_value');
+				$last_comma_first_middle = $this->_dataSource->Concat('aslln.setting_value', '\', \'', 'aslfn.setting_value', '\' \'', 'aslmn.setting_value');
 
 				if ($searchMatch === 'is') {
-					$searchSql = " AND (LOWER(aa.last_name) = LOWER(?) OR LOWER($first_last) = LOWER(?) OR LOWER($first_middle_last) = LOWER(?) OR LOWER($last_comma_first) = LOWER(?) OR LOWER($last_comma_first_middle) = LOWER(?))";
+					$searchSql = " AND (LOWER(aslln.setting_value) = LOWER(?) OR LOWER($first_last) = LOWER(?) OR LOWER($first_middle_last) = LOWER(?) OR LOWER($last_comma_first) = LOWER(?) OR LOWER($last_comma_first_middle) = LOWER(?))";
 				} elseif ($searchMatch === 'contains') {
-					$searchSql = " AND (LOWER(aa.last_name) LIKE LOWER(?) OR LOWER($first_last) LIKE LOWER(?) OR LOWER($first_middle_last) LIKE LOWER(?) OR LOWER($last_comma_first) LIKE LOWER(?) OR LOWER($last_comma_first_middle) LIKE LOWER(?))";
+					$searchSql = " AND (LOWER(aslln.setting_value) LIKE LOWER(?) OR LOWER($first_last) LIKE LOWER(?) OR LOWER($first_middle_last) LIKE LOWER(?) OR LOWER($last_comma_first) LIKE LOWER(?) OR LOWER($last_comma_first_middle) LIKE LOWER(?))";
 					$search = '%' . $search . '%';
 				} else { // $searchMatch === 'startsWith
-					$searchSql = " AND (LOWER(aa.last_name) LIKE LOWER(?) OR LOWER($first_last) LIKE LOWER(?) OR LOWER($first_middle_last) LIKE LOWER(?) OR LOWER($last_comma_first) LIKE LOWER(?) OR LOWER($last_comma_first_middle) LIKE LOWER(?))";
+					$searchSql = " AND (LOWER(aslln.setting_value) LIKE LOWER(?) OR LOWER($first_last) LIKE LOWER(?) OR LOWER($first_middle_last) LIKE LOWER(?) OR LOWER($last_comma_first) LIKE LOWER(?) OR LOWER($last_comma_first_middle) LIKE LOWER(?))";
 					$search = $search . '%';
 				}
 				$params[] = $params[] = $params[] = $params[] = $params[] = $search;
@@ -443,7 +449,7 @@ class SectionEditorSubmissionDAO extends DAO {
 				spr.date_completed as proofread_completed,
 				sle.date_completed as layout_completed,
 				SUBSTRING(COALESCE(atl.setting_value, atpl.setting_value) FROM 1 FOR 255) AS submission_title,
-				aap.last_name AS author_name,
+				aslln.setting_value AS author_name,
 				e.can_review AS can_review,
 				e.can_edit AS can_edit,
 				SUBSTRING(COALESCE(stl.setting_value, stpl.setting_value) FROM 1 FOR 255) AS section_title,
@@ -452,6 +458,9 @@ class SectionEditorSubmissionDAO extends DAO {
 			FROM	articles a
 				LEFT JOIN authors aa ON (aa.submission_id = a.article_id)
 				LEFT JOIN authors aap ON (aap.submission_id = a.article_id AND aap.primary_contact = 1)
+				LEFT JOIN author_settings aslfn ON (aa.author_id = aslfn.author_id AND aslfn.setting_name = ? AND aslfn.locale = ?)
+				LEFT JOIN author_settings aslmn ON (aa.author_id = aslmn.author_id AND aslmn.setting_name = ? AND aslmn.locale = ?)
+				LEFT JOIN author_settings aslln ON (aa.author_id = aslln.author_id AND aslln.setting_name = ? AND aslln.locale = ?)
 				LEFT JOIN edit_assignments e ON (e.article_id = a.article_id)
 				LEFT JOIN users ed ON (e.editor_id = ed.user_id)
 				LEFT JOIN sections s ON (s.section_id = a.section_id)
