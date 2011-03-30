@@ -738,7 +738,11 @@ class SectionEditorSubmissionDAO extends DAO {
 	 * @return DAOResultFactory containing matching Users
 	 */
 	function &getReviewersForArticle($journalId, $articleId, $round, $searchType = null, $search = null, $searchMatch = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
-		$paramArray = array($articleId, $round, ASSOC_TYPE_USER, 'interest', $journalId, RoleDAO::getRoleIdFromPath('reviewer'));
+		$paramArray = array($articleId, $round);
+		// Do not include user interests in the query unless we're searching for them
+		if($searchType == USER_FIELD_INTERESTS) array_push($paramArray, ASSOC_TYPE_USER, 'interest');
+		array_push($paramArray, $journalId, RoleDAO::getRoleIdFromPath('reviewer'));
+
 		$searchSql = '';
 
 		$searchTypeMap = array(
@@ -777,8 +781,7 @@ class SectionEditorSubmissionDAO extends DAO {
 				break;
 		}
 
-		$result =& $this->retrieveRange(
-			'SELECT DISTINCT
+		$sql = 'SELECT DISTINCT
 				u.user_id,
 				u.last_name,
 				ar.review_id,
@@ -793,15 +796,19 @@ class SectionEditorSubmissionDAO extends DAO {
 				LEFT JOIN review_assignments ai ON (ai.reviewer_id = u.user_id AND ai.date_completed IS NULL)
 				LEFT JOIN review_assignments ar ON (ar.reviewer_id = u.user_id AND ar.cancelled = 0 AND ar.submission_id = ? AND ar.round = ?)
 				LEFT JOIN roles r ON (r.user_id = u.user_id)
-				LEFT JOIN articles a ON (ra.submission_id = a.article_id)
-				LEFT JOIN controlled_vocabs cv ON (cv.assoc_type = ? AND cv.assoc_id = u.user_id AND cv.symbolic = ?)
+				LEFT JOIN articles a ON (ra.submission_id = a.article_id) ';
+		if($searchType == USER_FIELD_INTERESTS) {
+			$sql .= 'LEFT JOIN controlled_vocabs cv ON (cv.assoc_type = ? AND cv.assoc_id = u.user_id AND cv.symbolic = ?)
 				LEFT JOIN controlled_vocab_entries cve ON (cve.controlled_vocab_id = cv.controlled_vocab_id)
-				LEFT JOIN controlled_vocab_entry_settings cves ON (cves.controlled_vocab_entry_id = cve.controlled_vocab_entry_id)
-			WHERE u.user_id = r.user_id AND
+				LEFT JOIN controlled_vocab_entry_settings cves ON (cves.controlled_vocab_entry_id = cve.controlled_vocab_entry_id)';
+		}
+		$sql .= 'WHERE u.user_id = r.user_id AND
 				r.journal_id = ? AND
 				r.role_id = ? ' . $searchSql . 'GROUP BY u.user_id, u.last_name, ar.review_id' .
-			($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''),
-			$paramArray, $rangeInfo
+			($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : '');
+
+		$result =& $this->retrieveRange(
+			$sql, $paramArray, $rangeInfo
 		);
 
 		$returner = new DAOResultFactory($result, $this, '_returnReviewerUserFromRow');
