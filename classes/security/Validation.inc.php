@@ -45,7 +45,13 @@ class Validation {
 				$valid=true;
 			}
 		} else { // Regular Auth
-			$user =& $userDao->getUserByUsername($username, true);
+			// Check if the user is logging in with an email address or username
+			if(strpos($username, '@') === false) {
+				$user =& $userDao->getUserByUsername($username, true);
+			} else {
+				$user =& $userDao->getUserByEmail($username);
+				$username = $user->getUsername();
+			}
 
 			if (!isset($user)) {
 				// User does not exist
