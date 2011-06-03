@@ -54,7 +54,8 @@ class OAIMetadataFormat_DCTest extends PKPTestCase {
 		        ->method('getBestArticleId')
 		        ->will($this->returnValue(9));
 		$article->setId(9);
-		$article->addAuthor($author);
+		$authorDao =& DAORegistry::getDAO('AuthorDAO'); /* @var $authorDao AuthorDAO */
+		$authorDao->insertAuthor($author);
 		$article->setSuppFiles(array($suppFile));
 		$article->setPages(15);
 		$article->setType('art-type', 'en_US');
