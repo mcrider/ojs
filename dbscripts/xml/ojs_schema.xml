@@ -44,7 +44,7 @@
 			<UNIQUE />
 		</index>
 	</table>
-	
+
 	<!--
 	  *
 	  * TABLE journal_settings
@@ -77,7 +77,7 @@
 			<UNIQUE />
 		</index>
 	</table>
-	
+
 	<!--
 	  *
 	  * TABLE plugin_settings
@@ -114,7 +114,7 @@
 			<UNIQUE />
 		</index>
 	</table>
-	
+
 	<!--
 	  *
 	  * TABLE roles
@@ -204,7 +204,7 @@
 			<col>journal_id</col>
 		</index>
 	</table>
-	
+
 	<!--
 	  *
 	  * TABLE section_settings
@@ -237,7 +237,7 @@
 			<UNIQUE />
 		</index>
 	</table>
-	
+
 	<!--
 	  *
 	  * TABLE section_editors
@@ -278,7 +278,7 @@
 			<UNIQUE />
 		</index>
 	</table>
-	
+
 	<!--
 	  *
 	  * TABLE issues
@@ -435,6 +435,7 @@
 			<DEFAULT VALUE="en"/>
 		</field>
 		<field name="comments_to_ed" type="X"/>
+		<field name="biblio" type="X"/>
 		<field name="citations" type="X"/>
 		<field name="date_submitted" type="T"/>
 		<field name="last_modified" type="T"/>
@@ -480,7 +481,7 @@
 			<col>section_id</col>
 		</index>
 	</table>
-	
+
 	<!--
 	  *
 	  * TABLE article_settings
@@ -604,7 +605,7 @@
 			<col>article_id</col>
 		</index>
 	</table>
-	
+
 	<!--
 	  *
 	  * TABLE article_supplementary_files
@@ -720,7 +721,7 @@
 			<col>file_id</col>
 		</index>
 	</table>
-	
+
 	<!--
 	  *
 	  * TABLE edit_assignments
@@ -756,7 +757,7 @@
 			<col>editor_id</col>
 		</index>
 	</table>
-	
+
 	<!--
 	  *
 	  * TABLE edit_decisions
@@ -790,7 +791,7 @@
 			<col>editor_id</col>
 		</index>
 	</table>
-	
+
 	<!--
 	  *
 	  * TABLE article_galleys
@@ -833,7 +834,7 @@
 			<UNIQUE/>
 		</index>
 	</table>
-	
+
 	<!--
 	  *
 	  * TABLE article_html_galley_images
@@ -853,7 +854,7 @@
 			<UNIQUE/>
 		</index>
 	</table>
-	
+
 	<!--
 	  *
 	  * TABLE article_event_log
@@ -886,7 +887,7 @@
 			<col>article_id</col>
 		</index>
 	</table>
-	
+
 	<!--
 	  *
 	  * TABLE article_email_log
@@ -921,7 +922,7 @@
 			<col>article_id</col>
 		</index>
 	</table>
-	
+
 	<!--
 	  *
 	  * TABLE article_comments
@@ -957,7 +958,7 @@
 			<col>article_id</col>
 		</index>
 	</table>
-	
+
 	<!--
 	 *
 	 * TABLE article_search_keyword_list
@@ -977,7 +978,7 @@
 			<UNIQUE/>
 		</index>
 	</table>
-	
+
 	<!--
 	 *
 	 * TABLE article_search_objects
@@ -1000,7 +1001,7 @@
 		</field>
 		<descr>Indexed objects.</descr>
 	</table>
-	
+
 	<!--
 	 *
 	 * TABLE article_search_object_keywords
@@ -1027,9 +1028,9 @@
 			<UNIQUE />
 		</index>
 	</table>
-	
+
 	<!-- Reading Tools Tables -->
-	
+
 	<!--
 	 *
 	 * TABLE rt_versions
@@ -1061,7 +1062,7 @@
 			<col>version_key</col>
 		</index>
 	</table>
-	
+
 	<!--
 	 *
 	 * TABLE rt_contexts
@@ -1107,7 +1108,7 @@
 			<col>version_id</col>
 		</index>
 	</table>
-	
+
 	<!--
 	 *
 	 * TABLE rt_searches
@@ -1140,7 +1141,7 @@
 
 	<!--
 	 *
-	 * TABLE subscription_types 
+	 * TABLE subscription_types
 	 *
 	 -->
 	<table name="subscription_types">
@@ -1328,7 +1329,7 @@
 		<field name="payment_data" type="X" />
 		<descr>Logs queued (unfulfilled) payments.</descr>
 	</table>
-	
+
 	<!--
 	  *
 	  * TABLE completed_payments
@@ -1352,7 +1353,7 @@
 		<field name="assoc_id" type="I8" />
 		<field name="amount" type="F">
 			<NOTNULL/>
-		</field>		
+		</field>
 		<field name="currency_code_alpha" type="C2" size="3" />
 		<field name="payment_method_plugin_name" type="C2" size="80" />
 		<descr>Logs completed (fulfilled) payments.</descr>

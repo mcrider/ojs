@@ -82,6 +82,34 @@
 		</div>
 	{/if}
 
+	{** MC: Custom metadata for EJP/ECP **}
+	<h4>Article Number</h4>
+	<p>{$article->getId()}</p>
+
+	<h4>References</h4>
+	<p>{$article->getBiblio()}</p>
+
+	<h4>Author Affiliations</h4>
+	{foreach from=$article->getAuthors() item=author}
+	{$author->getFullName()|escape} - {$author->getLocalizedAffiliation()} <br />
+	{/foreach}
+
+	<h4>Publication Date</h4>
+	<p>{if $article->getDatePublished()}{$article->getDatePublished()|date_format:$dateFormatLong|default:""}{/if}</p>
+
+	{if $article->getSuppFiles()}
+	<h4>Supplementary Files</h4>
+		{foreach from=$article->getSuppFiles() item=suppFile}
+			<a href="{url page="article" op="downloadSuppFile" path=$articleId|to_array:$suppFile->getBestSuppFileId($currentJournal)}">{$suppFile->getSuppFileTitle()|escape}</a> ({$suppFile->getNiceFileSize()})<br />
+		{/foreach}
+	{/if}
+
+	<h4>Pages</h4>
+	<p>{$article->getPages()}</p>
+
+
+
+
 	{if $article->getLocalizedSubject()}
 		<div id="articleSubject">
 		<h4>{translate key="article.subject"}</h4>

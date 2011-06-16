@@ -592,6 +592,25 @@ class Article extends Submission {
 
 		return $signoff->getUserId();
 	}
+
+
+	// MC: Custom code to get HTML bibliographies for EJT
+	/**
+	 * Set the bibliography
+	 * @param $biblio string
+	 */
+	function setBiblio($biblio) {
+	    $this->_biblio = $biblio;
+	}
+
+	/**
+	 * Get the bibliography
+	 * @return string
+	 */
+	function getBiblio() {
+	    return $this->_biblio;
+	}
+
 }
 
 ?>
