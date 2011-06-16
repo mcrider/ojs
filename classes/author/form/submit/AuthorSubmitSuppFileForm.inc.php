@@ -127,7 +127,8 @@ class AuthorSubmitSuppFileForm extends Form {
 				'dateCreated' => $suppFile->getDateCreated(),
 				'source' => $suppFile->getSource(null), // Localized
 				'language' => $suppFile->getLanguage(),
-				'showReviewers' => $suppFile->getShowReviewers()
+				'showReviewers' => $suppFile->getShowReviewers(),
+				'showReaders' => $suppFile->getShowReaders()
 			);
 
 		} else {
@@ -155,7 +156,8 @@ class AuthorSubmitSuppFileForm extends Form {
 				'dateCreated',
 				'source',
 				'language',
-				'showReviewers'
+				'showReviewers',
+				'showReaders'
 			)
 		);
 	}
@@ -223,6 +225,7 @@ class AuthorSubmitSuppFileForm extends Form {
 		$suppFile->setSource($this->getData('source'), null); // Null
 		$suppFile->setLanguage($this->getData('language'));
 		$suppFile->setShowReviewers($this->getData('showReviewers'));
+		$suppFile->setShowReaders($this->getData('showReaders'));
 	}
 }
 

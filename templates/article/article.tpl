@@ -100,7 +100,9 @@
 	{if $article->getSuppFiles()}
 	<h4>Supplementary Files</h4>
 		{foreach from=$article->getSuppFiles() item=suppFile}
+			{if $suppFile->getShowReaders()}
 			<a href="{url page="article" op="downloadSuppFile" path=$articleId|to_array:$suppFile->getBestSuppFileId($currentJournal)}">{$suppFile->getSuppFileTitle()|escape}</a> ({$suppFile->getNiceFileSize()})<br />
+			{/if}
 		{/foreach}
 	{/if}
 

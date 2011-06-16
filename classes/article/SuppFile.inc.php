@@ -357,6 +357,22 @@ class SuppFile extends ArticleFile {
 	}
 
 	/**
+	 * Set if the file is viewable to readers
+	 * @param $showReaders boolean
+	 */
+	function setShowReaders($showReaders) {
+	    $this->_showReaders = $showReaders;
+	}
+
+	/**
+	 * Get if the file is viewable to readers
+	 * @return boolean
+	 */
+	function getShowReaders() {
+	    return $this->_showReaders;
+	}
+
+	/**
 	 * Get date file was submitted.
 	 * @return datetime
 	 */

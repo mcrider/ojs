@@ -125,6 +125,7 @@ class SuppFileDAO extends DAO {
 		$suppFile->setDateCreated($this->dateFromDB($row['date_created']));
 		$suppFile->setLanguage($row['language']);
 		$suppFile->setShowReviewers($row['show_reviewers']);
+		$suppFile->setShowReaders($row['show_readers']);
 		$suppFile->setDateSubmitted($this->datetimeFromDB($row['date_submitted']));
 		$suppFile->setSequence($row['seq']);
 
@@ -156,9 +157,9 @@ class SuppFileDAO extends DAO {
 		}
 		$this->update(
 			sprintf('INSERT INTO article_supplementary_files
-				(public_supp_file_id, file_id, article_id, type, date_created, language, show_reviewers, date_submitted, seq)
+				(public_supp_file_id, file_id, article_id, type, date_created, language, show_reviewers, date_submitted, show_readers, seq)
 				VALUES
-				(?, ?, ?, ?, %s, ?, ?, %s, ?)',
+				(?, ?, ?, ?, %s, ?, ?, %s, ?, ?)',
 				$this->dateToDB($suppFile->getDateCreated()), $this->datetimeToDB($suppFile->getDateSubmitted())),
 			array(
 				$suppFile->getPublicSuppFileId(),
@@ -167,6 +168,7 @@ class SuppFileDAO extends DAO {
 				$suppFile->getType(),
 				$suppFile->getLanguage(),
 				$suppFile->getShowReviewers(),
+				$suppFile->getShowReaders(),
 				$suppFile->getSequence()
 			)
 		);
@@ -189,6 +191,7 @@ class SuppFileDAO extends DAO {
 					date_created = %s,
 					language = ?,
 					show_reviewers = ?,
+					show_readers = ?,
 					seq = ?
 				WHERE supp_id = ?',
 				$this->dateToDB($suppFile->getDateCreated())),
@@ -198,6 +201,7 @@ class SuppFileDAO extends DAO {
 				$suppFile->getType(),
 				$suppFile->getLanguage(),
 				$suppFile->getShowReviewers(),
+				$suppFile->getShowReaders(),
 				$suppFile->getSequence(),
 				$suppFile->getId()
 			)

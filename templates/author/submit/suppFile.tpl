@@ -123,8 +123,13 @@
 <table id="showReviewers" class="data" width="100%">
 <tr valign="top">
 	<td>&nbsp;</td>
-	<td class="value"><input type="checkbox" name="showReviewers" id="showReviewers" value="1"{if $showReviewers==1} checked="checked"{/if} /> 
+	<td class="value"><input type="checkbox" name="showReviewers" id="showReviewers" value="1"{if $showReviewers==1} checked="checked"{/if} />
 	<label for="showReviewers">{translate key="author.submit.suppFile.availableToPeers"}</label></td>
+</tr>
+<tr valign="top">
+	<td>&nbsp;</td>
+	<td class="value"><input type="checkbox" name="showReaders" id="showReaders" value="1"{if $showReaders==1} checked="checked"{/if} />
+	<label for="showReaders">Show this file to readers (will be visible to the general public upon publication)</label></td>
 </tr>
 </table>
 {else}
@@ -146,6 +151,11 @@
 	<td>&nbsp;</td>
         <td class="value"><input type="checkbox" name="showReviewers" id="showReviewers" value="1"{if $showReviewers==1} checked="checked"{/if} />&nbsp;
 	<label for="showReviewers">{translate key="author.submit.suppFile.availableToPeers"}</label></td>
+</tr>
+<tr valign="top">
+	<td>&nbsp;</td>
+	<td class="value"><input type="checkbox" name="showReaders" id="showReaders" value="1"{if $showReaders==1} checked="checked"{/if} />
+	<label for="showReaders">Show this file to readers (will be visible to the general public upon publication)</label></td>
 </tr>
 {/if}
 </table>

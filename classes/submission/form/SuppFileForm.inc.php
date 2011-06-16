@@ -118,7 +118,7 @@ class SuppFileForm extends Form {
 		if (isset($this->suppFile)) {
 			$templateMgr->assign_by_ref('suppFile', $this->suppFile);
 		}
-		$templateMgr->assign('helpTopicId','submission.supplementaryFiles');		
+		$templateMgr->assign('helpTopicId','submission.supplementaryFiles');
 		parent::display();
 	}
 
@@ -157,13 +157,15 @@ class SuppFileForm extends Form {
 				'source' => $suppFile->getSource(null), // Localized
 				'language' => $suppFile->getLanguage(),
 				'showReviewers' => $suppFile->getShowReviewers()==1?1:0,
+				'showReaders' => $suppFile->getShowReaders()==1?1:0,
 				'publicSuppFileId' => $suppFile->getPublicSuppFileId()
 			);
 
 		} else {
 			$this->_data = array(
 				'type' => '',
-				'showReviewers' => 1
+				'showReviewers' => 1,
+				'showReaders' => 1
 			);
 		}
 
@@ -187,6 +189,7 @@ class SuppFileForm extends Form {
 				'source',
 				'language',
 				'showReviewers',
+				'showReaders',
 				'publicSuppFileId'
 			)
 		);
@@ -230,7 +233,7 @@ class SuppFileForm extends Form {
 				$fileId = 0;
 			}
 
-			// Insert new supplementary file		
+			// Insert new supplementary file
 			$suppFile = new SuppFile();
 			$suppFile->setArticleId($this->article->getArticleId());
 			$suppFile->setFileId($fileId);
@@ -259,6 +262,7 @@ class SuppFileForm extends Form {
 		$suppFile->setSource($this->getData('source'), null); // Localized
 		$suppFile->setLanguage($this->getData('language'));
 		$suppFile->setShowReviewers($this->getData('showReviewers')==1?1:0);
+		$suppFile->setShowReaders($this->getData('showReaders')==1?1:0);
 		$suppFile->setPublicSuppFileId($this->getData('publicSuppFileId'));
 	}
 }

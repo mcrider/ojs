@@ -131,11 +131,15 @@
 		<td class="value">{$suppFile->getDateUploaded()|date_format:$dateFormatShort}</td>
 	</tr>
 </table>
-	
+
 <table width="100%"  class="data">
 	<tr valign="top">
 		<td width="5%" class="label"><input type="checkbox" name="showReviewers" id="showReviewers" value="1"{if $showReviewers==1} checked="checked"{/if} /></td>
 		<td width="95%" class="value"><label for="showReviewers">{translate key="author.submit.suppFile.availableToPeers"}</label></td>
+	</tr>
+	<tr valign="top">
+		<td width="5%" class="label"><input type="checkbox" name="showReaders" id="showReaders" value="1"{if $showReaders==1} checked="checked"{/if} /></td>
+		<td width="95%" class="value"><label for="showReaders">Show this file to readers (will be visible to the general public upon publication)</label></td>
 	</tr>
 </table>
 {else}
@@ -164,6 +168,13 @@
 		<td class="value">
 			<input type="checkbox" name="showReviewers" id="showReviewers" value="1"{if $showReviewers==1} checked="checked"{/if} />&nbsp;
 			<label for="showReviewers">{translate key="author.submit.suppFile.availableToPeers"}</label>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td>&nbsp;</td>
+		<td class="value">
+			<input type="checkbox" name="showReaders" id="showReaders" value="1"{if $showReaders==1} checked="checked"{/if} />
+			<label for="showReaders">Show this file to readers (will be visible to the general public upon publication)</label>
 		</td>
 	</tr>
 	{/if}

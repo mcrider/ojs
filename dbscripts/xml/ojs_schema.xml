@@ -629,6 +629,9 @@
 		<field name="show_reviewers" type="I1">
 			<DEFAULT VALUE="0"/>
 		</field>
+		<field name="show_readers" type="I1">
+			<DEFAULT VALUE="1"/>
+		</field>
 		<field name="date_submitted" type="T">
 			<NOTNULL/>
 		</field>
