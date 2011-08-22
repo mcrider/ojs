@@ -121,7 +121,7 @@ class SwordPlugin extends GenericPlugin {
 		$depositPoints = $this->getSetting($journal->getId(), 'depositPoints');
 		import('classes.sword.OJSSwordDeposit');
 
-		import('lib.pkp.classes.notification.NotificationManager');
+		import('classes.notification.NotificationManager');
 		$notificationManager = new NotificationManager();
 
 		$sendDepositNotification = $this->getSetting($journal->getId(), 'allowAuthorSpecify') ? true : false;
@@ -145,7 +145,9 @@ class SwordPlugin extends GenericPlugin {
 			$deposit->cleanup();
 			unset($deposit);
 
-			$notificationManager->createTrivialNotification(Locale::translate('notification.notification'), Locale::translate('plugins.generic.sword.automaticDepositComplete', array('itemTitle' => $sectionEditorSubmission->getLocalizedTitle(), 'repositoryName' => $depositPoint['name'])), NOTIFICATION_TYPE_SUCCESS, null, false);
+			$user =& $request->getUser();
+			$params = array('itemTitle' => $sectionEditorSubmission->getLocalizedTitle(), 'repositoryName' => $depositPoint['name']);
+			$notificationManager->createTrivialNotification($user->getId(), NOTIFICATION_TYPE_SWORD_AUTO_DEPOSIT_COMPLETE, $params);
 		}
 
 		if ($sendDepositNotification) {
@@ -199,9 +201,9 @@ class SwordPlugin extends GenericPlugin {
  	 * Execute a management verb on this plugin
  	 * @param $verb string
  	 * @param $args array
-	 * @param $message string Location for the plugin to put a result msg
- 	 * @return boolean
- 	 */
+	 * @param $message string Result status message
+	 * @return boolean
+	 */
 	function manage($verb, $args, &$message) {
 		$returner = true;
 		$journal =& Request::getJournal();
@@ -231,12 +233,12 @@ class SwordPlugin extends GenericPlugin {
 				break;
 			case 'enable':
 				$this->updateSetting($journal->getId(), 'enabled', true);
-				$message = Locale::translate('plugins.generic.sword.enabled');
+				$message = NOTIFICATION_TYPE_SWORD_ENABLED;
 				$returner = false;
 				break;
 			case 'disable':
 				$this->updateSetting($journal->getId(), 'enabled', false);
-				$message = Locale::translate('plugins.generic.sword.disabled');
+				$message = NOTIFICATION_TYPE_SWORD_DISABLED;
 				$returner = false;
 				break;
 			case 'createDepositPoint':
