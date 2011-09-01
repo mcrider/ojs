@@ -20,6 +20,11 @@ define('SWORD_DEPOSIT_TYPE_OPTIONAL_SELECTION',	2);
 define('SWORD_DEPOSIT_TYPE_OPTIONAL_FIXED',	3);
 define('SWORD_DEPOSIT_TYPE_MANAGER',		4);
 
+define('NOTIFICATION_TYPE_SWORD_ENABLED',				0x6000001);
+define('NOTIFICATION_TYPE_SWORD_DISABLED',				0x6000002);
+define('NOTIFICATION_TYPE_SWORD_DEPOSIT_COMPLETE',		0x6000003);
+define('NOTIFICATION_TYPE_SWORD_AUTO_DEPOSIT_COMPLETE',	0x6000004);
+
 import('lib.pkp.classes.plugins.GenericPlugin');
 
 class SwordPlugin extends GenericPlugin {
@@ -45,6 +50,7 @@ class SwordPlugin extends GenericPlugin {
 			if ($this->getEnabled()) {
 				HookRegistry::register('LoadHandler', array(&$this, 'callbackLoadHandler'));
 				HookRegistry::register('SectionEditorAction::emailEditorDecisionComment', array(&$this, 'callbackAuthorDeposits'));
+				HookRegistry::register('NotificationManager::getNotificationContents', array($this, 'callbackNotificationContents'));
 			}
 			$this->addLocaleData();
 			return true;
@@ -172,6 +178,38 @@ class SwordPlugin extends GenericPlugin {
 		}
 
 		return false;
+	}
+
+/**
+	 * Hook registry function to provide notification messages for SWORD notifications
+	 * @param $hookName string
+	 * @param $args array
+	 */
+	function callbackNotificationContents($hookName, $args) {
+		$notification =& $args[0];
+		$message =& $args[1];
+
+		$type = $notification->getType();
+		assert(isset($type));
+
+		import('classes.notification.NotificationManager');
+		$notificationManager = new NotificationManager();
+
+		switch ($type) {
+			case NOTIFICATION_TYPE_SWORD_DEPOSIT_COMPLETE:
+				$notificationSettingsDao =& DAORegistry::getDAO('NotificationSettingsDAO');
+				$params = $notificationSettingsDao->getNotificationSettings($notification->getId());
+				$message = __('plugins.generic.sword.depositComplete', $notificationManager->getParamsForCurrentLocale($params));
+			case NOTIFICATION_TYPE_SWORD_AUTO_DEPOSIT_COMPLETE:
+				$notificationSettingsDao =& DAORegistry::getDAO('NotificationSettingsDAO');
+				$params = $notificationSettingsDao->getNotificationSettings($notification->getId());
+				$message = __('plugins.generic.sword.automaticDepositComplete', $notificationManager->getParamsForCurrentLocale($params));
+			case NOTIFICATION_TYPE_SWORD_ENABLED:
+				$message = __('plugins.generic.sword.enabled');
+			case NOTIFICATION_TYPE_SWORD_DISABLED:
+				$message = __('plugins.generic.sword.disable');
+		}
+
 	}
 
 	/**
