@@ -1,0 +1,330 @@
+diff --git a/classes/author/form/submit/AuthorSubmitStep3Form.inc.php b/classes/author/form/submit/AuthorSubmitStep3Form.inc.php
+index e271ced..e367412 100644
+--- a/classes/author/form/submit/AuthorSubmitStep3Form.inc.php
++++ b/classes/author/form/submit/AuthorSubmitStep3Form.inc.php
+@@ -26,6 +26,7 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
+ 		// Validation checks for this form
+ 		$this->addCheck(new FormValidatorCustom($this, 'authors', 'required', 'author.submit.form.authorRequired', create_function('$authors', 'return count($authors) > 0;')));
+ 		$this->addCheck(new FormValidatorArray($this, 'authors', 'required', 'author.submit.form.authorRequiredFields', array('firstName', 'lastName')));
++		$this->addCheck(new FormValidatorArrayCustom($this, 'authors', 'required', 'author.submit.form.authorRequiredFields', create_function('$address', 'return !empty($address["en_US"]);'), array(false), false, array('address')));
+ 		$this->addCheck(new FormValidatorArrayCustom($this, 'authors', 'required', 'author.submit.form.authorRequiredFields', create_function('$email, $regExp', 'return String::regexp_match($regExp, $email);'), array(ValidatorEmail::getRegexp()), false, array('email')));
+ 		$this->addCheck(new FormValidatorArrayCustom($this, 'authors', 'required', 'user.profile.form.urlInvalid', create_function('$url, $regExp', 'return empty($url) ? true : String::regexp_match($regExp, $url);'), array(ValidatorUrl::getRegexp()), false, array('url')));
+ 		$this->addCheck(new FormValidatorLocale($this, 'title', 'required', 'author.submit.form.titleRequired', $this->getRequiredLocale()));
+@@ -74,6 +75,7 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
+ 						'middleName' => $authors[$i]->getMiddleName(),
+ 						'lastName' => $authors[$i]->getLastName(),
+ 						'affiliation' => $authors[$i]->getAffiliation(null),
++						'address' => $authors[$i]->getAddress(null),
+ 						'country' => $authors[$i]->getCountry(),
+ 						'email' => $authors[$i]->getEmail(),
+ 						'url' => $authors[$i]->getUrl(),
+@@ -200,6 +202,7 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
+ 				$author->setMiddleName($authors[$i]['middleName']);
+ 				$author->setLastName($authors[$i]['lastName']);
+ 				$author->setAffiliation($authors[$i]['affiliation'], null);
++				$author->setAddress($authors[$i]['address'], null);
+ 				$author->setCountry($authors[$i]['country']);
+ 				$author->setEmail($authors[$i]['email']);
+ 				$author->setUrl($authors[$i]['url']);
+diff --git a/classes/submission/form/MetadataForm.inc.php b/classes/submission/form/MetadataForm.inc.php
+index a1a584b..c2c7d3d 100644
+--- a/classes/submission/form/MetadataForm.inc.php
++++ b/classes/submission/form/MetadataForm.inc.php
+@@ -82,6 +82,7 @@ class MetadataForm extends Form {
+ 			);
+ 			$this->addCheck(new FormValidatorLocale($this, 'title', 'required', 'author.submit.form.titleRequired', $this->getRequiredLocale()));
+ 			$this->addCheck(new FormValidatorArray($this, 'authors', 'required', 'author.submit.form.authorRequiredFields', array('firstName', 'lastName')));
++			$this->addCheck(new FormValidatorArrayCustom($this, 'authors', 'required', 'author.submit.form.authorRequiredFields', create_function('$address', 'return !empty($address["en_US"]);'), array(false), false, array('address')));
+ 			$this->addCheck(new FormValidatorArrayCustom($this, 'authors', 'required', 'author.submit.form.authorRequiredFields', create_function('$email, $regExp', 'return String::regexp_match($regExp, $email);'), array(ValidatorEmail::getRegexp()), false, array('email')));
+ 			$this->addCheck(new FormValidatorArrayCustom($this, 'authors', 'required', 'user.profile.form.urlInvalid', create_function('$url, $regExp', 'return empty($url) ? true : String::regexp_match($regExp, $url);'), array(ValidatorUrl::getRegexp()), false, array('url')));
+ 		} else {
+@@ -149,6 +150,7 @@ class MetadataForm extends Form {
+ 						'middleName' => $authors[$i]->getMiddleName(),
+ 						'lastName' => $authors[$i]->getLastName(),
+ 						'affiliation' => $authors[$i]->getAffiliation(null), // Localized
++						'address' => $authors[$i]->getAddress(null), // Localized
+ 						'country' => $authors[$i]->getCountry(),
+ 						'countryLocalized' => $authors[$i]->getCountryLocalized(),
+ 						'email' => $authors[$i]->getEmail(),
+@@ -381,6 +383,7 @@ class MetadataForm extends Form {
+ 				$author->setMiddleName($authors[$i]['middleName']);
+ 				$author->setLastName($authors[$i]['lastName']);
+ 				$author->setAffiliation($authors[$i]['affiliation'], null); // Localized
++				$author->setAddress($authors[$i]['address'], null); // Localized
+ 				$author->setCountry($authors[$i]['country']);
+ 				$author->setEmail($authors[$i]['email']);
+ 				$author->setUrl($authors[$i]['url']);
+diff --git a/lib/pkp b/lib/pkp
+index 947d54f..ea1547b 160000
+--- a/lib/pkp
++++ b/lib/pkp
+@@ -1 +1 @@
+-Subproject commit 947d54f6b1cf4da16098ed614ed63a2852df7ac5
++Subproject commit ea1547b089796223ad89297a03d33829cce9a671-dirty
+diff --git a/locale/en_US/author.xml b/locale/en_US/author.xml
+index a936f65..0a14501 100644
+--- a/locale/en_US/author.xml
++++ b/locale/en_US/author.xml
+@@ -75,7 +75,7 @@
+ 	<message key="author.submit.subjectClassInstructions">Use the hyperlinked classification system to select classification terms and, if appropriate, numbers.</message>
+ 	<message key="author.submit.languageInstructions"><![CDATA[English=en; French=fr; Spanish=es. <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php" target="_blank">Additional codes</a>.]]></message>
+ 	<message key="author.submit.form.authorRequired">At least one author is required.</message>
+-	<message key="author.submit.form.authorRequiredFields">The first name, last name, and email address of each author is required.</message>
++	<message key="author.submit.form.authorRequiredFields">The first name, last name, mailing address, and email address of each author is required.</message>
+ 	<message key="author.submit.form.titleRequired">Please enter the title of your article.</message>
+ 	<message key="author.submit.form.abstractRequired">Please enter the abstract of your article.</message>
+ 	<message key="author.submit.form.wordCountAlert">You have exceeded the maximum word limit for abstracts in this section's track.</message>
+diff --git a/plugins/importexport/quickSubmit/QuickSubmitForm.inc.php b/plugins/importexport/quickSubmit/QuickSubmitForm.inc.php
+index 903e8e4..99908f4 100644
+--- a/plugins/importexport/quickSubmit/QuickSubmitForm.inc.php
++++ b/plugins/importexport/quickSubmit/QuickSubmitForm.inc.php
+@@ -240,6 +240,9 @@ class QuickSubmitForm extends Form {
+ 					$author->setCompetingInterests($authors[$i]['competingInterests'], null);
+ 				}
+ 				$author->setBiography($authors[$i]['biography'], null);
++				if (array_key_exists('address', $authors[$i])) {
++					$author->setAddress($authors[$i]['address'], null);
++				}
+ 				$author->setPrimaryContact($this->getData('primaryContact') == $i ? 1 : 0);
+ 				$author->setSequence($authors[$i]['seq']);
+ 
+diff --git a/plugins/importexport/quickSubmit/index.tpl b/plugins/importexport/quickSubmit/index.tpl
+index ff4fbda..255545c 100644
+--- a/plugins/importexport/quickSubmit/index.tpl
++++ b/plugins/importexport/quickSubmit/index.tpl
+@@ -64,6 +64,9 @@ function updateAbstractRequired() {
+ 				{foreach from=$author.affiliation key="thisLocale" item="thisAffiliation"}
+ 					{if $thisLocale != $formLocale}<input type="hidden" name="authors[{$authorIndex|escape}][affiliation][{$thisLocale|escape}]" value="{$thisAffiliation|escape}" />{/if}
+ 				{/foreach}
++				{foreach from=$author.address key="thisLocale" item="thisAddress"}
++					{if $thisLocale != $formLocale}<input type="hidden" name="authors[{$authorIndex|escape}][address][{$thisLocale|escape}]" value="{$thisAddress|escape}" />{/if}
++				{/foreach}
+ 			{/foreach}
+ 			{form_language_chooser form="submit" url=$quickSubmitUrl}
+ 			<span class="instruct">{translate key="form.formLanguage.description"}</span>
+@@ -240,6 +243,10 @@ function updateAbstractRequired() {
+ 				<td width="70%" class="value"><textarea name="authors[{$authorIndex|escape}][affiliation][{$formLocale|escape}]" class="textArea" id="authors-{$authorIndex|escape}-affiliation" rows="5" cols="40">{$author.affiliation[$formLocale]|escape}</textarea></td>
+ 			</tr>
+ 			<tr valign="top">
++				<td width="30%" class="label">{fieldLabel name="authors-$authorIndex-address" key="common.mailingAddress"}</td>
++				<td width="70%" class="value"><textarea name="authors[{$authorIndex|escape}][address][{$formLocale|escape}]" class="textArea" id="authors-{$authorIndex|escape}-address" rows="5" cols="40">{$author.address[$formLocale]|escape}</textarea></td>
++			</tr>
++			<tr valign="top">
+ 				<td width="30%" class="label">{fieldLabel name="authors-$authorIndex-country" key="common.country"}</td>
+ 				<td width="70%" class="value">
+ 					<select name="authors[{$authorIndex|escape}][country]" id="authors-{$authorIndex|escape}-country" class="selectMenu">
+@@ -297,6 +304,10 @@ function updateAbstractRequired() {
+ 				<td width="70%" class="value"><textarea name="authors[0][affiliation][{$formLocale|escape}]" class="textArea" id="authors-0-affiliation" rows="5" cols="40"></textarea></td>
+ 			</tr>
+ 			<tr valign="top">
++				<td width="30%" class="label">{fieldLabel name="authors-0-address" key="common.mailingAddress"}</td>
++				<td width="70%" class="value"><textarea name="authors[0][address][{$formLocale|escape}]" class="textArea" id="authors-0-address" rows="5" cols="40"></textarea></td>
++			</tr>
++			<tr valign="top">
+ 				<td width="30%" class="label">{fieldLabel name="authors-0-country" key="common.country"}</td>
+ 				<td width="70%" class="value">
+ 					<select name="authors[0][country]" id="authors-0-country" class="selectMenu">
+diff --git a/plugins/reports/articles/ArticleReportDAO.inc.php b/plugins/reports/articles/ArticleReportDAO.inc.php
+index f82bea2..cd84bb7 100644
+--- a/plugins/reports/articles/ArticleReportDAO.inc.php
++++ b/plugins/reports/articles/ArticleReportDAO.inc.php
+@@ -101,13 +101,16 @@ class ArticleReportDAO extends DAO {
+ 					aa.country AS country,
+ 					aa.url AS url,
+ 					COALESCE(aasl.setting_value, aas.setting_value) AS biography,
+-					COALESCE(aaasl.setting_value, aaas.setting_value) AS affiliation
++					COALESCE(aaasl.setting_value, aaas.setting_value) AS affiliation,
++					COALESCE(aaaasl.setting_value, aaaas.setting_value) AS address
+ 				FROM	authors aa
+ 					LEFT JOIN articles a ON (aa.submission_id = a.article_id)
+ 					LEFT JOIN author_settings aas ON (aa.author_id = aas.author_id AND aas.setting_name = ? AND aas.locale = ?)
+ 					LEFT JOIN author_settings aasl ON (aa.author_id = aasl.author_id AND aasl.setting_name = ? AND aasl.locale = ?)
+ 					LEFT JOIN author_settings aaas ON (aa.author_id = aaas.author_id AND aaas.setting_name = ? AND aaas.locale = ?)
+ 					LEFT JOIN author_settings aaasl ON (aa.author_id = aaasl.author_id AND aaasl.setting_name = ? AND aaasl.locale = ?)
++					LEFT JOIN author_settings aaaas ON (aa.author_id = aaaas.author_id AND aaaas.setting_name = ? AND aaaas.locale = ?)
++					LEFT JOIN author_settings aaaasl ON (aa.author_id = aaaasl.author_id AND aaaasl.setting_name = ? AND aaaasl.locale = ?)
+ 				WHERE
+ 					a.journal_id = ? AND
+ 					aa.submission_id = ?',
+@@ -120,6 +123,10 @@ class ArticleReportDAO extends DAO {
+ 					$primaryLocale,
+ 					'affiliation',
+ 					$locale,
++					'address',
++					$primaryLocale,
++					'address',
++					$locale,
+ 					$journalId,
+ 					$article->getId()
+ 				)
+diff --git a/plugins/reports/articles/ArticleReportPlugin.inc.php b/plugins/reports/articles/ArticleReportPlugin.inc.php
+index 2cc979e..9773a7d 100644
+--- a/plugins/reports/articles/ArticleReportPlugin.inc.php
++++ b/plugins/reports/articles/ArticleReportPlugin.inc.php
+@@ -5,7 +5,7 @@
+  *
+  * Copyright (c) 2003-2011 John Willinsky
+  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+- * 
++ *
+  * @class ArticleReportPlugin
+  * @ingroup plugins_reports_article
+  *
+@@ -86,7 +86,7 @@ class ArticleReportPlugin extends ReportPlugin {
+ 			'title' => Locale::translate('article.title'),
+ 			'abstract' => Locale::translate('article.abstract')
+ 		);
+-			
++
+ 		for ($a = 1; $a <= $maxAuthors; $a++) {
+ 			$columns = array_merge($columns, array(
+ 				'fname' . $a => Locale::translate('user.firstName') . " (" . Locale::translate('user.role.author') . " $a)",
+@@ -96,10 +96,11 @@ class ArticleReportPlugin extends ReportPlugin {
+ 				'affiliation' . $a => Locale::translate('user.affiliation') . " (" . Locale::translate('user.role.author') . " $a)",
+ 				'email' . $a => Locale::translate('user.email') . " (" . Locale::translate('user.role.author') . " $a)",
+ 				'url' . $a => Locale::translate('user.url') . " (" . Locale::translate('user.role.author') . " $a)",
+-				'biography' . $a => Locale::translate('user.biography') . " (" . Locale::translate('user.role.author') . " $a)"
++				'biography' . $a => Locale::translate('user.biography') . " (" . Locale::translate('user.role.author') . " $a)",
++				'address' . $a => Locale::translate('common.mailingAddress') . " (" . Locale::translate('user.role.author') . " $a)"
+ 			));
+ 		}
+-			
++
+ 		$columns = array_merge($columns, array(
+ 			'section_title' => Locale::translate('section.title'),
+ 			'language' => Locale::translate('common.language'),
+@@ -143,10 +144,10 @@ class ArticleReportPlugin extends ReportPlugin {
+ 			unset($row);
+ 			$authorIndex++;
+ 		}
+-		
++
+ 		fclose($fp);
+ 	}
+-	
++
+ 	/**
+ 	 * Get the highest author count for any article (to determine how many columns to set)
+ 	 * @param $authorsIterator DBRowIterator
+@@ -159,7 +160,7 @@ class ArticleReportPlugin extends ReportPlugin {
+ 		}
+ 		return $maxAuthors;
+ 	}
+-	
++
+ 	/**
+ 	 * Flatten an array of author information into one array and append author sequence to each key
+ 	 * @param $authors array
+@@ -170,7 +171,7 @@ class ArticleReportPlugin extends ReportPlugin {
+ 		$seq = 0;
+ 		foreach($authors as $author) {
+ 			$seq++;
+-			
++
+ 			$returner['fname' . $seq] = isset($author['fname']) ? $author['fname'] : '';
+ 			$returner['mname' . $seq] = isset($author['mname']) ? $author['mname'] : '';
+ 			$returner['lname' . $seq] = isset($author['lname']) ? $author['lname'] : '';
+@@ -179,6 +180,7 @@ class ArticleReportPlugin extends ReportPlugin {
+ 			$returner['country' . $seq] = isset($author['country']) ? $author['country'] : '';
+ 			$returner['url' . $seq] = isset($author['url']) ? $author['url'] : '';
+ 			$returner['biography' . $seq] = isset($author['biography']) ? $author['biography'] : '';
++			$returner['address' . $seq] = isset($author['address']) ? $author['address'] : '';
+ 		}
+ 		return $returner;
+ 	}
+diff --git a/templates/author/submit/step3.tpl b/templates/author/submit/step3.tpl
+index 7b566cc..ab92872 100644
+--- a/templates/author/submit/step3.tpl
++++ b/templates/author/submit/step3.tpl
+@@ -54,6 +54,9 @@ function moveAuthor(dir, authorIndex) {
+ 				{foreach from=$author.affiliation key="thisLocale" item="thisAffiliation"}
+ 					{if $thisLocale != $formLocale}<input type="hidden" name="authors[{$authorIndex|escape}][affiliation][{$thisLocale|escape}]" value="{$thisAffiliation|escape}" />{/if}
+ 				{/foreach}
++				{foreach from=$author.address key="thisLocale" item="thisAddress"}
++					{if $thisLocale != $formLocale}<input type="hidden" name="authors[{$authorIndex|escape}][address][{$thisLocale|escape}]" value="{$thisAddress|escape}" />{/if}
++				{/foreach}
+ 			{/foreach}
+ 			{form_language_chooser form="submit" url=$submitFormUrl}
+ 			<span class="instruct">{translate key="form.formLanguage.description"}</span>
+@@ -106,6 +109,12 @@ function moveAuthor(dir, authorIndex) {
+ 	</td>
+ </tr>
+ <tr valign="top">
++	<td width="20%" class="label">{fieldLabel name="authors-$authorIndex-address" required="true" key="common.mailingAddress"}</td>
++	<td width="80%" class="value">
++		<textarea name="authors[{$authorIndex|escape}][address][{$formLocale|escape}]" class="textArea" id="authors-{$authorIndex|escape}-address" rows="5" cols="40">{$author.address[$formLocale]|escape}</textarea><br/>
++	</td>
++</tr>
++<tr valign="top">
+ 	<td width="20%" class="label">{fieldLabel name="authors-$authorIndex-country" key="common.country"}</td>
+ 	<td width="80%" class="value">
+ 		<select name="authors[{$authorIndex|escape}][country]" id="authors-{$authorIndex|escape}-country" class="selectMenu">
+diff --git a/templates/submission/metadata/metadata.tpl b/templates/submission/metadata/metadata.tpl
+index 07dae40..a1ee12e 100644
+--- a/templates/submission/metadata/metadata.tpl
++++ b/templates/submission/metadata/metadata.tpl
+@@ -16,7 +16,7 @@
+ 
+ <div id="authors">
+ <h4>{translate key="article.authors"}</h4>
+-	
++
+ <table width="100%" class="data">
+ 	{foreach name=authors from=$submission->getAuthors() item=author}
+ 	<tr valign="top">
+@@ -38,6 +38,10 @@
+ 		<td class="value">{$author->getLocalizedAffiliation()|escape|nl2br|default:"&mdash;"}</td>
+ 	</tr>
+ 	<tr valign="top">
++		<td class="label">{translate key="common.mailingAddress"}</td>
++		<td class="value">{$author->getLocalizedAddress()|escape|nl2br|default:"&mdash;"}</td>
++	</tr>
++	<tr valign="top">
+ 		<td class="label">{translate key="common.country"}</td>
+ 		<td class="value">{$author->getCountryLocalized()|escape|default:"&mdash;"}</td>
+ 	</tr>
+@@ -89,7 +93,7 @@
+ 
+ <div id="indexing">
+ <h4>{translate key="submission.indexing"}</h4>
+-	
++
+ <table width="100%" class="data">
+ 	{if $currentJournal->getSetting('metaDiscipline')}
+ 		<tr valign="top">
+@@ -159,7 +163,7 @@
+ 
+ <div id="supportingAgencies">
+ <h4>{translate key="submission.supportingAgencies"}</h4>
+-	
++
+ <table width="100%" class="data">
+ 	<tr valign="top">
+ 		<td width="20%" class="label">{translate key="submission.agencies"}</td>
+diff --git a/templates/submission/metadata/metadataEdit.tpl b/templates/submission/metadata/metadataEdit.tpl
+index 9ef4f11..b9fa0ae 100644
+--- a/templates/submission/metadata/metadataEdit.tpl
++++ b/templates/submission/metadata/metadataEdit.tpl
+@@ -53,6 +53,9 @@ function moveAuthor(dir, authorIndex) {
+ 				{foreach from=$author.affiliation key="thisLocale" item="thisAffiliation"}
+ 					{if $thisLocale != $formLocale}<input type="hidden" name="authors[{$authorIndex|escape}][affiliation][{$thisLocale|escape}]" value="{$thisAffiliation|escape}" />{/if}
+ 				{/foreach}
++				{foreach from=$author.address key="thisLocale" item="thisAddress"}
++					{if $thisLocale != $formLocale}<input type="hidden" name="authors[{$authorIndex|escape}][address][{$thisLocale|escape}]" value="{$thisAddress|escape}" />{/if}
++				{/foreach}
+ 			{/foreach}
+ 			{form_language_chooser form="metadata" url=$formUrl}
+ 			<span class="instruct">{translate key="form.formLanguage.description"}</span>
+@@ -107,6 +110,12 @@ function moveAuthor(dir, authorIndex) {
+ 		</td>
+ 	</tr>
+ 	<tr valign="top">
++		<td class="label">{fieldLabel name="authors-$authorIndex-address" required="true" key="common.mailingAddress"}</td>
++		<td class="value">
++			<textarea name="authors[{$authorIndex|escape}][address][{$formLocale|escape}]" class="textArea" id="authors-{$authorIndex|escape}-address" rows="5" cols="40">{$author.address[$formLocale]|escape}</textarea><br/>
++		</td>
++	</tr>
++	<tr valign="top">
+ 		<td class="label">{fieldLabel name="authors-$authorIndex-country" key="common.country"}</td>
+ 		<td class="value">
+ 			<select name="authors[{$authorIndex|escape}][country]" id="authors-{$authorIndex|escape}-country" class="selectMenu">

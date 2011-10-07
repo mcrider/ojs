@@ -64,6 +64,9 @@ function updateAbstractRequired() {
 				{foreach from=$author.affiliation key="thisLocale" item="thisAffiliation"}
 					{if $thisLocale != $formLocale}<input type="hidden" name="authors[{$authorIndex|escape}][affiliation][{$thisLocale|escape}]" value="{$thisAffiliation|escape}" />{/if}
 				{/foreach}
+				{foreach from=$author.address key="thisLocale" item="thisAddress"}
+					{if $thisLocale != $formLocale}<input type="hidden" name="authors[{$authorIndex|escape}][address][{$thisLocale|escape}]" value="{$thisAddress|escape}" />{/if}
+				{/foreach}
 			{/foreach}
 			{form_language_chooser form="submit" url=$quickSubmitUrl}
 			<span class="instruct">{translate key="form.formLanguage.description"}</span>
@@ -240,6 +243,10 @@ function updateAbstractRequired() {
 				<td width="70%" class="value"><textarea name="authors[{$authorIndex|escape}][affiliation][{$formLocale|escape}]" class="textArea" id="authors-{$authorIndex|escape}-affiliation" rows="5" cols="40">{$author.affiliation[$formLocale]|escape}</textarea></td>
 			</tr>
 			<tr valign="top">
+				<td width="30%" class="label">{fieldLabel name="authors-$authorIndex-address" key="common.mailingAddress"}</td>
+				<td width="70%" class="value"><textarea name="authors[{$authorIndex|escape}][address][{$formLocale|escape}]" class="textArea" id="authors-{$authorIndex|escape}-address" rows="5" cols="40">{$author.address[$formLocale]|escape}</textarea></td>
+			</tr>
+			<tr valign="top">
 				<td width="30%" class="label">{fieldLabel name="authors-$authorIndex-country" key="common.country"}</td>
 				<td width="70%" class="value">
 					<select name="authors[{$authorIndex|escape}][country]" id="authors-{$authorIndex|escape}-country" class="selectMenu">
@@ -295,6 +302,10 @@ function updateAbstractRequired() {
 			<tr valign="top">
 				<td width="30%" class="label">{fieldLabel name="authors-0-affiliation" key="user.affiliation"}</td>
 				<td width="70%" class="value"><textarea name="authors[0][affiliation][{$formLocale|escape}]" class="textArea" id="authors-0-affiliation" rows="5" cols="40"></textarea></td>
+			</tr>
+			<tr valign="top">
+				<td width="30%" class="label">{fieldLabel name="authors-0-address" key="common.mailingAddress"}</td>
+				<td width="70%" class="value"><textarea name="authors[0][address][{$formLocale|escape}]" class="textArea" id="authors-0-address" rows="5" cols="40"></textarea></td>
 			</tr>
 			<tr valign="top">
 				<td width="30%" class="label">{fieldLabel name="authors-0-country" key="common.country"}</td>

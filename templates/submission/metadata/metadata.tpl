@@ -16,7 +16,7 @@
 
 <div id="authors">
 <h4>{translate key="article.authors"}</h4>
-	
+
 <table width="100%" class="data">
 	{foreach name=authors from=$submission->getAuthors() item=author}
 	<tr valign="top">
@@ -36,6 +36,10 @@
 	<tr valign="top">
 		<td class="label">{translate key="user.affiliation"}</td>
 		<td class="value">{$author->getLocalizedAffiliation()|escape|nl2br|default:"&mdash;"}</td>
+	</tr>
+	<tr valign="top">
+		<td class="label">{translate key="common.mailingAddress"}</td>
+		<td class="value">{$author->getLocalizedAddress()|escape|nl2br|default:"&mdash;"}</td>
 	</tr>
 	<tr valign="top">
 		<td class="label">{translate key="common.country"}</td>
@@ -89,7 +93,7 @@
 
 <div id="indexing">
 <h4>{translate key="submission.indexing"}</h4>
-	
+
 <table width="100%" class="data">
 	{if $currentJournal->getSetting('metaDiscipline')}
 		<tr valign="top">
@@ -159,7 +163,7 @@
 
 <div id="supportingAgencies">
 <h4>{translate key="submission.supportingAgencies"}</h4>
-	
+
 <table width="100%" class="data">
 	<tr valign="top">
 		<td width="20%" class="label">{translate key="submission.agencies"}</td>

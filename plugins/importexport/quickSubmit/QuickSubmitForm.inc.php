@@ -240,6 +240,9 @@ class QuickSubmitForm extends Form {
 					$author->setCompetingInterests($authors[$i]['competingInterests'], null);
 				}
 				$author->setBiography($authors[$i]['biography'], null);
+				if (array_key_exists('address', $authors[$i])) {
+					$author->setAddress($authors[$i]['address'], null);
+				}
 				$author->setPrimaryContact($this->getData('primaryContact') == $i ? 1 : 0);
 				$author->setSequence($authors[$i]['seq']);
 

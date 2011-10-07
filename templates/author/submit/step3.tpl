@@ -54,6 +54,9 @@ function moveAuthor(dir, authorIndex) {
 				{foreach from=$author.affiliation key="thisLocale" item="thisAffiliation"}
 					{if $thisLocale != $formLocale}<input type="hidden" name="authors[{$authorIndex|escape}][affiliation][{$thisLocale|escape}]" value="{$thisAffiliation|escape}" />{/if}
 				{/foreach}
+				{foreach from=$author.address key="thisLocale" item="thisAddress"}
+					{if $thisLocale != $formLocale}<input type="hidden" name="authors[{$authorIndex|escape}][address][{$thisLocale|escape}]" value="{$thisAddress|escape}" />{/if}
+				{/foreach}
 			{/foreach}
 			{form_language_chooser form="submit" url=$submitFormUrl}
 			<span class="instruct">{translate key="form.formLanguage.description"}</span>
@@ -103,6 +106,12 @@ function moveAuthor(dir, authorIndex) {
 	<td width="80%" class="value">
 		<textarea name="authors[{$authorIndex|escape}][affiliation][{$formLocale|escape}]" class="textArea" id="authors-{$authorIndex|escape}-affiliation" rows="5" cols="40">{$author.affiliation[$formLocale]|escape}</textarea><br/>
 		<span class="instruct">{translate key="user.affiliation.description"}</span>
+	</td>
+</tr>
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="authors-$authorIndex-address" required="true" key="common.mailingAddress"}</td>
+	<td width="80%" class="value">
+		<textarea name="authors[{$authorIndex|escape}][address][{$formLocale|escape}]" class="textArea" id="authors-{$authorIndex|escape}-address" rows="5" cols="40">{$author.address[$formLocale]|escape}</textarea><br/>
 	</td>
 </tr>
 <tr valign="top">
