@@ -112,6 +112,14 @@ class UserManagementForm extends Form {
 			)
 		);
 
+		$interestsKeywords = $this->getData('interestsKeywords');
+		if (is_array($interestsKeywords)) {
+			// We need to re-display the interests (most likely due to a form error)
+			import('lib.pkp.classes.core.JSON');
+			$json = new JSON();
+			$this->setData('interestsKeywords', $json->json_encode($interestsKeywords));
+		}
+
 		// Send implicitAuth setting down to template
 		$templateMgr->assign('implicitAuth', Config::getVar('security', 'implicit_auth'));
 
@@ -140,19 +148,13 @@ class UserManagementForm extends Form {
 	 * Initialize form data from current user profile.
 	 */
 	function initData(&$args, &$request) {
-		$interestDao =& DAORegistry::getDAO('InterestDAO');
 		if (isset($this->userId)) {
 			$userDao =& DAORegistry::getDAO('UserDAO');
 			$user =& $userDao->getUser($this->userId);
 
 			// Get all available interests to populate the autocomplete with
-			if ($interestDao->getAllUniqueInterests()) {
-				$existingInterests = $interestDao->getAllUniqueInterests();
-			} else $existingInterests = null;
-			// Get the user's current set of interests
-			if ($interestDao->getInterests($user->getId())) {
-				$currentInterests = $interestDao->getInterests($user->getId());
-			} else $currentInterests = null;
+			$interestDao =& DAORegistry::getDAO('InterestDAO');
+			$existingInterests = $interestDao->getAllInterests(true);
 
 			if ($user != null) {
 				$this->_data = array(
@@ -174,7 +176,8 @@ class UserManagementForm extends Form {
 					'country' => $user->getCountry(),
 					'biography' => $user->getBiography(null), // Localized
 					'existingInterests' => $existingInterests,
-					'interestsKeywords' => $currentInterests,
+					'interestsKeywords' => $user->getInterests(true),
+					'interestsTextOnly' => $user->getInterests(false, true),
 					'gossip' => $user->getGossip(null), // Localized
 					'userLocales' => $user->getLocales()
 				);
@@ -218,8 +221,8 @@ class UserManagementForm extends Form {
 			'mailingAddress',
 			'country',
 			'biography',
+			'interestsTextOnly',
 			'interestsKeywords',
-			'interests',
 			'gossip',
 			'userLocales',
 			'generatePassword',
@@ -370,9 +373,9 @@ class UserManagementForm extends Form {
 			}
 		}
 
-		import('lib.pkp.classes.user.InterestManager');
-		$interestManager = new InterestManager();
-		$interestManager->insertInterests($userId, $this->getData('interestsKeywords'), $this->getData('interests'));
+		// Insert the user interests
+		$interests = $this->getData('interestsKeywords') ? $this->getData('interestsKeywords') : $this->getData('interestsTextOnly');
+		$user->setInterests($interests);
 	}
 }
 

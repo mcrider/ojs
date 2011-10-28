@@ -17,19 +17,14 @@
 {literal}
 
 <script type="text/javascript">
-	$(document).ready(function(){
-		$("#interestsTextOnly").hide();
-		$("#interests").tagit({
-			{/literal}{if $existingInterests}{literal}
-			// This is the list of interests in the system used to populate the autocomplete
-			availableTags: [{/literal}{foreach name=existingInterests from=$existingInterests item=interest}"{$interest|escape|escape:'javascript'}"{if !$smarty.foreach.existingInterests.last}, {/if}{/foreach}{literal}],{/literal}{/if}
-			// This is the list of the user's interests that have already been saved
-			{if $interestsKeywords}{literal}currentTags: [{/literal}{foreach name=currentInterests from=$interestsKeywords item=interest}"{$interest|escape|escape:'javascript'}"{if !$smarty.foreach.currentInterests.last}, {/if}{/foreach}{literal}]{/literal}
-			{else}{literal}currentTags: []{/literal}{/if}{literal}
-		});
-	});
+	$(document).ready(function(){ldelim}
+		$("#interestsTextOnly").html(null).hide();
+		$("#interests").tagit({ldelim}
+			{if $existingInterests}availableTags: {$existingInterests},{/if}
+			currentTags: {$interestsKeywords}
+		{rdelim});
+	{rdelim});
 </script>
-{/literal}
 
 <form name="profile" method="post" action="{url op="saveProfile"}" enctype="multipart/form-data">
 
@@ -141,9 +136,7 @@
 		<!-- The container which will be processed by tag-it.js as the interests widget -->
 		<ul id="interests"><li></li></ul><span class="interestDescription">{fieldLabel for="interests" key="user.interests.description"}</span><br />
 		<!-- If Javascript is disabled, this field will be visible -->
-		<textarea name="interests" id="interestsTextOnly" rows="5" cols="40" class="textArea">
-			{foreach name=currentInterests from=$interestsKeywords item=interest}{$interest|escape}{if !$smarty.foreach.currentInterests.last}, {/if}{/foreach}
-		</textarea>
+		<textarea name="interestsTextOnly" id="interestsTextOnly" rows="5" cols="40" class="textArea">{$interestsTextOnly|escape}</textarea>
 	</td>
 </tr>
 <tr valign="top">

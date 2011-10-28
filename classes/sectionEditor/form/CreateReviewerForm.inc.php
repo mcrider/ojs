@@ -75,11 +75,17 @@ class CreateReviewerForm extends Form {
 		$countries =& $countryDao->getCountries();
 		$templateMgr->assign_by_ref('countries', $countries);
 
-		$interestDao =& DAORegistry::getDAO('InterestDAO');
+		$interestsKeywords = $this->getData('interestsKeywords');
+		if (is_array($interestsKeywords)) {
+			// We need to re-display the interests (most likely due to a form error)
+			import('lib.pkp.classes.core.JSON');
+			$json = new JSON();
+			$this->setData('interestsKeywords', $json->json_encode($interestsKeywords));
+		}
+
 		// Get all available interests to populate the autocomplete with
-		if ($interestDao->getAllUniqueInterests()) {
-			$existingInterests = $interestDao->getAllUniqueInterests();
-		} else $existingInterests = null;
+		$interestDao =& DAORegistry::getDAO('InterestDAO');
+		$existingInterests = $interestDao->getAllInterests(true);
 		$templateMgr->assign('existingInterests', $existingInterests);
 
 		parent::display();
@@ -104,7 +110,7 @@ class CreateReviewerForm extends Form {
 			'mailingAddress',
 			'country',
 			'biography',
-			'interests',
+			'interestsTextOnly',
 			'interestsKeywords',
 			'gossip',
 			'userLocales',
@@ -122,8 +128,8 @@ class CreateReviewerForm extends Form {
 		}
 
 		$interests = $this->getData('interestsKeywords');
-		if ($interests != null && is_array($interests)) {
-			// The interests are coming in encoded -- Decode them for DB storage
+		if($interests != null && is_array($interests)) {
+			// The interests are coming in encoded -- decode them for DB storage
 			$this->setData('interestsKeywords', array_map('urldecode', $interests));
 		}
 	}
@@ -186,9 +192,8 @@ class CreateReviewerForm extends Form {
 		$userId = $userDao->insertUser($user);
 
 		// Insert the user interests
-		import('lib.pkp.classes.user.InterestManager');
-		$interestManager = new InterestManager();
-		$interestManager->insertInterests($userId, $this->getData('interestsKeywords'), $this->getData('interests'));
+		$interests = $this->getData('interestsKeywords') ? $this->getData('interestsKeywords') : $this->getData('interestsTextOnly');
+		$user->setInterests($interests);
 
 		$roleDao =& DAORegistry::getDAO('RoleDAO');
 		$journal =& Request::getJournal();

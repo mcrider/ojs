@@ -16,9 +16,6 @@
  * @brief Form for user registration.
  */
 
-// $Id$
-
-
 import('lib.pkp.classes.form.Form');
 
 class RegistrationForm extends Form {
@@ -121,6 +118,19 @@ class RegistrationForm extends Form {
 		$templateMgr->assign('allowRegReviewer', $journal->getSetting('allowRegReviewer'));
 		$templateMgr->assign('source', Request::getUserVar('source'));
 
+		// Get all available interests to populate the autocomplete with
+		$interestDao =& DAORegistry::getDAO('InterestDAO');
+		$existingInterests = $interestDao->getAllInterests(true);
+		$this->setData('existingInterests', $existingInterests);
+
+		$interestsKeywords = $this->getData('interestsKeywords');
+		if (is_array($interestsKeywords)) {
+			// We need to re-display the interests (most likely due to a form error)
+			import('lib.pkp.classes.core.JSON');
+			$json = new JSON();
+			$this->setData('interestsKeywords', $json->json_encode($interestsKeywords));
+		}
+
 		$site =& Request::getSite();
 		$templateMgr->assign('availableLocales', $site->getSupportedLocaleNames());
 
@@ -141,13 +151,6 @@ class RegistrationForm extends Form {
 		$this->setData('existingUser', $this->existingUser);
 		$this->setData('userLocales', array());
 		$this->setData('sendPassword', 1);
-
-		$interestDao =& DAORegistry::getDAO('InterestDAO');
-		// Get all available interests to populate the autocomplete with
-		if ($interestDao->getAllUniqueInterests()) {
-			$existingInterests = $interestDao->getAllUniqueInterests();
-		} else $existingInterests = null;
-		$this->setData('existingInterests', $existingInterests);
 	}
 
 	/**
@@ -159,13 +162,21 @@ class RegistrationForm extends Form {
 			'salutation', 'firstName', 'middleName', 'lastName',
 			'gender', 'initials', 'country',
 			'affiliation', 'email', 'confirmEmail', 'userUrl', 'phone', 'fax', 'signature',
-			'mailingAddress', 'biography', 'interests', 'interestsKeywords', 'userLocales',
+			'mailingAddress', 'biography', 'interestsTextOnly', 'interestsKeywords', 'userLocales',
 			'registerAsReader', 'openAccessNotification', 'registerAsAuthor',
 			'registerAsReviewer', 'existingUser', 'sendPassword'
 		);
 		if ($this->captchaEnabled) {
 			$userVars[] = 'captchaId';
 			$userVars[] = 'captcha';
+		}
+
+		$interestsKeywords = $this->getData('interestsKeywords');
+		if (is_array($interestsKeywords)) {
+			// We need to re-display the interests (most likely due to a form error)
+			import('lib.pkp.classes.core.JSON');
+			$json = new JSON();
+			$this->setData('interestsKeywords', $json->json_encode($interestsKeywords));
 		}
 
 		$this->readUserVars($userVars);
@@ -180,8 +191,8 @@ class RegistrationForm extends Form {
 		}
 
 		$interests = $this->getData('interestsKeywords');
-		if ($interests != null && is_array($interests)) {
-			// The interests are coming in encoded -- Decode them for DB storage
+		if($interests != null && is_array($interests)) {
+			// The interests are coming in encoded -- decode them for DB storage
 			$this->setData('interestsKeywords', array_map('urldecode', $interests));
 		}
 	}
@@ -267,9 +278,8 @@ class RegistrationForm extends Form {
 			}
 
 			// Insert the user interests
-			import('lib.pkp.classes.user.InterestManager');
-			$interestManager = new InterestManager();
-			$interestManager->insertInterests($userId, $this->getData('interestsKeywords'), $this->getData('interests'));
+			$interests = $this->getData('interestsKeywords') ? $this->getData('interestsKeywords') : $this->getData('interestsTextOnly');
+			$user->setInterests($interests);
 
 			$sessionManager =& SessionManager::getManager();
 			$session =& $sessionManager->getUserSession();

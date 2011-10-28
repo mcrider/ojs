@@ -13,21 +13,15 @@
 {include file="common/header.tpl"}
 {/strip}
 
-{literal}
 <script type="text/javascript">
-	$(document).ready(function(){
-		$("#interestsTextOnly").hide();
-		$("#interests").tagit({
-			{/literal}{if $existingInterests}{literal}
-			// This is the list of interests in the system used to populate the autocomplete
-			availableTags: [{/literal}{foreach name=existingInterests from=$existingInterests item=interest}"{$interest|escape|escape:'javascript'}"{if !$smarty.foreach.existingInterests.last}, {/if}{/foreach}{literal}],{/literal}{/if}
-			// This is the list of the user's interests that have already been saved
-			{if $interestsKeywords}{literal}currentTags: [{/literal}{foreach name=currentInterests from=$interestsKeywords item=interest}"{$interest|escape|escape:'javascript'}"{if !$smarty.foreach.currentInterests.last}, {/if}{/foreach}{literal}]{/literal}
-			{else}{literal}currentTags: []{/literal}{/if}{literal}
-		});
-	});
+	$(document).ready(function(){ldelim}
+		$("#interestsTextOnly").html(null).hide();
+		$("#interests").tagit({ldelim}
+			{if $existingInterests}availableTags: {$existingInterests},{/if}
+			currentTags: {if $interestsKeywords}{$interestsKeywords}{else}[]{/if}
+		{rdelim});
+	{rdelim});
 </script>
-{/literal}
 
 <form name="register" method="post" action="{url op="registerUser"}">
 
@@ -226,7 +220,7 @@
 		<br /><div id="reviewerInterestsContainer" style="margin-left:25px;">
 			<label class="desc">{translate key="user.register.reviewerInterests"}</label>
 			<ul id="interests"><li></li></ul><span class="interestDescription">{fieldLabel for="interests" key="user.interests.description"}</span>
-			<textarea name="interests" id="interestsTextOnly" rows="5" cols="40" class="textArea">
+			<textarea name="interestsTextOnly" id="interestsTextOnly" rows="5" cols="40" class="textArea">
 					{foreach name=currentInterests from=$interestsKeywords item=interest}{$interest|escape}{if !$smarty.foreach.currentInterests.last}, {/if}{/foreach}
 			</textarea>
 		</div>
