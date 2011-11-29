@@ -16,9 +16,12 @@
 <script type="text/javascript">
 	$(document).ready(function(){ldelim}
 		$("#interestsTextOnly").html(null).hide();
+		$(".interestDescription").show();
 		$("#interests").tagit({ldelim}
-			{if $existingInterests}availableTags: {$existingInterests},{/if}
-			currentTags: {if $interestsKeywords}{$interestsKeywords}{else}[]{/if}
+			itemName: "keywords",
+			fieldName: "interests",
+			allowSpaces: true,
+			availableTags: [{foreach name=existingInterests from=$existingInterests item=interest}"{$interest|escape}"{if !$smarty.foreach.existingInterests.last},{/if}{/foreach}]
 		{rdelim});
 	{rdelim});
 </script>
@@ -128,7 +131,14 @@
 	</tr>
 	<tr valign="top">
 		<td class="label">{fieldLabel for="interests" key="user.interests"}</td>
-		<td class="value"><ul id="interests"><li></li></ul><span class="interestDescription">{fieldLabel for="interests" key="user.interests.description"}</span><br /><textarea name="interestsTextOnly" id="interestsTextOnly" rows="5" cols="40" class="textArea">{$interestsTextOnly|escape}</textarea></td>
+		<td class="value">
+			<!-- The container which will be processed by tag-it.js as the interests widget -->
+			<ul id="interests">
+				{if $interestsKeywords}{foreach from=$interestsKeywords item=interest}<li class="hidden">{$interest|escape}</li>{/foreach}{/if}
+			</ul><span class="interestDescription hidden">{fieldLabel for="interests" key="user.interests.description"}</span><br />
+			<!-- If Javascript is disabled, this field will be visible -->
+			<textarea name="interestsTextOnly" id="interestsTextOnly" rows="5" cols="40" class="textArea">{$interestsTextOnly|escape}</textarea>
+		</td>
 	</tr>
 	<tr valign="top">
 		<td class="label">{fieldLabel name="gossip" key="user.gossip"}</td>

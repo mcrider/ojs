@@ -16,9 +16,12 @@
 <script type="text/javascript">
 	$(document).ready(function(){ldelim}
 		$("#interestsTextOnly").html(null).hide();
+		$(".interestDescription").show();
 		$("#interests").tagit({ldelim}
-			{if $existingInterests}availableTags: {$existingInterests},{/if}
-			currentTags: {if $interestsKeywords}{$interestsKeywords}{else}[]{/if}
+			itemName: "keywords",
+			fieldName: "interests",
+			allowSpaces: true,
+			availableTags: [{foreach name=existingInterests from=$existingInterests item=interest}"{$interest|escape}"{if !$smarty.foreach.existingInterests.last},{/if}{/foreach}]
 		{rdelim});
 	{rdelim});
 </script>
@@ -219,10 +222,12 @@
 		{if $allowRegReviewer || $allowRegReviewer === null}<input type="checkbox" name="registerAsReviewer" id="registerAsReviewer" value="1"{if $registerAsReviewer} checked="checked"{/if} /> <label for="registerAsReviewer">{translate key="user.role.reviewer"}</label>: {if $existingUser}{translate key="user.register.reviewerDescriptionNoInterests"}{else}{translate key="user.register.reviewerDescription"}{/if}{/if}
 		<br /><div id="reviewerInterestsContainer" style="margin-left:25px;">
 			<label class="desc">{translate key="user.register.reviewerInterests"}</label>
-			<ul id="interests"><li></li></ul><span class="interestDescription">{fieldLabel for="interests" key="user.interests.description"}</span>
-			<textarea name="interestsTextOnly" id="interestsTextOnly" rows="5" cols="40" class="textArea">
-					{foreach name=currentInterests from=$interestsKeywords item=interest}{$interest|escape}{if !$smarty.foreach.currentInterests.last}, {/if}{/foreach}
-			</textarea>
+			<!-- The container which will be processed by tag-it.js as the interests widget -->
+			<ul id="interests">
+				{if $interestsKeywords}{foreach from=$interestsKeywords item=interest}<li class="hidden">{$interest|escape}</li>{/foreach}{/if}
+			</ul><span class="interestDescription hidden">{fieldLabel for="interests" key="user.interests.description"}</span><br />
+			<!-- If Javascript is disabled, this field will be visible -->
+			<textarea name="interestsTextOnly" id="interestsTextOnly" rows="5" cols="40" class="textArea"></textarea>
 		</div>
 		</td>
 	</tr>

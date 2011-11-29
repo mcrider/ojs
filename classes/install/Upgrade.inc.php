@@ -762,6 +762,7 @@ class Upgrade extends Installer {
 		$idempotenceCheck =& $interestDao->retrieve('SELECT * FROM controlled_vocabs cv WHERE symbolic = ?', array('interest'));
 		$row = $idempotenceCheck->GetRowAssoc(false);
 		if ($idempotenceCheck->RecordCount() == 1 && $row['assoc_id'] == 0 && $row['assoc_type'] == 0) return true;
+		unset($idempotenceCheck);
 
 		// Get all interests for all users
 		$result =& $interestDao->retrieve('SELECT cves.setting_value as interest_keyword, cv.assoc_id as user_id
@@ -774,9 +775,9 @@ class Upgrade extends Installer {
 		$oldEntries =& $interestDao->retrieve('SELECT controlled_vocab_entry_id FROM controlled_vocab_entry_settings cves WHERE cves.setting_name = ?', array('interest'));
 		while (!$oldEntries->EOF) {
 			$row = $oldEntries->GetRowAssoc(false);
-			$controlled_vocab_entry_id = (int) $row['controlled_vocab_entry_id'];
-			$interestDao->update('DELETE FROM controlled_vocab_entries WHERE controlled_vocab_entry_id = ?', array($controlled_vocab_entry_id));
-			$interestDao->update('DELETE FROM controlled_vocab_entry_settings WHERE controlled_vocab_entry_id = ?', array($controlled_vocab_entry_id));
+			$controlledVocabEntryId = (int) $row['controlled_vocab_entry_id'];
+			$interestDao->update('DELETE FROM controlled_vocab_entries WHERE controlled_vocab_entry_id = ?', $controlledVocabEntryId);
+			$interestDao->update('DELETE FROM controlled_vocab_entry_settings WHERE controlled_vocab_entry_id = ?', $controlledVocabEntryId);
 			$oldEntries->MoveNext();
 		}
 
@@ -790,15 +791,15 @@ class Upgrade extends Installer {
 			$interest = $row['interest_keyword'];
 
 			$interestEntry = $interestEntryDao->getBySetting($interest, $controlledVocab->getSymbolic(),
-								$controlledVocab->getAssocId(), $controlledVocab->getAssocType(),
-								$controlledVocab->getSymbolic()
-							 );
+				$controlledVocab->getAssocId(), $controlledVocab->getAssocType(),
+				$controlledVocab->getSymbolic()
+			);
 
 			if(!$interestEntry) {
-				$interestEntry =& $interestEntryDao->newDataObject(); /* @var $interestEntry InterestEntry */
+				$interestEntry = $interestEntryDao->newDataObject(); /* @var $interestEntry InterestEntry */
 				$interestEntry->setInterest($interest);
 				$interestEntry->setControlledVocabId($controlledVocab->getId());
-				$interestEntry->setId($interestEntryDao->insertObject($interestEntry));
+				$interestEntryDao->insertObject($interestEntry);
 			}
 
 			$interestEntryDao->update(

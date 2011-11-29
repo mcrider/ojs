@@ -75,18 +75,10 @@ class CreateReviewerForm extends Form {
 		$countries =& $countryDao->getCountries();
 		$templateMgr->assign_by_ref('countries', $countries);
 
-		$interestsKeywords = $this->getData('interestsKeywords');
-		if (is_array($interestsKeywords)) {
-			// We need to re-display the interests (most likely due to a form error)
-			import('lib.pkp.classes.core.JSON');
-			$json = new JSON();
-			$this->setData('interestsKeywords', $json->json_encode($interestsKeywords));
-		}
-
 		// Get all available interests to populate the autocomplete with
-		$interestDao =& DAORegistry::getDAO('InterestDAO');
-		$existingInterests = $interestDao->getAllInterests(true);
-		$templateMgr->assign('existingInterests', $existingInterests);
+		import('lib.pkp.classes.user.InterestManager');
+		$interestManager = new InterestManager();
+		$templateMgr->assign('existingInterests', $interestManager->getAllInterests());
 
 		parent::display();
 	}
@@ -111,7 +103,7 @@ class CreateReviewerForm extends Form {
 			'country',
 			'biography',
 			'interestsTextOnly',
-			'interestsKeywords',
+			'keywords',
 			'gossip',
 			'userLocales',
 			'sendNotify',
@@ -127,10 +119,10 @@ class CreateReviewerForm extends Form {
 			$this->setData('username', strtolower($this->getData('username')));
 		}
 
-		$interests = $this->getData('interestsKeywords');
-		if($interests != null && is_array($interests)) {
-			// The interests are coming in encoded -- decode them for DB storage
-			$this->setData('interestsKeywords', array_map('urldecode', $interests));
+		$keywords = $this->getData('keywords');
+		if ($keywords != null && is_array($keywords['interests'])) {
+			// The interests are coming in encoded -- Decode them for DB storage
+			$this->setData('interestsKeywords', array_map('urldecode', $keywords['interests']));
 		}
 	}
 
@@ -193,7 +185,9 @@ class CreateReviewerForm extends Form {
 
 		// Insert the user interests
 		$interests = $this->getData('interestsKeywords') ? $this->getData('interestsKeywords') : $this->getData('interestsTextOnly');
-		$user->setInterests($interests);
+		import('lib.pkp.classes.user.InterestManager');
+		$interestManager = new InterestManager();
+		$interestManager->setInterestsForUser($user, $interests);
 
 		$roleDao =& DAORegistry::getDAO('RoleDAO');
 		$journal =& Request::getJournal();
