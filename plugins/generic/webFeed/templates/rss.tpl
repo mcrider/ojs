@@ -79,7 +79,7 @@
 			{/if}
 
 			{foreach from=$article->getAuthors() item=author name=authorList}
-				<dc:creator>{$author->getFullName()|strip|escape:"html"}</dc:creator>
+				<dc:creator>{$author->getLocalizedFullName()|strip|escape:"html"}</dc:creator>
 			{/foreach}
 
 			{if $article->getDatePublished()}

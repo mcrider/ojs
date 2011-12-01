@@ -299,7 +299,7 @@ class RTHandler extends ArticleHandler {
 					'volume' => $issue?$issue->getVolume():null,
 					'number' => $issue?$issue->getNumber():null,
 					'year' => $issue?$issue->getYear():null,
-					'authorName' => $primaryAuthor->getFullName(),
+					'authorName' => $primaryAuthor->getLocalizedFullName(),
 					'articleUrl' => $router->url($request, null, 'article', 'view', array($article->getBestArticleId()))
 				));
 			}
@@ -337,7 +337,7 @@ class RTHandler extends ArticleHandler {
 		if ($request->getUserVar('send') && !$email->hasErrors()) {
 			$authors =& $article->getAuthors();
 			$author =& $authors[0];
-			$email->addRecipient($author->getEmail(), $author->getFullName());
+			$email->addRecipient($author->getEmail(), $author->getLocalizedFullName());
 
 			$email->send();
 

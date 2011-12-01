@@ -16,15 +16,15 @@
 
 <div id="authors">
 <h4>{translate key="article.authors"}</h4>
-	
+
 <table width="100%" class="data">
 	{foreach name=authors from=$submission->getAuthors() item=author}
 	<tr valign="top">
 		<td width="20%" class="label">{translate key="user.name"}</td>
 		<td width="80%" class="value">
-			{assign var=emailString value=$author->getFullName()|concat:" <":$author->getEmail():">"}
+			{assign var=emailString value=$author->getLocalizedFullName()|concat:" <":$author->getEmail():">"}
 			{url|assign:"url" page="user" op="email" redirectUrl=$currentUrl to=$emailString|to_array subject=$submission->getLocalizedTitle()|strip_tags articleId=$submission->getId()}
-			{$author->getFullName()|escape} {icon name="mail" url=$url}
+			{$author->getLocalizedFullName()|escape} {icon name="mail" url=$url}
 		</td>
 	</tr>
 	{if $author->getUrl()}
@@ -89,7 +89,7 @@
 
 <div id="indexing">
 <h4>{translate key="submission.indexing"}</h4>
-	
+
 <table width="100%" class="data">
 	{if $currentJournal->getSetting('metaDiscipline')}
 		<tr valign="top">
@@ -159,7 +159,7 @@
 
 <div id="supportingAgencies">
 <h4>{translate key="submission.supportingAgencies"}</h4>
-	
+
 <table width="100%" class="data">
 	<tr valign="top">
 		<td width="20%" class="label">{translate key="submission.agencies"}</td>

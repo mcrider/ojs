@@ -664,10 +664,10 @@ class SectionEditorAction extends Action {
 			if (!$request->getUserVar('continued')) {
 				$paramArray = array(
 					'editorialContactSignature' => $user->getContactSignature(),
-					'authorName' => $author->getFullName()
+					'authorName' => $author->getLocalizedFullName()
 				);
 				$email->assignParams($paramArray);
-				$email->addRecipient($author->getEmail(), $author->getFullName());
+				$email->addRecipient($author->getEmail(), $author->getLocalizedFullName());
 			}
 			$email->displayEditForm($request->url(null, null, 'unsuitableSubmission'), array('articleId' => $sectionEditorSubmission->getId()));
 			return false;
@@ -1392,13 +1392,13 @@ class SectionEditorAction extends Action {
 			$issueDao =& DAORegistry::getDAO('IssueDAO');
 			$issue =& $issueDao->getIssueById($publishedArticle->getIssueId(), $publishedArticle->getJournalId());
 			if ($issue->getPublished()) {
-				// Insert article tombstone 
+				// Insert article tombstone
 				import('classes.article.ArticleTombstoneManager');
 				$articleTombstoneManager = new ArticleTombstoneManager();
 				$articleTombstoneManager->insertArticleTombstone($publishedArticle, $journal);
 			}
 		}
-				
+
 		$sectionEditorSubmission->setStatus(STATUS_ARCHIVED);
 		$sectionEditorSubmission->stampStatusModified();
 
@@ -1435,7 +1435,7 @@ class SectionEditorAction extends Action {
 			$sectionEditorSubmission->setStatus(STATUS_QUEUED);
 		}
 		unset($publishedArticle);
-		
+
 		$sectionEditorSubmission->stampStatusModified();
 
 		$sectionEditorSubmissionDao->updateSectionEditorSubmission($sectionEditorSubmission);

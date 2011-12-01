@@ -35,7 +35,7 @@ class ProofreadCommentForm extends CommentForm {
 		$templateMgr->assign('pageTitle', 'submission.comments.corrections');
 		$templateMgr->assign('commentAction', 'postProofreadComment');
 		$templateMgr->assign('commentType', 'proofread');
-		$templateMgr->assign('hiddenFormParams', 
+		$templateMgr->assign('hiddenFormParams',
 			array(
 				'articleId' => $this->article->getId()
 			)
@@ -65,7 +65,7 @@ class ProofreadCommentForm extends CommentForm {
 		$roleDao =& DAORegistry::getDAO('RoleDAO');
 		$signoffDao =& DAORegistry::getDAO('SignoffDAO');
 		$userDao =& DAORegistry::getDAO('UserDAO');
-		$journal =& Request::getJournal();	
+		$journal =& Request::getJournal();
 
 		// Create list of recipients:
 		$recipients = array();
@@ -123,7 +123,7 @@ class ProofreadCommentForm extends CommentForm {
 				$recipients = array_merge($recipients, array($proofreader->getEmail() => $proofreader->getFullName()));
 			}
 
-			if (isset($author)) $recipients = array_merge($recipients, array($author->getEmail() => $author->getFullName()));
+			if (isset($author)) $recipients = array_merge($recipients, array($author->getEmail() => $author->getLocalizedFullName()));
 
 		} else if ($this->roleId == ROLE_ID_LAYOUT_EDITOR) {
 			// Then add editors, proofreader and author
@@ -133,7 +133,7 @@ class ProofreadCommentForm extends CommentForm {
 				$recipients = array_merge($recipients, array($proofreader->getEmail() => $proofreader->getFullName()));
 			}
 
-			if (isset($author)) $recipients = array_merge($recipients, array($author->getEmail() => $author->getFullName()));
+			if (isset($author)) $recipients = array_merge($recipients, array($author->getEmail() => $author->getLocalizedFullName()));
 
 		} else if ($this->roleId == ROLE_ID_PROOFREADER) {
 			// Then add editors, layout editor, and author
@@ -143,7 +143,7 @@ class ProofreadCommentForm extends CommentForm {
 				$recipients = array_merge($recipients, array($layoutEditor->getEmail() => $layoutEditor->getFullName()));
 			}
 
-			if (isset($author)) $recipients = array_merge($recipients, array($author->getEmail() => $author->getFullName()));
+			if (isset($author)) $recipients = array_merge($recipients, array($author->getEmail() => $author->getLocalizedFullName()));
 
 		} else {
 			// Then add editors, layout editor, and proofreader

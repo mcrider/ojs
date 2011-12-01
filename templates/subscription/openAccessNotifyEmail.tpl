@@ -16,10 +16,8 @@ Content-Transfer-Encoding: quoted-printable
 {$article->getLocalizedTitle()|strip_tags}{if $article->getPages()} ({$article->getPages()}){/if}
 
 {foreach from=$article->getAuthors() item=author name=authorList}
-	{$author->getFullName()}{if !$smarty.foreach.authorList.last},{/if}{/foreach}
-
+	{$author->getLocalizedFullName()}{if !$smarty.foreach.authorList.last},{/if}{/foreach}
 {/foreach}
-
 
 {/foreach}
 {literal}{$templateSignature}{/literal}

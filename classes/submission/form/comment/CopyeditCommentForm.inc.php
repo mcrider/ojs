@@ -38,7 +38,7 @@ class CopyeditCommentForm extends CommentForm {
 		$templateMgr->assign('pageTitle', 'submission.comments.copyeditComments');
 		$templateMgr->assign('commentAction', 'postCopyeditComment');
 		$templateMgr->assign('commentType', 'copyedit');
-		$templateMgr->assign('hiddenFormParams', 
+		$templateMgr->assign('hiddenFormParams',
 			array(
 				'articleId' => $article->getId()
 			)
@@ -114,13 +114,13 @@ class CopyeditCommentForm extends CommentForm {
 				$recipients = array_merge($recipients, array($copyeditor->getEmail() => $copyeditor->getFullName()));
 			}
 
-			$recipients = array_merge($recipients, array($author->getEmail() => $author->getFullName()));
+			$recipients = array_merge($recipients, array($author->getEmail() => $author->getLocalizedFullName()));
 
 		} else if ($this->roleId == ROLE_ID_COPYEDITOR) {
 			// Then add editors and author
 			$recipients = array_merge($recipients, $editorAddresses);
 
-			if (isset($author)) $recipients = array_merge($recipients, array($author->getEmail() => $author->getFullName()));
+			if (isset($author)) $recipients = array_merge($recipients, array($author->getEmail() => $author->getLocalizedFullName()));
 
 		} else {
 			// Then add editors and copyeditor

@@ -58,7 +58,7 @@ class EditCommentForm extends Form {
 			'comments' => $comment->getComments(),
 			'viewable' => $comment->getViewable(),
 		);
-	}	
+	}
 
 	/**
 	 * Display the form.
@@ -101,7 +101,7 @@ class EditCommentForm extends Form {
 	function execute() {
 		$commentDao =& DAORegistry::getDAO('ArticleCommentDAO');
 
-		// Update comment		
+		// Update comment
 		$comment = $this->comment;
 		$comment->setCommentTitle($this->getData('commentTitle'));
 		$comment->setComments($this->getData('comments'));
@@ -191,7 +191,7 @@ class EditCommentForm extends Form {
 		case COMMENT_TYPE_EDITOR_DECISION:
 			if ($this->roleId == ROLE_ID_EDITOR || $this->roleId == ROLE_ID_SECTION_EDITOR) {
 				// Then add author
-				if (isset($author)) $recipients = array_merge($recipients, array($author->getEmail() => $author->getFullName()));
+				if (isset($author)) $recipients = array_merge($recipients, array($author->getEmail() => $author->getLocalizedFullName()));
 			} else {
 				// Then add editors
 				$recipients = array_merge($recipients, $editorAddresses);
@@ -205,13 +205,13 @@ class EditCommentForm extends Form {
 					$recipients = array_merge($recipients, array($copyeditor->getEmail() => $copyeditor->getFullName()));
 				}
 
-				$recipients = array_merge($recipients, array($author->getEmail() => $author->getFullName()));
+				$recipients = array_merge($recipients, array($author->getEmail() => $author->getLocalizedFullName()));
 
 			} else if ($this->roleId == ROLE_ID_COPYEDITOR) {
 				// Then add editors and author
 				$recipients = array_merge($recipients, $editorAddresses);
 
-				if (isset($author)) $recipients = array_merge($recipients, array($author->getEmail() => $author->getFullName()));
+				if (isset($author)) $recipients = array_merge($recipients, array($author->getEmail() => $author->getLocalizedFullName()));
 
 			} else {
 				// Then add editors and copyeditor
@@ -246,7 +246,7 @@ class EditCommentForm extends Form {
 					$recipients = array_merge($recipients, array($proofreader->getEmail() => $proofreader->getFullName()));
 				}
 
-				if (isset($author)) $recipients = array_merge($recipients, array($author->getEmail() => $author->getFullName()));
+				if (isset($author)) $recipients = array_merge($recipients, array($author->getEmail() => $author->getLocalizedFullName()));
 
 			} else if ($this->roleId == ROLE_ID_LAYOUT_EDITOR) {
 				// Then add editors, proofreader and author
@@ -256,7 +256,7 @@ class EditCommentForm extends Form {
 					$recipients = array_merge($recipients, array($proofreader->getEmail() => $proofreader->getFullName()));
 				}
 
-				if (isset($author)) $recipients = array_merge($recipients, array($author->getEmail() => $author->getFullName()));
+				if (isset($author)) $recipients = array_merge($recipients, array($author->getEmail() => $author->getLocalizedFullName()));
 
 			} else if ($this->roleId == ROLE_ID_PROOFREADER) {
 				// Then add editors, layout editor, and author
@@ -266,7 +266,7 @@ class EditCommentForm extends Form {
 					$recipients = array_merge($recipients, array($layoutEditor->getEmail() => $layoutEditor->getFullName()));
 				}
 
-				if (isset($author)) $recipients = array_merge($recipients, array($author->getEmail() => $author->getFullName()));
+				if (isset($author)) $recipients = array_merge($recipients, array($author->getEmail() => $author->getLocalizedFullName()));
 
 			} else {
 				// Then add editors, layout editor, and proofreader

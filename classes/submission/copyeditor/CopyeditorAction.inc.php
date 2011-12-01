@@ -77,12 +77,12 @@ class CopyeditorAction extends Action {
 
 		} else {
 			if (!$request->getUserVar('continued')) {
-				$email->addRecipient($author->getEmail(), $author->getFullName());
+				$email->addRecipient($author->getEmail(), $author->getLocalizedFullName());
 				$email->ccAssignedEditingSectionEditors($copyeditorSubmission->getId());
 				$email->ccAssignedEditors($copyeditorSubmission->getId());
 
 				$paramArray = array(
-					'editorialContactName' => $author->getFullName(),
+					'editorialContactName' => $author->getLocalizedFullName(),
 					'copyeditorName' => $user->getFullName(),
 					'authorUsername' => $author->getUsername(),
 					'submissionEditingUrl' => $request->url(null, 'author', 'submissionEditing', array($copyeditorSubmission->getId()))

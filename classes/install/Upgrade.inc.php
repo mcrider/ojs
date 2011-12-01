@@ -902,7 +902,6 @@ class Upgrade extends Installer {
 		return true;
 	}
 
-
 	/**
 	 * For 2.3.7 Upgrade -- Remove author revised file upload IDs erroneously added to copyedit signoff
 	 */
@@ -929,6 +928,34 @@ class Upgrade extends Installer {
 
 			$result->MoveNext();
 		}
+
+		return true;
+	}
+
+	/**
+	 * For 2.4.0 Upgrade -- Localize Author names
+	 */
+	function migrateAuthorNames() {
+		$authorDao =& DAORegistry::getDAO('AuthorDAO');
+
+		$result =& $authorDao->retrieve('SELECT aa.author_id, aa.first_name, aa.middle_name, aa.last_name, j.primary_locale FROM authors aa JOIN articles a ON (a.article_id = aa.submission_id) JOIN journals j ON (j.journal_id = a.journal_id)');
+
+		while (!$result->EOF) {
+			$row = $result->GetRowAssoc(false);
+			$locale = $row['primary_locale'];
+
+			$author = new Author(); /* @var $author Author */
+			$author->setId($row['author_id']);
+			$author->setFirstName($row['first_name'], $locale);
+			if(!empty($row['middle_name'])) $author->setMiddleName($row['middle_name'], $locale);
+			$author->setLastName($row['last_name'], $locale);
+
+			$authorDao->updateLocaleFields($author);
+
+			$result->MoveNext();
+		}
+		$result->Close();
+		unset($result);
 
 		return true;
 	}

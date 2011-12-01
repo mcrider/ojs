@@ -15,7 +15,7 @@
 {/if}
 TY  - JOUR
 {foreach from=$article->getAuthors() item=author}
-AU  - {$author->getFullName(true)|escape}
+AU  - {$author->getLocalizedFullName(true)|escape}
 {/foreach}
 {if $article->getDatePublished()}
 PY  - {$article->getDatePublished()|date_format:"%Y/%m/%d/"}

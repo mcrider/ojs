@@ -79,7 +79,7 @@ class OJSSwordDeposit {
 		}
 
 		foreach ($this->article->getAuthors() as $author) {
-			$creator = $author->getFullName(true);
+			$creator = $author->getLocalizedFullName(true);
 			$affiliation = $author->getAffiliation($this->journal->getPrimaryLocale());
 			if (!empty($affiliation)) $creator .= "; $affiliation";
 			$this->package->addCreator($creator);

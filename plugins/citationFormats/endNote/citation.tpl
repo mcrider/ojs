@@ -14,7 +14,7 @@
 	{url|assign:"articleUrl" page="article" op="view" path=$articleId}
 {/if}
 {foreach from=$article->getAuthors() item=author}
-%A {$author->getFullName(true)|escape}
+%A {$author->getLocalizedFullName(true)|escape}
 {/foreach}
 {if $article->getDatePublished()}
 %D {$article->getDatePublished()|date_format:"%Y"}

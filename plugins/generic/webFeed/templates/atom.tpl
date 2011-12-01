@@ -68,7 +68,7 @@
 
 				{foreach from=$article->getAuthors() item=author name=authorList}
 					<author>
-						<name>{$author->getFullName()|strip|escape:"html"}</name>
+						<name>{$author->getLocalizedFullName()|strip|escape:"html"}</name>
 						{if $author->getEmail()}
 							<email>{$author->getEmail()|strip|escape:"html"}</email>
 						{/if}
