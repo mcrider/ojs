@@ -186,7 +186,6 @@ class ProfileForm extends Form {
 			'isAuthor' => Validation::isAuthor(),
 			'isReader' => Validation::isReader(),
 			'isReviewer' => Validation::isReviewer(),
-			'existingInterests' => $interestManager->getAllInterests(),
 			'interestsKeywords' => $interestManager->getInterestsForUser($user),
 			'interestsTextOnly' => $interestManager->getInterestsForUserAsFormattedString($user),
 		);

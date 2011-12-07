@@ -14,19 +14,6 @@
 {include file="common/header.tpl"}
 {/strip}
 
-<script type="text/javascript">
-	$(document).ready(function(){ldelim}
-		$("#interestsTextOnly").html(null).hide();
-		$(".interestDescription").show();
-		$("#interests").tagit({ldelim}
-			itemName: "keywords",
-			fieldName: "interests",
-			allowSpaces: true,
-			availableTags: [{foreach name=existingInterests from=$existingInterests item=interest}"{$interest|escape}"{if !$smarty.foreach.existingInterests.last},{/if}{/foreach}]
-		{rdelim});
-	{rdelim});
-</script>
-
 <form name="profile" method="post" action="{url op="saveProfile"}" enctype="multipart/form-data">
 
 {include file="common/formErrors.tpl"}
@@ -134,12 +121,7 @@
 <tr valign="top">
 	<td class="label">{fieldLabel name="interests" key="user.interests"}</td>
 	<td class="value">
-		<!-- The container which will be processed by tag-it.js as the interests widget -->
-		<ul id="interests">
-			{if $interestsKeywords}{foreach from=$interestsKeywords item=interest}<li class="hidden">{$interest|escape}</li>{/foreach}{/if}
-		</ul><span class="interestDescription hidden">{fieldLabel for="interests" key="user.interests.description"}</span><br />
-		<!-- If Javascript is disabled, this field will be visible -->
-		<textarea name="interestsTextOnly" id="interestsTextOnly" rows="5" cols="40" class="textArea">{$interestsTextOnly|escape}</textarea>
+		{include file="form/keywordInput.tpl" interestKeywords=$interestsKeywords interestsTextOnly=$interestsTextOnly}
 	</td>
 </tr>
 <tr valign="top">

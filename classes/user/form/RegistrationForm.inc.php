@@ -118,11 +118,6 @@ class RegistrationForm extends Form {
 		$templateMgr->assign('allowRegReviewer', $journal->getSetting('allowRegReviewer'));
 		$templateMgr->assign('source', Request::getUserVar('source'));
 
-		// Get all available interests to populate the autocomplete with
-		import('lib.pkp.classes.user.InterestManager');
-		$interestManager = new InterestManager();
-		$templateMgr->assign('existingInterests', $interestManager->getAllInterests());
-
 		$site =& Request::getSite();
 		$templateMgr->assign('availableLocales', $site->getSupportedLocaleNames());
 

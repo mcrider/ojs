@@ -75,11 +75,6 @@ class CreateReviewerForm extends Form {
 		$countries =& $countryDao->getCountries();
 		$templateMgr->assign_by_ref('countries', $countries);
 
-		// Get all available interests to populate the autocomplete with
-		import('lib.pkp.classes.user.InterestManager');
-		$interestManager = new InterestManager();
-		$templateMgr->assign('existingInterests', $interestManager->getAllInterests());
-
 		parent::display();
 	}
 

@@ -166,7 +166,6 @@ class UserManagementForm extends Form {
 					'mailingAddress' => $user->getMailingAddress(),
 					'country' => $user->getCountry(),
 					'biography' => $user->getBiography(null), // Localized
-					'existingInterests' => $interestManager->getAllInterests(),
 					'interestsKeywords' => $interestManager->getInterestsForUser($user),
 					'interestsTextOnly' => $interestManager->getInterestsForUserAsFormattedString($user),
 					'gossip' => $user->getGossip(null), // Localized
