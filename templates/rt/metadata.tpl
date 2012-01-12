@@ -93,7 +93,17 @@
 	<td>7.</td>
 	<td>{translate key="rt.metadata.dublinCore.date"}</td>
 	<td>{translate key="rt.metadata.pkp.date"}</td>
-	<td>{$article->getDatePublished()|date_format:$dateFormatShort}</td>
+	<td>
+		{if $article->getDatePublished()}
+			{$article->getDatePublished()|date_format:$dateFormatShort}
+		{elseif $issue && $issue->getDatePublished()}
+			{$issue->getDatePublished()|date_format:$dateFormatShort}
+		{elseif $issue}
+			{$issue->getYear()|escape}
+		{else}
+			&mdash;
+		{/if}
+	</td>
 </tr>
 <tr><td colspan="4" class="separator">&nbsp;</td></tr>
 <tr valign="top">
@@ -127,7 +137,11 @@
 	<td>{translate key="rt.metadata.pkp.uri"}</td>
 	<td><a target="_new" href="{url page="article" op="view" path=$articleId}">{url page="article" op="view" path=$articleId}</a></td>
 </tr>
-{assign var=doi value=$article->getDOI()}
+{if $issue->getPublished()}
+	{assign var=doi value=$article->getDOI()}
+{else}
+	{assign var=doi value=$article->getDOI(true)}{* Don't affix DOI *}
+{/if}
 {if $doi}
 <tr><td colspan="4" class="separator">&nbsp;</td></tr>
 <tr valign="top">

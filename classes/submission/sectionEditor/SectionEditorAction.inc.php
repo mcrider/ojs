@@ -599,6 +599,29 @@ class SectionEditorAction extends Action {
 	}
 
 	/**
+	 * Remove cover page from article
+	 * @param $submission object
+	 * @param $formLocale string
+	 * @return boolean true iff ready for redirect
+	 */
+	function removeArticleCoverPage($submission, $formLocale) {
+		$journal =& Request::getJournal();
+
+		import('classes.file.PublicFileManager');
+		$publicFileManager = new PublicFileManager();
+		$publicFileManager->removeJournalFile($journal->getId(),$submission->getFileName($formLocale));
+		$submission->setFileName('', $formLocale);
+		$submission->setOriginalFileName('', $formLocale);
+		$submission->setWidth('', $formLocale);
+		$submission->setHeight('', $formLocale);
+
+		$articleDao =& DAORegistry::getDAO('ArticleDAO');
+		$articleDao->updateArticle($submission);
+
+		return true;
+	}
+
+	/**
 	 * Notifies an author that a submission was unsuitable.
 	 * @param $sectionEditorSubmission object
 	 * @return boolean true iff ready for redirect
@@ -1489,7 +1512,7 @@ class SectionEditorAction extends Action {
 
 		import('classes.mail.ArticleMailTemplate');
 		$email = new ArticleMailTemplate($submission, 'LAYOUT_REQUEST');
-		$layoutSignoff = $signoffDao->getBySymbolic('SIGNOFF_LAYOUT', ASSOC_TYPE_ARTICLE, $submission->getArticleId());
+		$layoutSignoff = $signoffDao->build('SIGNOFF_LAYOUT', ASSOC_TYPE_ARTICLE, $submission->getArticleId());
 		$layoutEditor =& $userDao->getUser($layoutSignoff->getUserId());
 		if (!isset($layoutEditor)) return true;
 
@@ -1538,7 +1561,7 @@ class SectionEditorAction extends Action {
 		import('classes.mail.ArticleMailTemplate');
 		$email = new ArticleMailTemplate($submission, 'LAYOUT_ACK');
 
-		$layoutSignoff = $signoffDao->getBySymbolic('SIGNOFF_LAYOUT', ASSOC_TYPE_ARTICLE, $submission->getArticleId());
+		$layoutSignoff = $signoffDao->build('SIGNOFF_LAYOUT', ASSOC_TYPE_ARTICLE, $submission->getArticleId());
 		$layoutEditor =& $userDao->getUser($layoutSignoff->getUserId());
 		if (!isset($layoutEditor)) return true;
 

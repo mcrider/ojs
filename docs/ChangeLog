@@ -1,203 +1,137 @@
-commit 2374d08d13cedd7946ef679988cf5a6b8a892e1e
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 13:53:16 2011 -0800
+commit cdcfe722a64c3d8a02fe19eef400bf144a9f22b6
+Author: Matthew Crider <mattcrider@gmail.com>
+Date:   Wed Jun 29 11:28:46 2011 -0700
 
-    *6367* Final commits
+    *6727* Produce human-readable errors when iBrowser doesn't have write access to its image directory
 
-commit cbaf304f73295f211aed14d4dc2b885da0fbed4d
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 13:45:16 2011 -0800
-
-    *6367* Final commits
-
-commit 76519665f4c423c81053e9a8df249852a1dddbcd
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 13:37:37 2011 -0800
-
-    *4904* Added subscription report
-
-commit 09824ca20639f455e6831176656438a5986c7e03
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 12:28:40 2011 -0800
-
-    *6243* Notify Users link broken for Editors
-
-commit cfab0a4181a63067895c4cf7ceb9270116b8ac31
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 12:24:49 2011 -0800
-
-    *6084* Sword Plugin does not implement lazy-load
-
-commit 22dff146ea35cc9c8fa425918822c935c14a023e
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 12:20:48 2011 -0800
-
-    *6056* Improve SWORD "creator" export
-
-commit 6037f68f88c0883716d0f8920833403bfd3c8e56
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 11:44:28 2011 -0800
-
-    *6367* Submodule tracking
-
-commit bb9f4491ed397ba7b179533f30b5574ffab6fc68
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 11:41:51 2011 -0800
-
-    *6352* Auth policies can redirect to pages/user/index.php with page "authorizationDenied", leading to 404
-
-commit 97e05eb18f4a4a9ec9c3b5efba9c9a9d57ac1ee7
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 11:41:13 2011 -0800
-
-    *4965* Add DOI information to export plugins
-
-commit c9bcc2aa56d8b29ac9adc220b84b719b7f5ed0af
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 11:40:52 2011 -0800
-
-    *6120* wrong pdftotext and pstotext lines in the config file
-
-commit 6cede5181b6fc2c26f3bd7440d7f0b9e50b50a48
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 11:40:31 2011 -0800
-
-    *6326* Breadcrumb URL for submission pages presumes Section Editor role
-
-commit 9bc31b8a2e00036d89d0f0d62be7689a114122fa
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 11:39:01 2011 -0800
-
-    *6290* Lengthen DOI suffix maxlength
-
-commit 5783d9e0f010a35307fe26e1c40a1859b9f4139a
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 11:38:27 2011 -0800
-
-    *6268* Fatal error: call to a member function getId() in AuthorAction.inc.php on line 154
-
-commit db605298f35150d25eba4cf091328fcd22a33035
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 11:37:56 2011 -0800
-
-    *6245* 2.2.x -> 2.3.3-3 upgrade removes submission notes
-
-commit f5578deecb40807aaf07ea1bb09740e8c41b8a4c
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 11:36:33 2011 -0800
-
-    *6249* Post Reply to comment produces fatal error
-
-commit 49ecb995c069162c407153f6ab4973e0f045aa17
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 11:36:07 2011 -0800
-
-    *6258* SectionEditorSubmissionDAO getReviewerStatistics typo
-
-commit f015e6cfc3fa44469769bdf03ae537846d76f5a2
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 11:35:11 2011 -0800
-
-    *6080* TinyMCE converts to HTML entities
-
-commit 6b6ab5b46e17032be5ba58c4e7c592f920602a5a
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 11:34:41 2011 -0800
-
-    *6255* Signoff incorrect joins in EditorSubmissionDAO
-
-commit 35868a141d194709247d0374c43733259b3f56d3
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 11:32:50 2011 -0800
-
-    *6220* OJS 2.3.3 upgrade process incorrect for OJS 2.1.1
-
-commit daff50fd1f5748d55c065dae352f6c8b9891a0ac
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 11:28:01 2011 -0800
-
-    *6048* Fatal error when Searching from Editor User Home
-
-commit 129e1bd2dfb3d95dde9454743bd0efca005644a3
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 11:27:20 2011 -0800
-
-    *6119* References header appears when there are no references
-
-commit 6db07d674d200b6a4043908caea8e07dc332d27d
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 11:24:42 2011 -0800
-
-    *6113* Upgrade to 2.3.3-3 doesn't correctly update version
-
-commit 2d5496c1447bf7052696f9ceee6bcf9f54c8215f
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 11:24:04 2011 -0800
-
-    *6097* Unexpected counter og data loss on upgrade
-
-commit 284c67838636c03e99837b2771b24a7a9af10564
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 11:23:14 2011 -0800
-
-    *6219* Subscription end date resets to expiry default
-
-commit 4e2e6a3da349d1b4f3929a716881b5f6a97fd818
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 11:22:05 2011 -0800
-
-    *6259* Fixed interests encoding
-
-commit 2715545c1e879d5e005ee14c88e4a9c52b9ded7a
-Author: Alec Smecher <alec@smecher.bc.ca>
-Date:   Mon Jan 31 11:08:54 2011 -0800
-
-    *6344* Updated copyright dates
-
-commit 43ed940dee3e1b504ee6a9511c5c7de55fea22d2
-Author: bozana <bozana.bokan@fu-berlin.de>
-Date:   Thu Jan 27 21:12:49 2011 +0100
-
-    use translation instead of hard coded text
-
-commit cd1f66ab0ec38886fe71d1c1e76d2b7b27523cd8
-Author: bozana <bozana.bokan@fu-berlin.de>
-Date:   Thu Jan 27 16:10:03 2011 +0100
-
-    *6366* patch for the Google Analytics plugin
-
-commit 639da9d33cd3f6ee53c65fdff96901483bdca8a4
-Author: bozana <bozana.bokan@fu-berlin.de>
-Date:   Thu Jan 27 15:57:12 2011 +0100
-
-    *6361* wrong link in the futureIssues breadcrumb
-
-commit ace5bf5aff83d7f7599317a83c7063e4f13185bc
-Author: bozana <bozana.bokan@fu-berlin.de>
-Date:   Thu Jan 27 14:20:25 2011 +0100
-
-    *6044* Patch for OpenAIRE plugin
-
-commit fec5b51e28d6e6ad0124366642628a9a021b57d8
+commit 8347aeafdba701555f868e69e96f858c959c7a41
 Author: michael-pkp <michael.pkp@gmail.com>
-Date:   Thu Dec 30 19:42:39 2010 -0500
+Date:   Tue Jun 28 10:18:21 2011 -0700
 
-    *6321* Call to undefined method ArticleEmailLogDAO::deleteArticleLogEntries (undo)
+    *6719* Issue ToC sorting options broken
 
-commit 5d290e8333ce10006feeaeb5ac45fa0fd3a1d935
+commit 6ac5890a440d0f5453687d27bd9051025b69fd06
+Author: jmacgreg <jmacgreg@gmail.com>
+Date:   Mon Jun 27 15:29:55 2011 -0700
+
+    *6724* fixed unlocalized METS plugin button
+
+commit be5f401503a406c7ff20bdf5e47df3e689ab4523
+Author: Alec Smecher <alec@smecher.bc.ca>
+Date:   Mon Jun 27 13:42:23 2011 -0700
+
+    *5280* Fixed broken reversed reversed commit
+
+commit 8dd0f8cd4edd6e7b9bc926989dcccf36c2079679
+Author: Matthew Crider <mattcrider@gmail.com>
+Date:   Mon Jun 27 12:25:46 2011 -0700
+
+    *6723* Some ICO file types don't upload for favicon
+
+commit 040765b5d3694a0efb67fc65941e4b5dd342fd6a
+Author: Matthew Crider <mattcrider@gmail.com>
+Date:   Wed Dec 1 17:40:38 2010 -0800
+
+    *6272* Misplaced closing div tag in article comments template causes rendering issues with footer
+
+commit ef7b9b663eee9641e2339be872f91c1407cfc2ad
 Author: michael-pkp <michael.pkp@gmail.com>
-Date:   Thu Dec 30 16:48:20 2010 -0500
+Date:   Thu Jun 23 16:50:08 2011 -0700
 
-    *6321* Call to undefined method ArticleEmailLogDAO::deleteArticleLogEntries
+    *6716* Untranslated locale keys on copyeditor edit metadata page
 
-commit 5585ceb8ad16b7e8a77d2e604ebede75f30c4478
+commit 0872afc89d6fb96ffcc225c04f5068933623428b
 Author: michael-pkp <michael.pkp@gmail.com>
-Date:   Tue Dec 7 21:37:26 2010 -0800
+Date:   Thu Jun 23 16:17:39 2011 -0700
 
-    *6279* Some generic plugins don't work after install/upgrade
+    *6701* Attempt to remove article cover image leads to 404
 
-commit 9bd22dcbbd426c882469f6d082ee4b19615e53ad
-Author: jerico.dev <jerico.dev@gmail.com>
-Date:   Tue Nov 30 00:45:00 2010 -0200
+commit f2eae23674cf3ecc4391a5ac9a142c2cf650d20f
+Author: Alec Smecher <alec@smecher.bc.ca>
+Date:   Mon Jun 20 13:36:55 2011 -0700
 
-    *6257* Upgrading from 2.x to 2.3.x orphans some plug-in settings due to upper/lower case change in plugin_settings.
+    *6698* foldoc.org update
+
+commit 161abab8c91cd1529b874b87c13ab6f4ae77570f
+Author: michael-pkp <michael.pkp@gmail.com>
+Date:   Mon Jun 20 11:57:22 2011 -0700
+
+    *6695* Books For Review cover page upload file type not validated
+
+commit 54bd98a9aa745681b9b21b338c25f13fe344cf3f
+Author: Alec Smecher <alec@smecher.bc.ca>
+Date:   Mon Jun 20 11:23:08 2011 -0700
+
+    *6696* Force image file extension
+
+commit f78fb176eed185026957f2504637c34ae3ec0379
+Author: Alec Smecher <alec@smecher.bc.ca>
+Date:   Thu Jun 16 09:59:11 2011 -0700
+
+    *6689* Add file type checking to article covers
+
+commit 76416aaac1e378d2d50e36c4d0e388356afdf2a0
+Author: Alec Smecher <alec@smecher.bc.ca>
+Date:   Tue Jun 7 13:42:29 2011 -0700
+
+    *6566* Added keywords to article view
+
+commit fc64b1716ee61d9a139ea001d9ea18a1ac5e2df5
+Author: Alec Smecher <alec@smecher.bc.ca>
+Date:   Tue Jun 7 12:26:41 2011 -0700
+
+    *6672* Revert unused function removal -- not ready yet
+
+commit 4916ce2b24f7a039166301916b98e4cb5e8cd4ee
+Author: Alec Smecher <alec@smecher.bc.ca>
+Date:   Tue Jun 7 12:21:38 2011 -0700
+
+    *6672* Removed unused function
+
+commit 7ccc3ff9a05a1acff832a00866febff9f0e289ec
+Author: Alec Smecher <alec@smecher.bc.ca>
+Date:   Tue Jun 7 12:09:55 2011 -0700
+
+    *6674* Removed unused function
+
+commit 23bccb88358d6058c55dadf1b746ee058407f8c2
+Author: Alec Smecher <alec@smecher.bc.ca>
+Date:   Tue Jun 7 09:13:08 2011 -0700
+
+    *6673* Removed duplicate / untranslated locale keys
+
+commit e589450effccd2702edc0f9630c4b87486ebb6d4
+Author: Alec Smecher <alec@smecher.bc.ca>
+Date:   Tue Jun 7 09:07:27 2011 -0700
+
+    *6673* Removed dupe keys
+
+commit 71590599895ddc7b0924ea46d7624e63c9d0a3f2
+Author: Alec Smecher <alec@smecher.bc.ca>
+Date:   Mon Jun 6 21:43:09 2011 -0700
+
+    *6671* Fixed updateUser form init params
+
+commit 516a5a5a657569f1855988108ab92bf635349355
+Author: Alec Smecher <alec@smecher.bc.ca>
+Date:   Mon Jun 6 09:10:25 2011 -0700
+
+    *6669* Fixed pkp.ubc.ca links
+
+commit 027cde9e198f55220c8246c56da5eb63e4436779
+Author: Matthew Crider <mattcrider@gmail.com>
+Date:   Tue Jun 21 16:57:48 2011 -0700
+
+    *6655* Fixed iBrowser errors, updated phpThumb iBrowser library
+
+commit 0ad521cf74671f6429ff488dc09da3975e77fd98
+Author: Alec Smecher <alec@smecher.bc.ca>
+Date:   Wed Jun 22 08:24:55 2011 -0700
+
+    *6696* Removed application/octet-stream
+
+commit de0224443d7c683b7506120e4cdd228343ff20bb
+Author: michael-pkp <michael.pkp@gmail.com>
+Date:   Wed Jun 1 21:03:23 2011 -0400
+
+    *6667* Upgrade does not mark old version as no longer current

@@ -253,6 +253,7 @@ class SubmissionCopyeditHandler extends CopyeditorHandler {
 		$articleId = (int) array_shift($args);
 		$journal =& $request->getJournal();
 		$this->validate($articleId);
+		Locale::requireComponents(array(LOCALE_COMPONENT_OJS_AUTHOR));
 		$submission =& $this->submission;
 		$this->setupTemplate(true, $articleId, 'editing');
 		CopyeditorAction::viewMetadata($submission, $journal);
@@ -272,25 +273,20 @@ class SubmissionCopyeditHandler extends CopyeditorHandler {
 	/**
 	 * Remove cover page from article
 	 */
-	function removeCoverPage($args) {
+	function removeArticleCoverPage($args, &$request) {
 		$articleId = isset($args[0]) ? (int)$args[0] : 0;
-		$formLocale = $args[1];
 		$this->validate($articleId);
+
+		$formLocale = $args[1];
+		if (!Locale::isLocaleValid($formLocale)) {
+			$request->redirect(null, null, 'viewMetadata', $articleId);
+		}
+
 		$submission =& $this->submission;
-		$journal =& Request::getJournal();
-
-		import('classes.file.PublicFileManager');
-		$publicFileManager = new PublicFileManager();
-		$publicFileManager->removeJournalFile($journal->getId(),$submission->getFileName($formLocale));
-		$submission->setFileName('', $formLocale);
-		$submission->setOriginalFileName('', $formLocale);
-		$submission->setWidth('', $formLocale);
-		$submission->setHeight('', $formLocale);
-
-		$articleDao =& DAORegistry::getDAO('ArticleDAO');
-		$articleDao->updateArticle($submission);
-
-		Request::redirect(null, null, 'viewMetadata', $articleId);
+		import('classes.submission.sectionEditor.SectionEditorAction');
+		if (SectionEditorAction::removeArticleCoverPage($submission, $formLocale)) {
+			$request->redirect(null, null, 'viewMetadata', $articleId);
+		}
 	}
 
 

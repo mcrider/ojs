@@ -89,14 +89,20 @@
 	<tr valign="top">
 		<td class="label">{translate key="common.status"}</td>
 		<td class="value">
-			{if $issue->getDatePublished()}
+			{if $issue->getPublished()}
 				{translate key="editor.issues.published"}&nbsp;&nbsp;
 				{* Find good values for starting and ending year options *}
-				{assign var=publishedYear value=$issue->getDatePublished()|date_format:"%Y"}
 				{assign var=currentYear value=$smarty.now|date_format:"%Y"}
-				{math|assign:"minYear" equation="min(x,y)-10" x=$publishedYear y=$currentYear}
-				{math|assign:"maxYear" equation="max(x,y)+2" x=$publishedYear y=$currentYear}
-				{html_select_date prefix="datePublished" time=$datePublished all_extra="class=\"selectMenu\"" start_year=$minYear end_year=$maxYear}
+				{if $datePublished}
+					{assign var=publishedYear value=$datePublished|date_format:"%Y"}
+					{math|assign:"minYear" equation="min(x,y)-10" x=$publishedYear y=$currentYear}
+					{math|assign:"maxYear" equation="max(x,y)+2" x=$publishedYear y=$currentYear}
+				{else}
+					{* No issue publication date info *}
+					{math|assign:"minYear" equation="x-10" x=$currentYear}
+					{math|assign:"maxYear" equation="x+2" x=$currentYear}
+				{/if}
+				{html_select_date prefix="datePublished" time=$datePublished|default:"---" all_extra="class=\"selectMenu\"" start_year=$minYear end_year=$maxYear year_empty="-" month_empty="-" day_empty="-"}
 			{else}
 				{translate key="editor.issues.unpublished"}
 			{/if}
@@ -143,7 +149,7 @@
 	</tr>
 	<tr valign="top">
 		<td width="20%" class="label">{fieldLabel name="coverPage" key="editor.issues.coverPage"}</td>
-		<td width="80%" class="value"><input type="file" name="coverPage" id="coverPage" class="uploadField" />&nbsp;&nbsp;{translate key="form.saveToUpload"}<br />{translate key="editor.issues.coverPageInstructions"}<br />{translate key="editor.issues.uploaded"}:&nbsp;{if $fileName[$formLocale] }<a href="javascript:openWindow('{$publicFilesDir}/{$fileName[$formLocale]|escape:"url"}');" class="file">{$originalFileName[$formLocale]}</a>&nbsp;<a href="{url op="removeCoverPage" path=$issueId|to_array:$formLocale}" onclick="return confirm('{translate|escape:"jsparam" key="editor.issues.removeCoverPage"}')">{translate key="editor.issues.remove"}</a>{else}&mdash;{/if}</td>
+		<td width="80%" class="value"><input type="file" name="coverPage" id="coverPage" class="uploadField" />&nbsp;&nbsp;{translate key="form.saveToUpload"}<br />{translate key="editor.issues.coverPageInstructions"}<br />{translate key="editor.issues.uploaded"}:&nbsp;{if $fileName[$formLocale] }<a href="javascript:openWindow('{$publicFilesDir}/{$fileName[$formLocale]|escape:"url"}');" class="file">{$originalFileName[$formLocale]}</a>&nbsp;<a href="{url op="removeIssueCoverPage" path=$issueId|to_array:$formLocale}" onclick="return confirm('{translate|escape:"jsparam" key="editor.issues.removeCoverPage"}')">{translate key="editor.issues.remove"}</a>{else}&mdash;{/if}</td>
 	</tr>
 	<tr valign="top">
 		<td width="20%" class="label">{fieldLabel name="coverPageAltText" key="common.altText"}</td>

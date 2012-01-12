@@ -134,12 +134,13 @@ switch ($op) {
 	// Scheduling functions
 	//
 	case 'scheduleForPublication':
-	 //
-	 // Payments
-	 //
-	 case 'waiveSubmissionFee':
-	 case 'waiveFastTrackFee':
-	 case 'waivePublicationFee':
+	case 'setDatePublished':
+	//
+	// Payments
+	//
+	case 'waiveSubmissionFee':
+	case 'waiveFastTrackFee':
+	case 'waivePublicationFee':
 		define('HANDLER_CLASS', 'SubmissionEditHandler');
 		import('pages.sectionEditor.SubmissionEditHandler');
 		break;
@@ -174,7 +175,7 @@ switch ($op) {
 	case 'saveIssue':
 	case 'issueData':
 	case 'editIssue':
-	case 'removeCoverPage':
+	case 'removeIssueCoverPage':
 	case 'removeStyleFile':
 	case 'issueToc':
 	case 'updateIssueToc':
