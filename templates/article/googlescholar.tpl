@@ -19,31 +19,14 @@
 {/if}
 	<meta name="citation_authors" content="{foreach name="authors" from=$article->getAuthors() item=author}{$author->getLastName()|escape}, {$author->getFirstName()|escape}{if $author->getMiddleName() != ""} {$author->getMiddleName()|escape}{/if}{if !$smarty.foreach.authors.last}; {/if}{/foreach}"/>
 	<meta name="citation_title" content="{$article->getLocalizedTitle()|strip_tags|escape}"/>
-
-{**
- * Google Scholar date: Use article publication date, falling back on issue
- * year and issue publication date in sequence. Bug #6480.
- *}
-{if $article->getDatePublished()}
 	<meta name="citation_date" content="{$article->getDatePublished()|date_format:"%d/%m/%Y"}"/>
-{elseif $issue->getYear()}
-	<meta name="citation_date" content="{$issue->getYear()|escape}"/>
-{elseif $issue->getDatePublished()}
-	<meta name="citation_date" content="{$issue->getDatePublished()|date_format:"%d/%m/%Y"}"/>
-{/if}
-
 	<meta name="citation_volume" content="{$issue->getVolume()|strip_tags|escape}"/>
 	<meta name="citation_issue" content="{$issue->getNumber()|strip_tags|escape}"/>
 {if $article->getPages()}
 	<meta name="citation_firstpage" content="{$article->getPages()|escape}"/>
 {/if}
-{if $issue->getPublished()}
-	{assign var=doi value=$article->getDOI()}
-{else}
-	{assign var=doi value=$article->getDOI(true)}{* Don't affix DOI *}
-{/if}
-{if $doi}
-	<meta name="citation_doi" content="{$doi|escape}"/>
+{if $article->getDOI()}
+	<meta name="citation_doi" content="{$article->getDOI()|escape}"/>
 {/if}
 	<meta name="citation_abstract_html_url" content="{url page="article" op="view" path=$article->getBestArticleId($currentJournal)}"/>
 {if $article->getLanguage()}

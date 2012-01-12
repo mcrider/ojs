@@ -624,12 +624,12 @@ class PeopleHandler extends ManagerHandler {
 	/**
 	 * Save changes to a user profile.
 	 */
-	function updateUser($args, &$request) {
+	function updateUser() {
 		$this->validate();
 		$this->setupTemplate(true);
 
-		$journal =& $request->getJournal();
-		$userId = $request->getUserVar('userId');
+		$journal =& Request::getJournal();
+		$userId = Request::getUserVar('userId');
 
 		if (!empty($userId) && !Validation::canAdminister($journal->getId(), $userId)) {
 			// We don't have administrative rights
@@ -655,9 +655,9 @@ class PeopleHandler extends ManagerHandler {
 		if ($userForm->validate()) {
 			$userForm->execute();
 
-			if ($request->getUserVar('createAnother')) {
+			if (Request::getUserVar('createAnother')) {
 				$templateMgr =& TemplateManager::getManager();
-				$templateMgr->assign('currentUrl', $request->url(null, null, 'people', 'all'));
+				$templateMgr->assign('currentUrl', Request::url(null, null, 'people', 'all'));
 				$templateMgr->assign('userCreated', true);
 				unset($userForm);
 				if (checkPhpVersion('5.0.0')) { // WARNING: This form needs $this in constructor
@@ -665,12 +665,12 @@ class PeopleHandler extends ManagerHandler {
 				} else {
 					$userForm =& new UserManagementForm();
 				}
-				$userForm->initData($args, $request);
+				$userForm->initData();
 				$userForm->display();
 
 			} else {
-				if ($source = $request->getUserVar('source')) $request->redirectUrl($source);
-				else $request->redirect(null, null, 'people', 'all');
+				if ($source = Request::getUserVar('source')) Request::redirectUrl($source);
+				else Request::redirect(null, null, 'people', 'all');
 			}
 		} else {
 			$userForm->display();

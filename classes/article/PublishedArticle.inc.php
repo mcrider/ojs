@@ -246,9 +246,8 @@ class PublishedArticle extends Article {
 
 	/**
 	 * Get a DOI for this article.
-	 * @var $preview boolean If true, generate a non-persisted preview only.
 	 */
-	function getDOI($preview = false) {
+	function getDOI() {
 		// If we already have an assigned DOI, use it.
 		$storedDOI = $this->getStoredDOI();
 		if ($storedDOI) return $storedDOI;
@@ -295,12 +294,10 @@ class PublishedArticle extends Article {
 				$doi = $doiPrefix . '/' . String::strtolower($journal->getLocalizedSetting('initials')) . '.v' . $issue->getVolume() . 'i' . $issue->getNumber() . '.' . $this->getArticleId();
 		}
 
-		if (!$preview) {
-			// Save the generated DOI
-			$this->setStoredDOI($doi);
-			$articleDao =& DAORegistry::getDAO('ArticleDAO');
-			$articleDao->changeDOI($this->getId(), $doi);
-		}
+		// Save the generated DOI
+		$this->setStoredDOI($doi);
+		$articleDao =& DAORegistry::getDAO('ArticleDAO');
+		$articleDao->changeDOI($this->getId(), $doi);
 
 		return $doi;
 	}

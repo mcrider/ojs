@@ -97,9 +97,6 @@
 </table>
 </div>
 <div class="separator"></div>
-
-{call_hook name="Templates::Author::Submit::SuppFile::AdditionalMetadata"}
-
 <div id="supplementaryFileUpload">
 <h3>{translate key="author.submit.supplementaryFileUpload"}</h3>
 
@@ -141,16 +138,10 @@
 
 <table id="replaceFile" class="data" width="100%">
 <tr valign="top">
-	<td width="20%" class="label">
-		{if $suppFile && $suppFile->getFileId()}
-			{fieldLabel name="uploadSuppFile" key="common.replaceFile"}
-		{else}
-			{fieldLabel name="uploadSuppFile" key="common.upload"}
-		{/if}
-	</td>
+	<td width="20%" class="label">{fieldLabel name="uploadSuppFile" key="common.replaceFile"}</td>
 	<td width="80%" class="value"><input type="file" name="uploadSuppFile" id="uploadSuppFile" class="uploadField" />&nbsp;&nbsp;{translate key="form.saveToUpload"}</td>
 </tr>
-{if not ($suppFile && $suppFile->getFileId())}
+{if not $suppFile}
 <tr valign="top">
 	<td>&nbsp;</td>
         <td class="value"><input type="checkbox" name="showReviewers" id="showReviewers" value="1"{if $showReviewers==1} checked="checked"{/if} />&nbsp;

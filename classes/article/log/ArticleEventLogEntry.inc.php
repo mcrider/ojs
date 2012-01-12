@@ -115,7 +115,6 @@ class ArticleEventLogEntry extends DataObject {
 	 * @param $params array optional array of parameters
 	 */
 	function setLogMessage($key, $params = array()) {
-		Locale::requireComponents(array(LOCALE_COMPONENT_APPLICATION_COMMON));
 		$this->setMessage(Locale::translate($key, $params, Locale::getPrimaryLocale()));
 	}
 

@@ -58,12 +58,7 @@ class OAIMetadataFormat_DC extends OAIMetadataFormat {
 			if (!empty($publisherInstitution)) {
 				$publishers = array($journal->getPrimaryLocale() => $publisherInstitution);
 			}
-			
-			// Contributor
-			$contributors = $this->stripAssocArray((array) $article->getSponsor(null));
-			foreach ($contributors as $key => $contributor) {
-				$contributors[$key] = array_map('trim', explode(';', $contributor));
-			}	
+	
 			// Types
 			$types = $this->stripAssocArray((array) $section->getIdentifyType(null));
 			$types = array_merge_recursive(
@@ -76,26 +71,11 @@ class OAIMetadataFormat_DC extends OAIMetadataFormat {
 			foreach ($galleys as $galley) {
 				$formats[] = $galley->getFileType();
 			}
-					
-			// Languages
-			$languages = array();
-			foreach ($galleys as $galley) {
-				$galleyLocale = $galley->getLocale();
-				$iso3 = Locale::getIso3FromLocale($galleyLocale);
-				if(!in_array($iso3, $languages)) {
-					$languages[] = $iso3;
-				}
-			}
-
+	
 			// Relation
 			$relation = array();
-			// full texts URLs
-			foreach ($galleys as $galley) {
-				$relation[] = Request::url($journal->getPath(), 'article', 'view', array($article->getBestArticleId($journal), $galley->getBestGalleyId($journal)));
-			}
-			// supp files URLs  
 			foreach ($article->getSuppFiles() as $suppFile) {
-				$relation[] = Request::url($journal->getPath(), 'article', 'downloadSuppFile', array($article->getBestArticleId($journal), $suppFile->getBestSuppFileId($journal)));
+				$relation[] = Request::url($journal->getPath(), 'article', 'download', array($article->getId(), $suppFile->getFileId()));
 			}
 	
 			$response = "<oai_dc:dc\n" .
@@ -117,14 +97,14 @@ class OAIMetadataFormat_DC extends OAIMetadataFormat {
 				) .
 				$this->formatElement('description', $this->stripAssocArray((array) $article->getAbstract(null)), true) .
 				$this->formatElement('publisher', $publishers, true) .
-				$this->formatElement('contributor', $contributors, true) .
+				$this->formatElement('contributor', $this->stripAssocArray((array) $article->getSponsor(null)), true) .
 				$this->formatElement('date', date('Y-m-d', strtotime($issue->getDatePublished()))) .
 				$this->formatElement('type', $types, true) .
 				$this->formatElement('format', $formats) .
 				$this->formatElement('identifier', Request::url($journal->getPath(), 'article', 'view', array($article->getBestArticleId()))) .
 				(($doi = $article->getDOI())?$this->formatElement('identifier', $doi, false, array('xsi:type' => 'dcterms:DOI')):'') .
 				$this->formatElement('source', $sources, true) .
-				$this->formatElement('language', $languages) .
+				$this->formatElement('language', strip_tags($article->getLanguage())) .
 				$this->formatElement('relation', $relation) .
 				$this->formatElement(
 					'coverage',

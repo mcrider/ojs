@@ -17,16 +17,11 @@ TY  - JOUR
 {foreach from=$article->getAuthors() item=author}
 AU  - {$author->getFullName(true)|escape}
 {/foreach}
-{if $article->getDatePublished()}
 PY  - {$article->getDatePublished()|date_format:"%Y"}
-{elseif $issue->getDatePublished()}
-PY  - {$issue->getDatePublished()|date_format:"%Y"}
-{else}
-PY  - {$issue->getYear()|escape}
-{/if}
 TI  - {$article->getLocalizedTitle()|strip_tags}
 JF  - {$journal->getLocalizedTitle()}{if $issue}; {$issue->getIssueIdentification()|strip_tags}{/if}
 
+Y2  - {$article->getDatePublished()|date_format:"%Y"}
 KW  - {$article->getLocalizedSubject()|escape}
 N2  - {$article->getLocalizedAbstract()|strip_tags|replace:"\n":" "|replace:"\r":" "}
 UR  - {$articleUrl}

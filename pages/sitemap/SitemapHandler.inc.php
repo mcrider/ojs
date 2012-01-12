@@ -52,7 +52,7 @@ class SitemapHandler extends Handler {
 		$root =& XMLCustomWriter::createElement($doc, 'sitemapindex');
 		XMLCustomWriter::setAttribute($root, 'xmlns', SITEMAP_XSD_URL);
 
-		$journals =& $journalDao->getEnabledJournals();
+		$journals =& $journalDao->getJournals();
 		while ($journal =& $journals->next()) {
 			$sitemapUrl = Request::url($journal->getPath(), 'sitemap');
 			$sitemap =& XMLCustomWriter::createElement($doc, 'sitemap');

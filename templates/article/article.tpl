@@ -12,7 +12,7 @@
 	{if $galley->isHTMLGalley()}
 		{$galley->getHTMLContents()}
 	{elseif $galley->isPdfGalley()}
-		{url|assign:"pdfUrl" op="viewFile" path=$articleId|to_array:$galley->getBestGalleyId($currentJournal) escape=false}
+		{url|assign:"pdfUrl" op="viewFile" path=$articleId|to_array:$galley->getBestGalleyId($currentJournal)}
 		{translate|assign:"noPluginText" key='article.pdf.pluginMissing'}
 		<script type="text/javascript"><!--{literal}
 			$(document).ready(function(){
@@ -51,7 +51,7 @@
 	{/if}
 {else}
 	<div id="topBar">
-		{assign var=galleys value=$article->getGalleys()}
+		{assign var=galleys value=$article->getLocalizedGalleys()}
 		{if $galleys && $subscriptionRequired && $showGalleyLinks}
 			<div id="accessKey">
 				<img src="{$baseUrl}/lib/pkp/templates/images/icons/fulltext_open_medium.gif" alt="{translate key="article.accessLogoOpen.altText"}" />
@@ -82,17 +82,7 @@
 		</div>
 	{/if}
 
-	{if $article->getLocalizedSubject()}
-		<div id="articleSubject">
-		<h4>{translate key="article.subject"}</h4>
-		<br />
-		<div>{$article->getLocalizedSubject()|escape}</div>
-		<br />
-		</div>
-	{/if}
-
 	{if $citationFactory->getCount()}
-		<div id="articleCitations">
 		<h4>{translate key="submission.citations"}</h4>
 		<br />
 		<div>
@@ -101,7 +91,6 @@
 			{/iterate}
 		</div>
 		<br />
-		</div>
 	{/if}
 
 	{if (!$subscriptionRequired || $article->getAccessStatus() == $smarty.const.ARTICLE_ACCESS_OPEN || $subscribedUser || $subscribedDomain)}
@@ -113,7 +102,7 @@
 	{if $galleys}
 		{translate key="reader.fullText"}
 		{if $hasAccess || ($subscriptionRequired && $showGalleyLinks)}
-			{foreach from=$article->getGalleys() item=galley name=galleyList}
+			{foreach from=$article->getLocalizedGalleys() item=galley name=galleyList}
 				<a href="{url page="article" op="view" path=$article->getBestArticleId($currentJournal)|to_array:$galley->getBestGalleyId($currentJournal)}" class="file" target="_parent">{$galley->getGalleyLabel()|escape}</a>
 				{if $subscriptionRequired && $showGalleyLinks && $restrictOnlyPdf}
 					{if $article->getAccessStatus() == $smarty.const.ARTICLE_ACCESS_OPEN || !$galley->isPdfGalley()}

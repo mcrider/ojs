@@ -82,11 +82,9 @@
 				<dc:creator>{$author->getFullName()|strip|escape:"html"}</dc:creator>
 			{/foreach}
 
-			{if $article->getDatePublished()}
-				<dc:date>{$article->getDatePublished()|date_format:"%Y-%m-%d"}</dc:date>
-				<prism:publicationDate>{$article->getDatePublished()|date_format:"%Y-%m-%d"}</prism:publicationDate>
-			{/if}
+			<dc:date>{$article->getDatePublished()|date_format:"%Y-%m-%d"}</dc:date>
 			<prism:volume>{$issue->getVolume()|escape}</prism:volume>
+			<prism:publicationDate>{$article->getDatePublished()|date_format:"%Y-%m-%d"}</prism:publicationDate>
 		</item>
 	{/foreach}{* articles *}
 {/foreach}{* sections *}

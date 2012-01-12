@@ -102,13 +102,6 @@ class LoginHandler extends PKPLoginHandler {
 	}
 
 	/**
-	 * Get the log in URL.
-	 */
-	function _getLoginUrl() {
-		return Request::url(null, 'login', 'signIn');
-	}
-
-	/**
 	 * Configure the template for display.
 	 */
 	function setupTemplate() {

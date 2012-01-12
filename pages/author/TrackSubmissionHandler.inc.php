@@ -370,17 +370,12 @@ class TrackSubmissionHandler extends AuthorHandler {
 	/**
 	 * Remove cover page from article
 	 */
-	function removeArticleCoverPage($args, &$request) {
+	function removeCoverPage($args) {
 		$articleId = isset($args[0]) ? (int)$args[0] : 0;
-		$this->validate($articleId);
-
 		$formLocale = $args[1];
-		if (!Locale::isLocaleValid($formLocale)) {
-			$request->redirect(null, null, 'viewMetadata', $articleId);
-		}
-
+		$this->validate($articleId);
 		$submission =& $this->submission;
-		$journal =& $request->getJournal();
+		$journal =& Request::getJournal();
 
 		import('classes.file.PublicFileManager');
 		$publicFileManager = new PublicFileManager();
@@ -393,7 +388,7 @@ class TrackSubmissionHandler extends AuthorHandler {
 		$articleDao =& DAORegistry::getDAO('ArticleDAO');
 		$articleDao->updateArticle($submission);
 
-		$request->redirect(null, null, 'viewMetadata', $articleId);
+		Request::redirect(null, null, 'viewMetadata', $articleId);
 	}
 
 	function uploadCopyeditVersion() {

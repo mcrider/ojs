@@ -135,7 +135,9 @@ class UserXMLParser {
 								$newUser->setSignature($attrib->getValue(), $locale);
 								break;
 							case 'interests':
-								$newUser->setTemporaryInterests($attrib->getValue());
+								$locale = $attrib->getAttribute('locale');
+								if (empty($locale)) $locale = $journalPrimaryLocale;
+								$newUser->setInterests($attrib->getValue(), $locale);
 								break;
 							case 'gossip':
 								$locale = $attrib->getAttribute('locale');
@@ -248,15 +250,6 @@ class UserXMLParser {
 						return false;
 					}
 				}
-			}
-
-			// Add reviewing interests to interests table
-			$interestDao =& DAORegistry::getDAO('InterestDAO');
-			$interests = $user->getTemporaryInterests();
-			$interests = explode(',', $interests);
-			$interests = array_map('trim', $interests); // Trim leading whitespace
-			if(is_array($interests) && !empty($interests)) {
-				$interestDao->insertInterests($interests, $user->getId());
 			}
 
 			// Enroll user in specified roles
@@ -424,22 +417,6 @@ class ImportedUser extends User {
 	 */
 	function &getRoles() {
 		return $this->roles;
-	}
-
-	/**
-	 * Set the interests to be inserted after we have a user ID
-	 * @param $interests string
-	 */
-	function setTemporaryInterests($interests) {
-	    $this->setData('interests', $interests);
-	}
-
-	/**
-	 * Get the interests to be inserted after we have a user ID
-	 * @return string
-	 */
-	function getTemporaryInterests() {
-	    return $this->getData('interests');
 	}
 
 }

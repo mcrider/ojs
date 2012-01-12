@@ -277,12 +277,6 @@ class NativeExportDom {
 
 		XMLCustomWriter::createChildWithText($doc, $root, 'pages', $article->getPages(), false);
 
-		// NOTE that this is a required field for import, but it's
-		// possible here to generate nonconforming XML via export b/c
-		// of the potentially missing date_published node. This is due
-		// to legacy data issues WRT an earlier lack of ability to
-		// define article pub dates. Some legacy data will be missing
-		// this date.
 		XMLCustomWriter::createChildWithText($doc, $root, 'date_published', NativeExportDom::formatDate($article->getDatePublished()), false);
 
 		if ($article->getAccessStatus() == ARTICLE_ACCESS_OPEN) {
@@ -321,9 +315,9 @@ class NativeExportDom {
 
 		$affiliations = $author->getAffiliation(null);
 		if (is_array($affiliations)) foreach ($affiliations as $locale => $affiliation) {
-			$affiliationNode =& XMLCustomWriter::createChildWithText($doc, $root, 'affiliation', $affiliation, false);
-			if ($affiliationNode) XMLCustomWriter::setAttribute($affiliationNode, 'locale', $locale);
-			unset($affiliationNode);
+			$n =& XMLCustomWriter::createChildWithText($doc, $root, 'affiliation', $author->getAffiliation(), false);
+			XMLCustomWriter::setAttribute($n, 'locale', $locale);
+			unset($n);
 		}
 		XMLCustomWriter::createChildWithText($doc, $root, 'country', $author->getCountry(), false);
 		XMLCustomWriter::createChildWithText($doc, $root, 'email', $author->getEmail(), false);

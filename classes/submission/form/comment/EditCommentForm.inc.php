@@ -303,7 +303,7 @@ class EditCommentForm extends Form {
 			$paramArray = array(
 				'name' => $name,
 				'commentName' => $this->user->getFullName(),
-				'comments' => String::html2text($this->getData('comments'))
+				'comments' => $this->getData('comments')	
 			);
 			$email->assignParams($paramArray);
 

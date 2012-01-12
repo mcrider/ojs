@@ -5,14 +5,15 @@
   * locale.xml
   *
   * Copyright (c) 2003-2011 John Willinsky
-  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+  * Weiterverbreitung nach GNU GPL v2. Die vollständigen Bedingungen für die Weiterverbreitung dieser Datei finden Sie unter docs/COPYING.
   *
-  * Localization strings for the de_DE (Deutsch (Deutschland)) locale.
+  * Regionalisierungszeichenketten für die de_DE (Deutsche) Regionaleinstellung.
   *
+  * Version, erstellt durch die Freie Universität Berlin, Redaktionen Querelles-Net und Forum Qualitative Sozialforschung (FQS).
   * $Id$
   -->
   
-<locale name="de_DE" full_name="Deutsch (Deutschland)">
+<locale name="de_DE" full_name="German">
 	<message key="plugins.block.user.displayName">Benutzer/innen-Block</message>
 	<message key="plugins.block.user.description">Dieses Plug-In stellt Werkzeuge für die Benutzer/innen-Konten (z.B. Anmelden, Abmelden, Link zum Konto etc.) in der Sidebar bereit.</message>
 	<message key="plugins.block.user.loggedInAs">Sie sind eingeloggt als…</message>

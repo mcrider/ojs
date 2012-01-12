@@ -14,8 +14,6 @@
 
 import('lib.pkp.classes.form.Form');
 
-define('BFR_COVER_PAGE_IMAGE_NAME', 'coverPage');
-
 class BookForReviewForm extends Form {
 	/** @var $parentPluginName string Name of parent plugin */
 	var $parentPluginName;
@@ -241,27 +239,6 @@ class BookForReviewForm extends Form {
 	}
 
 	/**
-	 * Check to ensure that the form is correctly validated.
-	 */
-	function validate() {
-		// Verify that book cover image, if supplied, is actually an image.
-		import('classes.file.PublicFileManager');
-		$publicFileManager = new PublicFileManager();
-		if ($publicFileManager->uploadedFileExists(BFR_COVER_PAGE_IMAGE_NAME)) {
-			$type = $publicFileManager->getUploadedFileType(BFR_COVER_PAGE_IMAGE_NAME);
-			$extension = $publicFileManager->getImageExtension($type);
-			if (!$extension) {
-				// Not a valid image.
-				$this->addError('imageFile', Locale::translate('submission.layout.imageInvalid'));
-				return false;
-			}
-		}
-
-		// Fall back on parent validation
-		return parent::validate();
-	}
-
-	/**
 	 * Save book. 
 	 */
 	function execute() {
@@ -284,6 +261,7 @@ class BookForReviewForm extends Form {
 		} else {
 			$book =& $this->book;
 		}
+
 
 		$book->setAuthorType($this->getData('authorType'));
 		$book->setPublisher($this->getData('publisher'));
@@ -350,11 +328,10 @@ class BookForReviewForm extends Form {
 		import('classes.file.PublicFileManager');
 		$publicFileManager = new PublicFileManager();
 		$formLocale = $this->getFormLocale();
-		if ($publicFileManager->uploadedFileExists(BFR_COVER_PAGE_IMAGE_NAME)) {
-			$originalFileName = $publicFileManager->getUploadedFileName(BFR_COVER_PAGE_IMAGE_NAME);
-			$type = $publicFileManager->getUploadedFileType(BFR_COVER_PAGE_IMAGE_NAME);
-			$newFileName = 'cover_bfr_' . $book->getId() . '_' . $formLocale . $publicFileManager->getImageExtension($type);
-			$publicFileManager->uploadJournalFile($journalId, BFR_COVER_PAGE_IMAGE_NAME, $newFileName);
+		if ($publicFileManager->uploadedFileExists('coverPage')) {
+			$originalFileName = $publicFileManager->getUploadedFileName('coverPage');
+			$newFileName = 'cover_bfr_' . $book->getId() . '_' . $formLocale . '.' . $publicFileManager->getExtension($originalFileName);
+			$publicFileManager->uploadJournalFile($journalId, 'coverPage', $newFileName);
 			$book->setOriginalFileName($publicFileManager->truncateFileName($originalFileName, 127), $formLocale);
 			$book->setFileName($newFileName, $formLocale);
 

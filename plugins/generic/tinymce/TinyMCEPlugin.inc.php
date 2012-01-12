@@ -91,9 +91,7 @@ class TinyMCEPlugin extends GenericPlugin {
 						break;
 				}
 				break;
-			case 'author/submitSuppFile':
-			case 'author/saveSubmitSuppFile':
-				$fields[] = 'description'; break;
+			case 'author/submitSuppFile': $fields[] = 'description'; break;
 			case 'editor/createIssue':
 			case 'editor/issueData':
 			case 'editor/editIssue':
@@ -189,8 +187,7 @@ class TinyMCEPlugin extends GenericPlugin {
 				break;
 			case 'manager/setup':
 			case 'manager/saveSetup':
-				$args = Request::getRequestedArgs();
-				switch (array_shift($args)) {
+				switch (array_shift(Request::getRequestedArgs())) {
 					case 1:
 						$fields[] = 'mailingAddress';
 						$fields[] = 'contactMailingAddress';

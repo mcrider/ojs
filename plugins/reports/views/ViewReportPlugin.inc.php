@@ -93,10 +93,6 @@ class ViewReportPlugin extends ReportPlugin {
 					$galleyLabels[] = $label;
 				}
 
-				// Make sure the array is the same size as in previous iterations
-				//  so that we insert values into the right location
-				$galleyViews[$articleId] = array_pad($galleyViews[$articleId], count($galleyLabels), '');
-
 				$views = $galley->getViews();
 				$galleyViews[$articleId][$i] = $views;
 				$galleyViewTotals[$articleId] += $views;

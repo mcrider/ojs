@@ -40,9 +40,7 @@
 			<webMaster>{$journal->getSetting('supportEmail')|strip|escape:"html"}{if $journal->getSetting('contactName')} ({$journal->getSetting('supportName')|strip|escape:"html"}){/if}</webMaster>
 		{/if}
 
-		{if $issue->getDatePublished()}
-			<pubDate>{$issue->getDatePublished()|date_format:"%a, %d %b %Y %T %z"}</pubDate>
-		{/if}
+		<pubDate>{$issue->getDatePublished()|date_format:"%a, %d %b %Y %T %z"}</pubDate>
 
 		{* <lastBuildDate/> *}
 		{* <category/> *}
@@ -67,9 +65,7 @@
 					{* <source/> *}
 
 					<guid isPermaLink="true">{url page="article" op="view" path=$article->getBestArticleId($currentJournal)}</guid>
-					{if $article->getDatePublished()}
-						<pubDate>{$article->getDatePublished()|date_format:"%a, %d %b %Y %T %z"}</pubDate>
-					{/if}
+					<pubDate>{$article->getDatePublished()|date_format:"%a, %d %b %Y %T %z"}</pubDate>
 				</item>
 			{/foreach}{* articles *}
 		{/foreach}{* sections *}

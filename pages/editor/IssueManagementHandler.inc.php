@@ -249,17 +249,13 @@ class IssueManagementHandler extends EditorHandler {
 	/**
 	 * Remove cover page from issue
 	 */
-	function removeIssueCoverPage($args) {
+	function removeCoverPage($args) {
 		$issueId = isset($args[0]) ? (int)$args[0] : 0;
-		$this->validate($issueId, true);
-
 		$formLocale = $args[1];
-		if (!Locale::isLocaleValid($formLocale)) {
-			Request::redirect(null, null, 'issueData', $issueId);
-		}
+		$this->validate($issueId, true);
+		$issue =& $this->issue;
 
 		import('classes.file.PublicFileManager');
-		$issue =& $this->issue;
 		$journal =& Request::getJournal();
 		$publicFileManager = new PublicFileManager();
 		$publicFileManager->removeJournalFile($journal->getId(),$issue->getFileName($formLocale));
@@ -549,24 +545,17 @@ class IssueManagementHandler extends EditorHandler {
 	 */
 	function moveArticleToc($args, $request) {
 		$this->validate(null, true);
-		$pubId = (int) $request->getUserVar('id');
+		$issue =& $this->issue;
 
 		$journal =& $request->getJournal();
 
 		$publishedArticleDao =& DAORegistry::getDAO('PublishedArticleDAO');
 		$issueDao =& DAORegistry::getDAO('IssueDAO');
 
-		$publishedArticle =& $publishedArticleDao->getPublishedArticleById($pubId);
-
-		if (!$publishedArticle) $request->redirect(null, null, 'index');
-
-		$articleId = $publishedArticle->getId();
-		$articleDao =& DAORegistry::getDAO('ArticleDAO');
-		$article =& $articleDao->getArticle($articleId, $journal->getId());
-
+		$publishedArticle =& $publishedArticleDao->getPublishedArticleById($request->getUserVar('id'));
 		$issue =& $issueDao->getIssueById($publishedArticle->getIssueId());
 
-		if (!$article || !$issue || $publishedArticle->getIssueId() != $issue->getId() || $issue->getJournalId() != $journal->getId()) $request->redirect(null, null, 'index');
+		if (!$publishedArticle || $publishedArticle->getIssueId() != $issue->getId() || $issue->getJournalId() != $journal->getId()) $request->redirect(null, null, 'index');
 
 		if ($d = $request->getUserVar('d')) {
 			// Moving by up/down arrows
@@ -586,7 +575,7 @@ class IssueManagementHandler extends EditorHandler {
 			}
 		}
 		$publishedArticleDao->updatePublishedArticle($publishedArticle);
-		$publishedArticleDao->resequencePublishedArticles($article->getSectionId(), $issue->getIssueId());
+		$publishedArticleDao->resequencePublishedArticles($publishedArticle->getSectionId(), $issue->getIssueId());
 
 		// Only redirect if we're not doing drag and drop
 		if ($d) {

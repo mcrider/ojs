@@ -6,7 +6,7 @@
   * Copyright (c) 2003-2011 John Willinsky
   * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
   *
-  * Localized email templates XML file.
+  * Localized email templates XML file. / marco.tullney@fu-berlin.de
   *
   * $Id$
   -->
@@ -629,7 +629,7 @@ ich habe die Fahnenkorrekturen meines Manuskripts "{$articleTitle}" für {$journ
 		<description>Diese E-Mail von der/dem Autor/in an Korrekturlektor/in und Redakteur/in benachrichtigt diese, dass der Korrekturlektoratdurchgang der Autorin/des Autors abgeschlossen ist und dann Details in den Kommentaren zum Artikel zu finden sind.</description>
 	</email_text>
 	<email_text key="PROOFREAD_AUTHOR_ACK">
-		<subject>Eingangsbestätigung für die Korrekturfassung an Autor/in</subject>
+		<subject>Eingangsbestätigung für die Korrekturfassung an Verfasser/in</subject>
 		<body>{$authorName},
 
 vielen Dank für die Fahnenkorrektur Ihres Manuskripts "{$articleTitle}". Wir freuen uns auf die baldige Veröffentlichung Ihres Beitrags in {$journalName}.
@@ -904,8 +904,7 @@ könnten Sie uns bitte die korrekte Zitation für den folgenden Verweis aus Ihre
 Vielen Dank!
 
 {$userFirstName}
-Lektor/in, {$journalName}
-</body>
+Lektor/in, {$journalName}</body>
 		<description>Diese E-Mail ermöglicht es Lektor/innen, zusätzliche Informationen über Verweise von Autor/innen anzufordern.</description>
 	</email_text>
 </email_texts>

@@ -52,7 +52,7 @@ class ArticleGalleyForm extends Form {
 
 		// Validation checks for this form
 		$this->addCheck(new FormValidator($this, 'label', 'required', 'submission.layout.galleyLabelRequired'));
-		$this->addCheck(new FormValidator($this, 'galleyLocale', 'required', 'submission.layout.galleyLocaleRequired'), create_function('$galleyLocale,$availableLocales', 'return in_array($galleyLocale,$availableLocales);'), array_keys($journal->getSupportedSubmissionLocaleNames()));
+		$this->addCheck(new FormValidator($this, 'galleyLocale', 'required', 'submission.layout.galleyLocaleRequired'), create_function('$galleyLocale,$availableLocales', 'return in_array($galleyLocale,$availableLocales);'), array_keys($journal->getSupportedLocaleNames()));
 		$this->addCheck(new FormValidatorPost($this));
 	}
 
@@ -65,7 +65,7 @@ class ArticleGalleyForm extends Form {
 
 		$templateMgr->assign('articleId', $this->articleId);
 		$templateMgr->assign('galleyId', $this->galleyId);
-		$templateMgr->assign('supportedSubmissionLocales', $journal->getSupportedSubmissionLocaleNames());
+		$templateMgr->assign('supportedLocales', $journal->getSupportedLocaleNames());
 		$templateMgr->assign('enablePublicGalleyId', $journal->getSetting('enablePublicGalleyId'));
 
 		if (isset($this->galley)) {
@@ -135,7 +135,6 @@ class ArticleGalleyForm extends Form {
 
 		$fileName = isset($fileName) ? $fileName : 'galleyFile';
 		$journal =& Request::getJournal();
-		$fileId = null;
 
 		if (isset($this->galley)) {
 			$galley =& $this->galley;
@@ -144,7 +143,6 @@ class ArticleGalleyForm extends Form {
 			if ($articleFileManager->uploadedFileExists($fileName)) {
 				if($galley->getFileId()) {
 					$articleFileManager->uploadPublicFile($fileName, $galley->getFileId());
-					$fileId = $galley->getFileId();
 				} else {
 					$fileId = $articleFileManager->uploadPublicFile($fileName);
 					$galley->setFileId($fileId);
@@ -181,6 +179,12 @@ class ArticleGalleyForm extends Form {
 			if ($articleFileManager->uploadedFileExists($fileName)) {
 				$fileType = $articleFileManager->getUploadedFileType($fileName);
 				$fileId = $articleFileManager->uploadPublicFile($fileName);
+
+				// Update file search index
+				import('classes.search.ArticleSearchIndex');
+				ArticleSearchIndex::updateFileIndex($this->articleId, ARTICLE_SEARCH_GALLEY_FILE, $fileId);
+			} else {
+				$fileId = 0;
 			}
 
 			if (isset($fileType) && strstr($fileType, 'html')) {
@@ -236,12 +240,6 @@ class ArticleGalleyForm extends Form {
 			// Insert new galley
 			$galleyDao->insertGalley($galley);
 			$this->galleyId = $galley->getId();
-		}
-
-		if ($fileId) {
-			// Update file search index
-			import('classes.search.ArticleSearchIndex');
-			ArticleSearchIndex::updateFileIndex($this->articleId, ARTICLE_SEARCH_GALLEY_FILE, $fileId);
 		}
 
 		return $this->galleyId;

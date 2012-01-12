@@ -65,7 +65,7 @@ class UserExportDom {
 			}
 			$interestsNode =& XMLCustomWriter::createChildWithText($doc, $userNode, 'interests', $user->getInterests(), false);
 			if ($interestsNode) {
-				XMLCustomWriter::setAttribute($interestsNode);
+				XMLCustomWriter::setAttribute($interestsNode, 'locale', $locale);
 			}
 			if (is_array($user->getGossip(null))) {
 				foreach($user->getGossip(null) as $locale => $value) {

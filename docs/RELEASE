@@ -1,30 +1,39 @@
-OJS 2.3.6 Release Notes
-GIT tag: ojs-2_3_6-0
-Release date: June 30, 2011
-===========================
+OJS 2.3.4 Release Notes
+GIT tag: ojs-2_3_4-0
+Release date: Feb 1, 2011
+=================================
 
 New Features
 ------------
-	#6566# Publicly display keywords in article abstract pages, if they exist
+	#4904# Added subscription report for CSV export
 
 Bug Fixes
 ---------
-	#5280# E-mail attachment losing extension
-	#6272# Misplaced closing div tag in article comments template causes rendering issues with footer
-	#6655# Assertion Failed error with TinyMCE image upload interface
-	#6667# Upgrade does not mark old version as no longer current
-	#6669# Correct pkp.ubc.ca links in non-English languages
-	#6671# UserManagementForm::initData not always called with args
-	#6672# ReviewAssignmentDAO>getCompletedReviewCounts() no longer gets called, and should be removed
-	#6673# Duplicate message keys
-	#6674# Dead code removal
-	#6689# Cover image upload does not check file type
-	#6695# Books For Review cover page upload file type not validated
-	#6696# Uploads must not use supplied file extension
-	#6698# RT foldoc.org update
-	#6701# Attempt to remove article cover image leads to 404
-	#6716# Untranslated locale keys on copyeditor edit metadata page
-	#6719# Issue ToC sorting options broken
-	#6723# Some ICO file types don't upload for favicon
-	#6724# Unlocalized button in METS plugin
-	#6727# Lack of writable image dir results in iBrowser fatal error
+	#6259# User interests stored in database urlencoded
+	#6219# Subscription end date resets to expiry default
+	#6097# Unexpected counter log data loss on upgrade
+	#6133# Upgrade to 2.3.3-3 Doesn't correctly update version
+	#6115# citation assistant: remap ctrl+a and ctrl-c in citation assistant
+	#6119# "References" header appears when there are no references
+	#6048# Fatal error searching submissions from Editor home
+	#6220# Upgrade process incorrect for OJS 2.1.1 and prior to 2.3.3
+	#6226# HttpsPolicy tries to return undefined constant.
+	#6248# Article commenting comments outdated (PKP part of patch only)
+	#6255# Fixed join condition on editor submission fetch
+	#6080# TinyMCE uses HTML entities rather than UTF8
+	#6246# Upgrade fails on PHP4 due to incorrect false return
+	#6258# Correct index warning for reviewer statistics
+	#6249# Fix public commenting function name
+	#6257# Case changes from 2.x to 2.3.x orphans some plug-in settings
+	#6245# Upgrade loses submission notes
+	#6268# Copyediting notification error without copyeditor assigned
+	#6290# Lengthen DOI suffix maxlength
+	#6279# Some generic plugins don't work after install/upgrade
+	#6326# Breadcrumb URL for editor's submissions pages presumes SE role
+	#6120# Wrong parameters supplied to PDF indexing defaults
+	#4965# DOI does not import in Native XML Import
+	#6352# Authorization denied redirect goes to 404
+	#6084# SWORD plugin does not implement lazy-load
+	#6243# Notify Users link broken for Editors
+	#6056# Improve SWORD "creator" export
+	#6017# User interests disappear

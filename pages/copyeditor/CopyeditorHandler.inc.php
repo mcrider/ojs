@@ -12,7 +12,10 @@
  * @brief Handle requests for copyeditor functions. 
  */
 
-import('classes.submission.copyeditor.CopyeditorAction');
+// $Id$
+
+
+import ('classes.submission.copyeditor.CopyeditorAction');
 import('classes.handler.Handler');
 
 class CopyeditorHandler extends Handler {

@@ -73,6 +73,7 @@ class CoinsPlugin extends GenericPlugin {
 				array('rft.jtitle', $journal->getLocalizedTitle()),
 				array('rft.atitle', $article->getLocalizedTitle()),
 				array('rft.artnum', $article->getBestArticleId()),
+				array('rft.date', date('Y-m-d', strtotime($article->getDatePublished()))),
 				array('rft.stitle', $journal->getLocalizedSetting('abbreviation')),
 				array('rft.volume', $issue->getVolume()),
 				array('rft.issue', $issue->getNumber()),
@@ -80,12 +81,6 @@ class CoinsPlugin extends GenericPlugin {
 				array('rft.aufirst', $firstAuthor->getFirstName()),
 				array('rft.auinit', $firstAuthor->getMiddleName())
 			);
-
-			$datePublished = $article->getDatePublished();
-			if (!$datePublished) $datePublished = $issue->getDatePublished();
-			if ($datePublished) {
-				$vars[] = array('rft.date', date('Y-m-d', strtotime($datePublished)));
-			}
 
 			foreach ($authors as $author) {
 				$vars[] = array('rft.au', $author->getFullName());

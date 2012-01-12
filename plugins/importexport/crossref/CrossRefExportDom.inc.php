@@ -142,10 +142,8 @@ class CrossRefExportDom {
 	function &generateJournalIssueDom(&$doc, &$journal, &$issue, &$section, &$article) {
 		$journalIssueNode =& XMLCustomWriter::createElement($doc, 'journal_issue');
 
-		if ($issue->getDatePublished()) {
-			$publicationDateNode =& CrossRefExportDom::generatePublisherDateDom($doc, $issue->getDatePublished());
-			XMLCustomWriter::appendChild($journalIssueNode, $publicationDateNode);
-		}
+		$publicationDateNode =& CrossRefExportDom::generatePublisherDateDom($doc, $issue->getDatePublished());
+		XMLCustomWriter::appendChild($journalIssueNode, $publicationDateNode);
 
 		$journalVolumeNode =& XMLCustomWriter::createElement($doc, 'journal_volume');
 		XMLCustomWriter::appendChild($journalIssueNode, $journalVolumeNode);
@@ -186,10 +184,8 @@ class CrossRefExportDom {
 		XMLCustomWriter::appendChild($journalArticleNode, $contributorsNode);
 
 		/* publication date of issue */
-		if ($issue->getDatePublished()) {
-			$publicationDateNode =& CrossRefExportDom::generatePublisherDateDom($doc, $issue->getDatePublished());
-			XMLCustomWriter::appendChild($journalArticleNode, $publicationDateNode);
-		}
+		$publicationDateNode =& CrossRefExportDom::generatePublisherDateDom($doc, $issue->getDatePublished());
+		XMLCustomWriter::appendChild($journalArticleNode, $publicationDateNode);
 
 		/* publisher_item is the article pages */
 		if ($article->getPages() != '') {
