@@ -165,6 +165,11 @@ class SectionEditorHandler extends Handler {
 		$templateMgr->display('sectionEditor/index.tpl');
 	}
 
+	function reassignReviewer($args) {
+		import('pages.sectionEditor.SubmissionEditHandler');
+		SubmissionEditHandler::reassignReviewer($args);
+	}
+
 	/**
 	 * Setup common template variables.
 	 * @param $subclass boolean set to true if caller is below this handler in the hierarchy

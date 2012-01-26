@@ -670,6 +670,33 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		}
 	}
 
+	/*
+	 * Reassign a reviewer to the current round of review
+	 * @param $args array
+	 * @param $request object
+	 */
+	function reassignReviewer($args) {
+			$articleId = isset($args[0]) ? (int) $args[0] : 0;
+			$userId = isset($args[1]) ? (int) $args[1] : 0;
+			$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
+			$submission =& $sectionEditorSubmissionDao->getSectionEditorSubmission($articleId);
+			$round = $submission->getCurrentRound();
+
+			$reviewAssignmentDao = &DAORegistry::getDAO('ReviewAssignmentDAO');
+			$reviewAssignment =& $reviewAssignmentDao->getReviewAssignment($articleId, $userId, $submission->getCurrentRound());
+			if($reviewAssignment) {
+					$reviewAssignment->setDeclined(false);
+					$reviewAssignment->setDateAssigned(Core::getCurrentDate());
+					$reviewAssignment->setDateNotified(null);
+					$reviewAssignment->setDateConfirmed(null);
+					$reviewAssignment->setRound($submission->getCurrentRound());
+
+
+					$reviewAssignmentDao->updateReviewAssignment($reviewAssignment);
+			}
+			Request::redirect(null, null, 'submissionReview', $articleId);
+	}
+
 	function thankReviewer($args, $request) {
 		$articleId = (int) $request->getUserVar('articleId');
 		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
