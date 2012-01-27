@@ -46,6 +46,15 @@ class SiteSettingsForm extends PKPSiteSettingsForm {
 		$siteDao =& DAORegistry::getDAO('SiteDAO');
 		$site =& $siteDao->getSite();
 
+		$allThemes =& PluginRegistry::loadCategory('themes');
+		$themes = array();
+		foreach ($allThemes as $key => $junk) {
+			$plugin =& $allThemes[$key]; // by ref
+			$themes[basename($plugin->getPluginPath())] =& $plugin;
+			unset($plugin);
+		}
+
+		$this->_data['themes'] = $themes;
 		$this->_data['useAlphalist'] = $site->getSetting('useAlphalist');
 		$this->_data['usePaging'] = $site->getSetting('usePaging');
 	}
