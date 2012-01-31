@@ -2346,7 +2346,13 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			// Schedule against an issue.
 			if ($publishedArticle) {
 				$publishedArticle->setIssueId($issueId);
+
+				// Insert article into the end of the section
+				$publishedArticle->setSeq(REALLY_BIG_NUMBER);
 				$publishedArticleDao->updatePublishedArticle($publishedArticle);
+
+				// Resequence the articles.
+				$publishedArticleDao->resequencePublishedArticles($submission->getSectionId(), $issueId);
 			} else {
 				$publishedArticle = new PublishedArticle();
 				$publishedArticle->setId($submission->getId());
