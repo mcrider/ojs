@@ -49,6 +49,11 @@ class UserManagementForm extends Form {
 		}
 		$this->addCheck(new FormValidator($this, 'firstName', 'required', 'user.profile.form.firstNameRequired'));
 		$this->addCheck(new FormValidator($this, 'lastName', 'required', 'user.profile.form.lastNameRequired'));
+
+		$this->addCheck(new FormValidator($this, 'country', 'required', 'user.profile.form.countryRequired'));
+		$this->addCheck(new FormValidator($this, 'province', 'required', 'user.profile.provinceRequired'));
+		$this->addCheck(new FormValidator($this, 'specialty', 'required', 'user.profile.specialtyRequired'));
+
 		$this->addCheck(new FormValidatorUrl($this, 'userUrl', 'optional', 'user.profile.form.urlInvalid'));
 		$this->addCheck(new FormValidatorEmail($this, 'email', 'required', 'user.profile.form.emailRequired'));
 		$this->addCheck(new FormValidatorCustom($this, 'email', 'required', 'user.register.form.emailExists', array(DAORegistry::getDAO('UserDAO'), 'userExistsByEmail'), array($this->userId, true), true));
@@ -124,6 +129,40 @@ class UserManagementForm extends Form {
 		$countries =& $countryDao->getCountries();
 		$templateMgr->assign_by_ref('countries', $countries);
 
+
+		$specialties = array('gastroenterology' => 'Gastroenterology',
+			'generalPractitioner' => 'General Practitioner/Family Medicine',
+			'gynelogicOncology' => 'Gynecologic Oncology',
+			'hematology' => 'Hematology',
+			'internalMedicine' => 'Internal Medicine',
+			'labResearch' => 'Laboratory Research',
+			'medicalOncology' => 'Medical Oncology',
+			'oncologyNurse' => 'Oncology Nurse',
+			'pathology' => 'Pathology',
+			'pediatricOncology' => 'Pediatric Oncology',
+			'pharmacist' => 'Pharmacist',
+			'radiationOncology' => 'Radiation Oncology',
+			'surgicalOncology' => 'Surgical Oncology',
+			'urologicOncology' => 'Urologic Oncology',
+			'other' => 'Other (please specify)');
+		$templateMgr->assign('specialties', $specialties);
+
+		$provinces = array('britishColumbia' => 'British Columbia',
+			'manitoba' => 'Manitoba',
+			'newBrunswick' => 'New Brunswick',
+			'newfoundlandAndLab' => 'Newfoundland and Labrador',
+			'northwestTerr' => 'Northwest Territories',
+			'novaScotia' => 'Nova Scotia',
+			'nunavut' => 'Nunavut',
+			'ontario' => 'Ontario',
+			'pei' => 'Prince Edward Island',
+			'quebec' => 'Quebec',
+			'saskatchewan' => 'Saskatchewan',
+			'yukon' => 'Yukon Territory',
+			'usa' => 'United States',
+			'otherForeign' => 'Other Foreign');
+		$templateMgr->assign('provinces', $provinces);
+
 		$authDao =& DAORegistry::getDAO('AuthSourceDAO');
 		$authSources =& $authDao->getSources();
 		$authSourceOptions = array();
@@ -169,7 +208,12 @@ class UserManagementForm extends Form {
 					'interestsKeywords' => $interestManager->getInterestsForUser($user),
 					'interestsTextOnly' => $interestManager->getInterestsString($user),
 					'gossip' => $user->getGossip(null), // Localized
-					'userLocales' => $user->getLocales()
+					'userLocales' => $user->getLocales(),
+
+					'compSubscription' => $user->getLocalizedData('compSubscription'), 
+					'province' => $user->getLocalizedData('province'), 
+					'specialty' => $user->getLocalizedData('specialty'), 
+					'specialtyOther' => $user->getLocalizedData('specialtyOther')
 				);
 
 			} else {
@@ -192,6 +236,7 @@ class UserManagementForm extends Form {
 	 */
 	function readInputData() {
 		$this->readUserVars(array(
+			'compSubscription', 'province', 'specialty', 'specialtyOther', 
 			'authId',
 			'enrollAs',
 			'password',
@@ -237,6 +282,14 @@ class UserManagementForm extends Form {
 			// The interests are coming in encoded -- Decode them for DB storage
 			$this->setData('interestsKeywords', array_map('urldecode', $keywords['interests']));
 		}
+
+		if($this->getData('specialty') == 'other') {
+			$this->addCheck(new FormValidator($this, 'specialtyOther', 'required', 'user.profile.specialtyOtherRequired'));
+		}
+
+		if($this->getData('compSubscription') == 1) {
+			$this->addCheck(new FormValidator($this, 'mailingAddress', 'required', 'user.profile.form.mailingAddressRequired'));
+		}
 	}
 
 	function getLocaleFieldNames() {
@@ -277,6 +330,14 @@ class UserManagementForm extends Form {
 		$user->setGossip($this->getData('gossip'), null); // Localized
 		$user->setMustChangePassword($this->getData('mustChangePassword') ? 1 : 0);
 		$user->setAuthId((int) $this->getData('authId'));
+
+		// Set custom data
+		$user->setData('compSubscription', $this->getData('compSubscription'), $this->getFormLocale());
+		$user->setData('province', $this->getData('province'), $this->getFormLocale());
+		$user->setData('specialty', $this->getData('specialty'), $this->getFormLocale());
+		if($this->getData('specialty') == 'other') $user->setData('specialtyOther', $this->getData('specialtyOther'), $this->getFormLocale());
+
+
 
 		$site =& Request::getSite();
 		$availableLocales = $site->getSupportedLocales();

@@ -52,6 +52,9 @@ class RegistrationForm extends Form {
 			// Validation checks for this form
 			$this->addCheck(new FormValidator($this, 'username', 'required', 'user.profile.form.usernameRequired'));
 			$this->addCheck(new FormValidator($this, 'password', 'required', 'user.profile.form.passwordRequired'));
+			$this->addCheck(new FormValidator($this, 'country', 'required', 'user.profile.form.countryRequired'));
+			$this->addCheck(new FormValidator($this, 'province', 'required', 'user.profile.provinceRequired'));
+			$this->addCheck(new FormValidator($this, 'specialty', 'required', 'user.profile.specialtyRequired'));
 
 			if ($this->existingUser) {
 				// Existing user -- check login
@@ -79,6 +82,9 @@ class RegistrationForm extends Form {
 				if (isset($this->defaultAuth)) {
 					$this->addCheck(new FormValidatorCustom($this, 'username', 'required', 'user.register.form.usernameExists', create_function('$username,$form,$auth', 'return (!$auth->userExists($username) || $auth->authenticate($username, $form->getData(\'password\')));'), array(&$this, $this->defaultAuth)));
 				}
+
+
+
 			}
 		}
 
@@ -107,6 +113,40 @@ class RegistrationForm extends Form {
 		$countryDao =& DAORegistry::getDAO('CountryDAO');
 		$countries =& $countryDao->getCountries();
 		$templateMgr->assign_by_ref('countries', $countries);
+
+		$specialties = array('gastroenterology' => 'Gastroenterology',
+			'generalPractitioner' => 'General Practitioner/Family Medicine',
+			'gynelogicOncology' => 'Gynecologic Oncology',
+			'hematology' => 'Hematology',
+			'internalMedicine' => 'Internal Medicine',
+			'labResearch' => 'Laboratory Research',
+			'medicalOncology' => 'Medical Oncology',
+			'oncologyNurse' => 'Oncology Nurse',
+			'pathology' => 'Pathology',
+			'pediatricOncology' => 'Pediatric Oncology',
+			'pharmacist' => 'Pharmacist',
+			'radiationOncology' => 'Radiation Oncology',
+			'surgicalOncology' => 'Surgical Oncology',
+			'urologicOncology' => 'Urologic Oncology',
+			'other' => 'Other (please specify)');
+		$templateMgr->assign('specialties', $specialties);
+
+		$provinces = array('britishColumbia' => 'British Columbia',
+			'manitoba' => 'Manitoba',
+			'newBrunswick' => 'New Brunswick',
+			'newfoundlandAndLab' => 'Newfoundland and Labrador',
+			'northwestTerr' => 'Northwest Territories',
+			'novaScotia' => 'Nova Scotia',
+			'nunavut' => 'Nunavut',
+			'ontario' => 'Ontario',
+			'pei' => 'Prince Edward Island',
+			'quebec' => 'Quebec',
+			'saskatchewan' => 'Saskatchewan',
+			'yukon' => 'Yukon Territory',
+			'usa' => 'United States',
+			'otherForeign' => 'Other Foreign');
+		$templateMgr->assign('provinces', $provinces);
+
 
 		$userDao =& DAORegistry::getDAO('UserDAO');
 		$templateMgr->assign('genderOptions', $userDao->getGenderOptions());
@@ -145,6 +185,7 @@ class RegistrationForm extends Form {
 	 */
 	function readInputData() {
 		$userVars = array(
+			'compSubscription', 'province', 'specialty', 'specialtyOther', 
 			'username', 'password', 'password2',
 			'salutation', 'firstName', 'middleName', 'lastName',
 			'gender', 'initials', 'country',
@@ -173,6 +214,14 @@ class RegistrationForm extends Form {
 		if ($keywords != null && is_array($keywords['interests'])) {
 			// The interests are coming in encoded -- Decode them for DB storage
 			$this->setData('interestsKeywords', array_map('urldecode', $keywords['interests']));
+		}
+
+		if($this->getData('specialty') == 'other') {
+			$this->addCheck(new FormValidator($this, 'specialtyOther', 'required', 'user.profile.specialtyOtherRequired'));
+		}
+
+		if($this->getData('compSubscription') == 1) {
+			$this->addCheck(new FormValidator($this, 'mailingAddress', 'required', 'user.profile.form.mailingAddressRequired'));
 		}
 	}
 
@@ -222,6 +271,13 @@ class RegistrationForm extends Form {
 			$user->setBiography($this->getData('biography'), null); // Localized
 			$user->setDateRegistered(Core::getCurrentDate());
 			$user->setCountry($this->getData('country'));
+
+			// Set custom data
+			$user->setData('compSubscription', $this->getData('compSubscription'), $this->getFormLocale());
+			$user->setData('province', $this->getData('province'), $this->getFormLocale());
+			$user->setData('specialty', $this->getData('specialty'), $this->getFormLocale());
+			if($this->getData('specialty') == 'other') $user->setData('specialtyOther', $this->getData('specialtyOther'), $this->getFormLocale());
+
 
 			$site =& Request::getSite();
 			$availableLocales = $site->getSupportedLocales();

@@ -92,10 +92,6 @@
 		{/if}{* $captchaEnabled *}
 
 		<tr valign="top">
-			<td class="label">{fieldLabel name="salutation" key="user.salutation"}</td>
-			<td class="value"><input type="text" name="salutation" id="salutation" value="{$salutation|escape}" size="20" maxlength="40" class="textField" /></td>
-		</tr>
-		<tr valign="top">
 			<td class="label">{fieldLabel name="firstName" required="true" key="user.firstName"}</td>
 			<td class="value"><input type="text" id="firstName" name="firstName" value="{$firstName|escape}" size="20" maxlength="40" class="textField" /></td>
 		</tr>
@@ -113,15 +109,6 @@
 		<tr valign="top">
 			<td class="label">{fieldLabel name="initials" key="user.initials"}</td>
 			<td class="value"><input type="text" id="initials" name="initials" value="{$initials|escape}" size="5" maxlength="5" class="textField" />&nbsp;&nbsp;{translate key="user.initialsExample"}</td>
-		</tr>
-
-		<tr valign="top">
-			<td class="label">{fieldLabel name="gender-m" key="user.gender"}</td>
-			<td class="value">
-				<select name="gender" id="gender" size="1" class="selectMenu">
-					{html_options_translate options=$genderOptions selected=$gender}
-				</select>
-			</td>
 		</tr>
 
 		<tr valign="top">
@@ -148,11 +135,6 @@
 		</tr>
 
 		<tr valign="top">
-			<td class="label">{fieldLabel name="userUrl" key="user.url"}</td>
-			<td class="value"><input type="text" id="userUrl" name="userUrl" value="{$userUrl|escape}" size="30" maxlength="90" class="textField" /></td>
-		</tr>
-
-		<tr valign="top">
 			<td class="label">{fieldLabel name="phone" key="user.phone"}</td>
 			<td class="value"><input type="text" name="phone" id="phone" value="{$phone|escape}" size="15" maxlength="24" class="textField" /></td>
 		</tr>
@@ -163,8 +145,27 @@
 		</tr>
 
 		<tr valign="top">
+			<td class="label">{translate key="user.profile.form.compSubscription"}</td>
+			<td class="value">
+				<input type="radio" name="compSubscription" id="compSubscription-0" value="0"{if !$compSubscription} checked="checked"{/if} />&nbsp;{translate key="common.no"}
+				<input type="radio" name="compSubscription" id="compSubscription-1" value="1"{if $compSubscription} checked="checked"{/if} />&nbsp;{translate key="common.yes"} (if selected please provide your full mailing details in the box below)
+			</td>
+		</tr>
+
+		<tr valign="top">
 			<td class="label">{fieldLabel name="mailingAddress" key="common.mailingAddress"}</td>
 			<td class="value"><textarea name="mailingAddress" id="mailingAddress" rows="3" cols="40" class="textArea">{$mailingAddress|escape}</textarea></td>
+		</tr>
+
+		<tr valign="top">
+			<td class="label">{fieldLabel name="specialty" key="user.specialty" required="true"}</td>
+			<td class="value">
+				<select name="specialty" id="specialty" class="selectMenu">
+					<option value=""></option>
+					{html_options options=$specialties selected=$specialty}
+				</select><br />
+				<input type="text" name="specialtyOther" id="specialtyOther" value="{$specialtyOther|escape}" size="30" maxlength="200" class="textField" />
+			</td>
 		</tr>
 
 		<tr valign="top">
@@ -173,6 +174,16 @@
 				<select name="country" id="country" class="selectMenu">
 					<option value=""></option>
 					{html_options options=$countries selected=$country}
+				</select>
+			</td>
+		</tr>
+
+		<tr valign="top">
+			<td class="label">{fieldLabel name="province" key="user.profile.province"}</td>
+			<td class="value">
+				<select name="province" id="province" class="selectMenu">
+					<option value=""></option>
+					{html_options options=$provinces selected=$province}
 				</select>
 			</td>
 		</tr>
@@ -188,15 +199,6 @@
 				<input type="checkbox" name="sendPassword" id="sendPassword" value="1"{if $sendPassword} checked="checked"{/if} /> <label for="sendPassword">{translate key="user.sendPassword.description"}</label>
 			</td>
 		</tr>
-
-		{if count($availableLocales) > 1}
-			<tr valign="top">
-				<td class="label">{translate key="user.workingLanguages"}</td>
-				<td class="value">{foreach from=$availableLocales key=localeKey item=localeName}
-				<input type="checkbox" name="userLocales[]" id="userLocales-{$localeKey|escape}" value="{$localeKey|escape}"{if in_array($localeKey, $userLocales)} checked="checked"{/if} /> <label for="userLocales-{$localeKey|escape}">{$localeName|escape}</label><br />
-				{/foreach}</td>
-			</tr>
-		{/if}{* count($availableLocales) > 1 *}
 	{/if}{* !$existingUser *}
 {/if}{* !$implicitAuth *}
 

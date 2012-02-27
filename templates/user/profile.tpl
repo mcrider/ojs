@@ -33,10 +33,7 @@
 	<td width="20%" class="label">{fieldLabel suppressId="true" name="username" key="user.username"}</td>
 	<td width="80%" class="value">{$username|escape}</td>
 </tr>
-<tr valign="top">
-	<td class="label">{fieldLabel name="salutation" key="user.salutation"}</td>
-	<td class="value"><input type="text" name="salutation" id="salutation" value="{$salutation|escape}" size="20" maxlength="40" class="textField" /></td>
-</tr>
+
 <tr valign="top">
 	<td class="label">{fieldLabel name="firstName" required="true" key="user.firstName"}</td>
 	<td class="value"><input type="text" name="firstName" id="firstName" value="{$firstName|escape}" size="20" maxlength="40" class="textField" /></td>
@@ -53,14 +50,7 @@
 	<td class="label">{fieldLabel name="initials" key="user.initials"}</td>
 	<td class="value"><input type="text" name="initials" id="initials" value="{$initials|escape}" size="5" maxlength="5" class="textField" />&nbsp;&nbsp;{translate key="user.initialsExample"}</td>
 </tr>
-<tr valign="top">
-	<td class="label">{fieldLabel name="gender" key="user.gender"}</td>
-	<td class="value">
-		<select name="gender" id="gender" size="1" class="selectMenu">
-			{html_options_translate options=$genderOptions selected=$gender}
-		</select>
-	</td>
-</tr>
+
 <tr valign="top">
 	<td class="label">{fieldLabel name="affiliation" key="user.affiliation"}</td>
 	<td class="value">
@@ -76,10 +66,7 @@
 	<td class="label">{fieldLabel name="email" required="true" key="user.email"}</td>
 	<td class="value"><input type="text" name="email" id="email" value="{$email|escape}" size="30" maxlength="90" class="textField" /></td>
 </tr>
-<tr valign="top">
-	<td class="label">{fieldLabel name="userUrl" key="user.url"}</td>
-	<td class="value"><input type="text" name="userUrl" id="userUrl" value="{$userUrl|escape}" size="30" maxlength="90" class="textField" /></td>
-</tr>
+
 <tr valign="top">
 	<td class="label">{fieldLabel name="phone" key="user.phone"}</td>
 	<td class="value"><input type="text" name="phone" id="phone" value="{$phone|escape}" size="15" maxlength="24" class="textField" /></td>
@@ -89,15 +76,42 @@
 	<td class="value"><input type="text" name="fax" id="fax" value="{$fax|escape}" size="15" maxlength="24" class="textField" /></td>
 </tr>
 <tr valign="top">
+	<td class="label">{translate key="user.profile.form.compSubscription"}</td>
+	<td class="value">
+		<input type="radio" name="compSubscription" id="compSubscription-0" value="0"{if !$compSubscription} checked="checked"{/if} />&nbsp;{translate key="common.no"}
+		<input type="radio" name="compSubscription" id="compSubscription-1" value="1"{if $compSubscription} checked="checked"{/if} />&nbsp;{translate key="common.yes"} (if selected please provide your full mailing details in the box below)
+	</td>
+</tr>
+<tr valign="top">
 	<td class="label">{fieldLabel name="mailingAddress" key="common.mailingAddress"}</td>
 	<td class="value"><textarea name="mailingAddress" id="mailingAddress" rows="3" cols="40" class="textArea">{$mailingAddress|escape}</textarea></td>
 </tr>
 <tr valign="top">
-	<td class="label">{fieldLabel name="country" key="common.country"}</td>
+	<td class="label">{fieldLabel name="specialty" key="user.specialty" required="true"}</td>
+	<td class="value">
+		<select name="specialty" id="specialty" class="selectMenu">
+			<option value=""></option>
+			{html_options options=$specialties selected=$specialty}
+		</select>
+		<input type="text" name="specialtyOther" id="specialtyOther" value="{$specialtyOther|escape}" size="15" maxlength="200" class="textField" />
+	</td>
+</tr>
+<tr valign="top">
+	<td class="label">{fieldLabel name="country" key="common.country" required="true"}</td>
 	<td class="value">
 		<select name="country" id="country" class="selectMenu">
 			<option value=""></option>
 			{html_options options=$countries selected=$country}
+		</select>
+	</td>
+</tr>
+
+<tr valign="top">
+	<td class="label">{fieldLabel name="province" key="user.profile.province"}</td>
+	<td class="value">
+		<select name="province" id="province" class="selectMenu">
+			<option value=""></option>
+			{html_options options=$provinces selected=$province}
 		</select>
 	</td>
 </tr>
@@ -141,14 +155,6 @@
 		{/if}
 	</td>
 </tr>
-{if count($availableLocales) > 1}
-<tr valign="top">
-	<td class="label">{translate key="user.workingLanguages"}</td>
-	<td>{foreach from=$availableLocales key=localeKey item=localeName}
-		<input type="checkbox" name="userLocales[]" id="userLocales-{$localeKey|escape}" value="{$localeKey|escape}"{if in_array($localeKey, $userLocales)} checked="checked"{/if} /> <label for="userLocales-{$localeKey|escape}">{$localeName|escape}</label><br />
-	{/foreach}</td>
-</tr>
-{/if}
 
 {if $displayOpenAccessNotification}
 	{assign var=notFirstJournal value=0}
