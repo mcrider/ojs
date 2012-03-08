@@ -66,10 +66,22 @@
 	<tr>
 		<td class="label">{translate key="submission.submitter"}</td>
 		<td colspan="2" class="value">
-			{assign var="submitter" value=$submission->getUser()}
-			{assign var=emailString value=$submitter->getFullName()|concat:" <":$submitter->getEmail():">"}
-			{url|assign:"url" page="user" op="email" redirectUrl=$currentUrl to=$emailString|to_array subject=$submission->getLocalizedTitle|strip_tags articleId=$submission->getId()}
-			{$submitter->getFullName()|escape} {icon name="mail" url=$url}
+				{** MC Customization, 15/3/2012 **}
+				{foreach from=$submitters item=submitter}
+					{assign var=emailString value=$submitter->getFullName()|concat:" <":$submitter->getEmail():">"}
+					{url|assign:"url" page="user" op="email" redirectUrl=$currentUrl to=$emailString|to_array subject=$submission->getLocalizedTitle|strip_tags articleId=$submission->getId()}
+					{$submitter->getFullName()|escape} {icon name="mail" url=$url}
+					&nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="deleteSubmitter" path=$submission->getId()|to_array:$submitter->getId()}" class="action">{translate key="common.delete"}</a>
+					<br />
+				{foreachelse}
+					{assign var="submitter" value=$submission->getUser()}
+					{assign var=emailString value=$submitter->getFullName()|concat:" <":$submitter->getEmail():">"}
+					{url|assign:"url" page="user" op="email" redirectUrl=$currentUrl to=$emailString|to_array subject=$submission->getLocalizedTitle|strip_tags articleId=$submission->getId()}
+					{$submitter->getFullName()|escape} {icon name="mail" url=$url}
+				{/foreach}
+			<br />
+			<a href="{url op="assignSubmitter" articleId=$submission->getId()}" class="action">{translate key="submission.addSubmitter"}</a>
+
 		</td>
 	</tr>
 	<tr>

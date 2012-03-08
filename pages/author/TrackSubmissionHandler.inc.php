@@ -100,6 +100,11 @@ class TrackSubmissionHandler extends AuthorHandler {
 		$section =& $sectionDao->getSection($submission->getSectionId());
 		$templateMgr->assign_by_ref('section', $section);
 
+		// Get submitters -- MC Customization, 15/3/2012
+		$submitterDao =& DAORegistry::getDAO('SubmitterDAO');
+		$submitters =& $submitterDao->getSubmittersBySubmissionId($submission->getId());
+		$templateMgr->assign_by_ref('submitters', $submitters);
+
 		$templateMgr->assign_by_ref('journalSettings', $journalSettings);
 		$templateMgr->assign_by_ref('submission', $submission);
 		$templateMgr->assign_by_ref('publishedArticle', $publishedArticle);
@@ -466,6 +471,7 @@ class TrackSubmissionHandler extends AuthorHandler {
 
 		$authorSubmissionDao =& DAORegistry::getDAO('AuthorSubmissionDAO');
 		$roleDao =& DAORegistry::getDAO('RoleDAO');
+		$submitterDao =& DAORegistry::getDAO('SubmitterDAO');
 		$journal =& Request::getJournal();
 		$user =& Request::getUser();
 
@@ -473,14 +479,13 @@ class TrackSubmissionHandler extends AuthorHandler {
 
 		$authorSubmission =& $authorSubmissionDao->getAuthorSubmission($articleId);
 
-		if ($authorSubmission == null) {
+		// MC Customization, 15/3/2012: The code below has been customized to allow for multiple authors
+		if(!$submitterDao->submitterExists($user->getId(), $articleId)) {
+			$isValid = false;
+		} else if ($authorSubmission == null) {
 			$isValid = false;
 		} else if ($authorSubmission->getJournalId() != $journal->getId()) {
 			$isValid = false;
-		} else {
-			if ($authorSubmission->getUserId() != $user->getId()) {
-				$isValid = false;
-			}
 		}
 
 		if (!$isValid) {

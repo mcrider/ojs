@@ -72,6 +72,11 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$templateMgr->assign('isEditor', $isEditor);
 		$templateMgr->assign('enableComments', $enableComments);
 
+		// Get submitters
+		$submitterDao =& DAORegistry::getDAO('SubmitterDAO');
+		$submitters =& $submitterDao->getSubmittersBySubmissionId($submission->getId());
+		$templateMgr->assign_by_ref('submitters', $submitters);
+
 		$sectionDao =& DAORegistry::getDAO('SectionDAO');
 		$templateMgr->assign_by_ref('sections', $sectionDao->getSectionTitles($journal->getId()));
 		if ($enableComments) {

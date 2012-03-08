@@ -121,6 +121,7 @@ class Application extends PKPApplication {
 			'SectionDAO' => 'classes.journal.SectionDAO',
 			'SectionEditorsDAO' => 'classes.journal.SectionEditorsDAO',
 			'SectionEditorSubmissionDAO' => 'classes.submission.sectionEditor.SectionEditorSubmissionDAO',
+			'SubmitterDAO' => 'classes.article.SubmitterDAO',
 			'SubscriptionDAO' => 'classes.subscription.SubscriptionDAO',
 			'SubscriptionTypeDAO' => 'classes.subscription.SubscriptionTypeDAO',
 			'SuppFileDAO' => 'classes.article.SuppFileDAO',

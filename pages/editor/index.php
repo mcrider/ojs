@@ -196,6 +196,8 @@ switch ($op) {
 	case 'setEditorFlags':
 	case 'deleteEditAssignment':
 	case 'assignEditor':
+	case 'assignSubmitter':  // MC Customization, 15/3/2012
+	case 'deleteSubmitter':  // MC Customization, 15/3/2012
 	case 'deleteSubmission':
 	case 'instructions':
 		define('HANDLER_CLASS', 'EditorHandler');

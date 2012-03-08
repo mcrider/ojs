@@ -88,6 +88,54 @@ class EditorAction extends SectionEditorAction {
 		}
 	}
 
+
+	/**
+	 * Assigns a submitter to a submission.
+	 * MC Customization, 15/3/2012
+	 * @param $articleId int
+	 * @return boolean true iff ready for redirect
+	 */
+	function assignSubmitter($articleId, $submitterId, $send = false) {
+		$journal =& Request::getJournal();
+		$submitterDao =& DAORegistry::getDAO('SubmitterDAO');
+		$userDao =& DAORegistry::getDAO('UserDAO'); /* @var $userDao UserDAO */
+		$submitter =& $userDao->getUser($submitterId);
+		$user =& Request::getUser();
+
+		// Make sure the submitter isn't already assigned
+		if($submitterDao->submitterExists($submitterId, $articleId)) return false;
+
+		$editorSubmissionDao =& DAORegistry::getDAO('EditorSubmissionDAO');
+		$editorSubmission =& $editorSubmissionDao->getEditorSubmission($articleId);
+
+		import('classes.mail.ArticleMailTemplate');
+		$email = new ArticleMailTemplate($editorSubmission, 'SUBMITTER_ASSIGN');
+
+		if (!$email->isEnabled() || ($send && !$email->hasErrors())) {
+			if ($email->isEnabled()) {
+				$email->setAssoc(ARTICLE_EMAIL_EDITOR_ASSIGN, ARTICLE_EMAIL_TYPE_EDITOR, $submitter->getId());
+				$email->send();
+			}
+
+			$submitterDao->insertSubmitter($submitterId, $articleId);
+
+			return true;
+		} else {
+			if (!Request::getUserVar('continued')) {
+				$email->addRecipient($submitter->getEmail(), $submitter->getFullName());
+				$paramArray = array(
+					'submitterName' => $submitter->getFullName(),
+					'submitterUsername' => $submitter->getUsername(),
+					'editorialContactSignature' => $user->getContactSignature(),
+					'submissionUrl' => Request::url(null, 'author', 'submission', $articleId),
+				);
+				$email->assignParams($paramArray);
+			}
+			$email->displayEditForm(Request::url(null, null, 'assignSubmitter', 'send'), array('articleId' => $articleId, 'submitterId' => $submitterId));
+			return false;
+		}
+	}
+
 	/**
 	 * Rush a new submission into the end of the editing queue.
 	 * @param $article object

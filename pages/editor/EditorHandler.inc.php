@@ -389,6 +389,95 @@ class EditorHandler extends SectionEditorHandler {
 	}
 
 	/**
+	 * Assign a submitter to give them access to the submission (as an author)
+	 * MC Customization, 15/3/2012: The code below has been customized to allow for multiple authors
+	 */
+	function assignSubmitter($args) {
+		$articleId = (int) Request::getUserVar('articleId');
+		$submitterId = (int) Request::getUserVar('submitterId');
+		$this->validate();
+		AppLocale::requireComponents(array(LOCALE_COMPONENT_PKP_MANAGER)); // manager.people.noneEnrolled
+		$journal =& Request::getJournal();
+		$roleDao =& DAORegistry::getDAO('RoleDAO');
+
+		if(isset($submitterId)) {
+			$isAuthor = $roleDao->roleExists($journal->getId(), $submitterId, ROLE_ID_AUTHOR);
+		}
+
+		if (isset($submitterId) && $submitterId != null && $isAuthor) {
+			// A valid author has already been chosen;
+			// either prompt with a modifiable email or, if this
+			// has been done, send the email and store the author
+			// selection.
+
+			$this->setupTemplate(EDITOR_SECTION_SUBMISSIONS, $articleId, 'summary');
+
+			if (EditorAction::assignSubmitter($articleId, $submitterId, Request::getUserVar('send'))) {
+				Request::redirect(null, null, 'submission', $articleId);
+			}
+		} else {
+			// Allow the user to choose a section editor or editor.
+			$this->setupTemplate(EDITOR_SECTION_SUBMISSIONS, $articleId, 'summary');
+
+			$searchType = null;
+			$searchMatch = null;
+			$search = Request::getUserVar('search');
+			$searchInitial = Request::getUserVar('searchInitial');
+			if (!empty($search)) {
+				$searchType = Request::getUserVar('searchField');
+				$searchMatch = Request::getUserVar('searchMatch');
+
+			} elseif (!empty($searchInitial)) {
+				$searchInitial = String::strtoupper($searchInitial);
+				$searchType = USER_FIELD_INITIAL;
+				$search = $searchInitial;
+			}
+
+			$rangeInfo =& Handler::getRangeInfo('editors');
+			$submitterDao =& DAORegistry::getDAO('SubmitterDAO');
+
+			$roleName = 'user.role.author';
+			$submitters =& $submitterDao->getSubmittersNotAssignedToArticle($journal->getId(), $articleId, $roleDao->getRoleIdFromPath('author'), $searchType, $search, $searchMatch, $rangeInfo);
+
+			$templateMgr =& TemplateManager::getManager();
+
+			$templateMgr->assign_by_ref('submitters', $submitters);
+			$templateMgr->assign('roleName', $roleName);
+			$templateMgr->assign('articleId', $articleId);
+
+
+			$templateMgr->assign('searchField', $searchType);
+			$templateMgr->assign('searchMatch', $searchMatch);
+			$templateMgr->assign('search', $search);
+			$templateMgr->assign('searchInitial', Request::getUserVar('searchInitial'));
+
+			$templateMgr->assign('fieldOptions', Array(
+				USER_FIELD_FIRSTNAME => 'user.firstName',
+				USER_FIELD_LASTNAME => 'user.lastName',
+				USER_FIELD_USERNAME => 'user.username',
+				USER_FIELD_EMAIL => 'user.email'
+			));
+			$templateMgr->assign('alphaList', explode(' ', __('common.alphaList')));
+			$templateMgr->display('editor/selectSubmitter.tpl');
+		}
+	}
+
+	/**
+	 * Remove a submitter from a submission.
+	 */
+	function deleteSubmitter($args) {
+		$articleId = isset($args[0]) ? (int) $args[0] : 0;
+		$submitterId = isset($args[1]) ? (int) $args[1] : 0;
+		$this->validate($articleId);
+		parent::setupTemplate(true);
+
+		$submitterDao =& DAORegistry::getDAO('SubmitterDAO');
+		$submitterDao->deleteSubmitterFromSubmission($submitterId, $articleId);
+
+		Request::redirect(null, null, 'submission', $articleId);
+	}
+
+	/**
 	 * Assigns the selected editor to the submission.
 	 */
 	function assignEditor($args) {
