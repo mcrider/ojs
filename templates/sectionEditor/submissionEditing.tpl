@@ -24,6 +24,19 @@
 
 {include file="sectionEditor/submission/summary.tpl"}
 
+{if $currentJournal->getId() == 1}
+<div class="separator"></div>
+
+{** Coaction customization to send an 'article accepted' email **}
+<div id="msAccepted">
+	<h3>{translate key="editor.article.acceptEmail"}</h3>
+	{url|assign:"url" op="sendAcceptanceEmail" articleId=$submission->getId()}
+	{icon name="mail" url=$url}
+	{if $msAcceptedLogEntry}{translate key="editor.article.acceptEmailSent"} {$msAcceptedLogEntry->getDateSent()|date_format:$dateFormatShort}
+	{else}{translate key="editor.article.acceptEmailDescription"}{/if}
+</div>
+{/if}
+
 <div class="separator"></div>
 
 {include file="sectionEditor/submission/copyedit.tpl"}
@@ -39,6 +52,19 @@
 <div class="separator"></div>
 
 {include file="sectionEditor/submission/proofread.tpl"}
+
+{if $currentJournal->getId() == 1}
+<div class="separator"></div>
+
+{** Coaction customization to send an 'article published' email **}
+<div id="msPublished">
+	<h3>{translate key="editor.article.publishedEmail"}</h3>
+	{url|assign:"url" op="sendPublishedEmail" articleId=$submission->getId()}
+	{icon name="mail" url=$url}
+	{if $msPublishedLogEntry}{translate key="editor.article.publishedEmailSent"} {$msPublishedLogEntry->getDateSent()|date_format:$dateFormatShort}
+	{else}{translate key="editor.article.publishedEmailDescription"}{/if}
+</div>
+{/if}
 
 {include file="common/footer.tpl"}
 

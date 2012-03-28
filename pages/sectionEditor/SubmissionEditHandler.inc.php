@@ -301,6 +301,17 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$templateMgr->assign('useProofreaders', $useProofreaders);
 		$templateMgr->assign('submissionAccepted', $submissionAccepted);
 
+		// Coaction customization, March 28, 2012 -- Get Accepted/Published emails if they exist
+		$articleEmailLogDao =& DAORegistry::getDAO('ArticleEmailLogDAO');
+		$msAcceptedLogs = $articleEmailLogDao->getArticleLogEntriesByAssoc($articleId, ARTICLE_EMAIL_EDITOR_NOTIFY_AUTHOR_ACCEPTED);
+
+		$msAcceptedLogEntry =& $msAcceptedLogs->next();
+		$templateMgr->assign_by_ref('msAcceptedLogEntry', $msAcceptedLogEntry);
+		$msPublishedLogs = $articleEmailLogDao->getArticleLogEntriesByAssoc($articleId, ARTICLE_EMAIL_EDITOR_NOTIFY_AUTHOR_PUBLISHED);
+		$msPublishedLogEntry =& $msPublishedLogs->next();
+		$templateMgr->assign_by_ref('msPublishedLogEntry', $msPublishedLogEntry);
+
+
 		// Set up required Payment Related Information
 		import('classes.payment.ojs.OJSPaymentManager');
 		$paymentManager =& OJSPaymentManager::getManager();
@@ -1098,6 +1109,33 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$this->setupTemplate(true, $articleId, 'editing');
 
 		if (SectionEditorAction::notifyCopyeditor($submission, $send)) {
+			Request::redirect(null, null, 'submissionEditing', $articleId);
+		}
+	}
+
+	/* Custom code for Coaction */
+	function sendAcceptanceEmail($args) {
+		$articleId = Request::getUserVar('articleId');
+		$this->validate($articleId, SECTION_EDITOR_ACCESS_EDIT);
+		$submission =& $this->submission;
+
+		$send = Request::getUserVar('send')?true:false;
+		$this->setupTemplate(true, $articleId, 'editing');
+
+		if (SectionEditorAction::sendAcceptanceEmail($submission, $send)) {
+			Request::redirect(null, null, 'submissionEditing', $articleId);
+		}
+	}
+
+	function sendPublishedEmail($args) {
+		$articleId = Request::getUserVar('articleId');
+		$this->validate($articleId, SECTION_EDITOR_ACCESS_EDIT);
+		$submission =& $this->submission;
+
+		$send = Request::getUserVar('send')?true:false;
+		$this->setupTemplate(true, $articleId, 'editing');
+
+		if (SectionEditorAction::sendPublishedEmail($submission, $send)) {
 			Request::redirect(null, null, 'submissionEditing', $articleId);
 		}
 	}

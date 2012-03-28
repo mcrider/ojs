@@ -51,6 +51,8 @@ switch ($op) {
 	case 'saveMetadata':
 	case 'removeArticleCoverPage':
 	case 'editorReview':
+	case 'sendAcceptanceEmail':
+	case 'sendPublishedEmail':
 	case 'selectCopyeditor':
 	case 'notifyCopyeditor':
 	case 'initiateCopyedit':

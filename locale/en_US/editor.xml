@@ -13,6 +13,12 @@
   -->
 
 <locale name="en_US" full_name = "English">
+	<message key="editor.article.acceptEmail">Article Accepted</message>
+	<message key="editor.article.acceptEmailDescription">Send 'Articicle Accepted' email to corresponding author</message>
+	<message key="editor.article.acceptEmailSent">Acceptance email sent on</message>
+	<message key="editor.article.publishedEmail">Article Published</message>
+	<message key="editor.article.publishedEmailDescription">Send 'Article Published' email to corresponding author</message>
+	<message key="editor.article.publishedEmailSent">Published email sent on</message>
 	<message key="editor.article.reviewForms">Review Forms</message>
 	<message key="editor.article.selectReviewForm">Select Review Form</message>
 	<message key="editor.article.clearReviewForm">Clear Review Form</message>

@@ -863,6 +863,93 @@ class SectionEditorAction extends Action {
 	}
 
 	/**
+	 * Send an email to the corresponding author notifying them that their MS was accepted
+	 * Customization for CoAction, March 28, 2012
+	 * @param $sectionEditorSubmission object
+	 * @return true iff ready for redirect
+	 */
+	function sendAcceptanceEmail($sectionEditorSubmission, $send = false) {
+		$userDao =& DAORegistry::getDAO('UserDAO');
+		$journal =& Request::getJournal();
+		$user =& Request::getUser();
+
+		import('classes.mail.ArticleMailTemplate');
+		$email = new ArticleMailTemplate($sectionEditorSubmission, 'MS_ACCEPTED');
+
+		$author =& $userDao->getUser($sectionEditorSubmission->getUserId());
+		if (!isset($author)) return true;
+
+		if (!$email->isEnabled() || ($send && !$email->hasErrors())) {
+			HookRegistry::call('SectionEditorAction::sendAcceptanceEmail', array(&$sectionEditorSubmission, &$author, &$email));
+			if ($email->isEnabled()) {
+				$email->setAssoc(ARTICLE_EMAIL_TYPE_ACCEPTED, ARTICLE_EMAIL_EDITOR_NOTIFY_AUTHOR_ACCEPTED, $sectionEditorSubmission->getArticleId());
+				$email->send();
+			}
+
+		} else {
+			if (!Request::getUserVar('continued')) {
+				$email->addRecipient($author->getEmail(), $author->getFullName());
+				$paramArray = array(
+					'authorName' => $author->getFullName(),
+					'authorUsername' => $author->getUsername(),
+					'authorPassword' => $author->getPassword(),
+					'editorialContactSignature' => $user->getContactSignature(),
+					'submissionEditingUrl' => Request::url(null, 'author', 'submission', $sectionEditorSubmission->getArticleId())
+
+				);
+				$email->assignParams($paramArray);
+			}
+			$email->displayEditForm(Request::url(null, null, 'sendAcceptanceEmail', 'send'), array('articleId' => $sectionEditorSubmission->getArticleId()));
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Send an email to the corresponding author notifying them that their MS was published
+	 * Customization for CoAction, March 28, 2012
+	 * @param $sectionEditorSubmission object
+	 * @return true iff ready for redirect
+	 */
+	function sendPublishedEmail($sectionEditorSubmission, $send = false) {
+		$userDao =& DAORegistry::getDAO('UserDAO');
+		$journal =& Request::getJournal();
+		$user =& Request::getUser();
+
+		import('classes.mail.ArticleMailTemplate');
+		$email = new ArticleMailTemplate($sectionEditorSubmission, 'MS_PUBLISHED');
+
+		$author =& $userDao->getUser($sectionEditorSubmission->getUserId());
+		if (!isset($author)) return true;
+
+		if (!$email->isEnabled() || ($send && !$email->hasErrors())) {
+			HookRegistry::call('SectionEditorAction::sendPublishedEmail', array(&$sectionEditorSubmission, &$author, &$email));
+			if ($email->isEnabled()) {
+				$email->setAssoc(ARTICLE_EMAIL_TYPE_ACCEPTED, ARTICLE_EMAIL_EDITOR_NOTIFY_AUTHOR_PUBLISHED, $sectionEditorSubmission->getArticleId());
+				$email->send();
+			}
+
+		} else {
+			if (!Request::getUserVar('continued')) {
+				$email->addRecipient($author->getEmail(), $author->getFullName());
+				$paramArray = array(
+					'authorName' => $author->getFullName(),
+					'authorUsername' => $author->getUsername(),
+					'authorPassword' => $author->getPassword(),
+					'editorialContactSignature' => $user->getContactSignature(),
+					'submissionEditingUrl' => Request::url(null, 'author', 'submission', $sectionEditorSubmission->getArticleId())
+
+				);
+				$email->assignParams($paramArray);
+			}
+			$email->displayEditForm(Request::url(null, null, 'sendPublishedEmail', 'send'), array('articleId' => $sectionEditorSubmission->getArticleId()));
+			return false;
+		}
+		return true;
+	}
+
+
+	/**
 	 * Assigns a copyeditor to a submission.
 	 * @param $sectionEditorSubmission object
 	 * @param $copyeditorId int
