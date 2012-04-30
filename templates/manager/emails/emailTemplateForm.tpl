@@ -52,7 +52,7 @@
 	</tr>
 	<tr valign="top">
 		<td class="label">{fieldLabel name="body-$localeKey" key="email.body"}</td>
-		<td class="value"><textarea name="body[{$localeKey|escape}]" id="body-{$localeKey|escape}" cols="70" rows="20" class="textArea">{$body.$localeKey|escape}</textarea></td>
+		<td class="value"><textarea name="body[{$localeKey|escape}]" id="emailBody" cols="70" rows="20" class="textArea">{$body.$localeKey|escape|nl2br}</textarea></td>
 	</tr>
 {foreachelse}
 <tr valign="top"><td colspan="2">
@@ -65,7 +65,7 @@
 	</tr>
 	<tr valign="top">
 		<td class="label">{fieldLabel name="body-$currentLocale" key="email.body"}</td>
-		<td class="value"><textarea name="body[{$currentLocale|escape}]" id="body-{$currentLocale|escape}" cols="70" rows="20" class="textArea">{$body.$currentLocale|escape}</textarea></td>
+		<td class="value"><textarea name="body[{$currentLocale|escape}]" id="emailBody" cols="70" rows="20" class="textArea">{$body.$currentLocale|escape|nl2br}</textarea></td>
 	</tr>
 {/foreach}
 </table>

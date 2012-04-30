@@ -146,7 +146,7 @@ function deleteAttachment(fileId) {
 </tr>
 <tr valign="top">
 	<td class="label">{fieldLabel name="body" key="email.body"}</td>
-	<td class="value"><textarea name="body" cols="60" rows="15" class="textArea">{$body|escape}</textarea></td>
+	<td class="value"><textarea id="emailBody" name="body" cols="60" rows="15" class="textArea">{$body|escape|nl2br}</textarea></td>
 </tr>
 </table>
 

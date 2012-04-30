@@ -315,6 +315,12 @@ class TinyMCEPlugin extends GenericPlugin {
 				$fields[] = 'description';
 				break;
 			case 'comment/add': $fields[] = 'commentBody'; break;
+			// For coaction customization -- have to use locale codes because body matches the main <body> tag
+			// Email template editing:
+			default: 
+				$journal = Request::getJournal();
+				if($journal->getId() == 4) $fields[] = 'emailBody'; 
+				break;
 		}
 		HookRegistry::call('TinyMCEPlugin::getEnableFields', array(&$this, &$fields));
 		return $fields;
