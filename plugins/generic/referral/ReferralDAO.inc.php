@@ -194,9 +194,10 @@ class ReferralDAO extends DAO {
 		$result =& $this->retrieveRange(
 			'SELECT	r.*
 			FROM	referrals r,
-				articles a
+				articles a 
+				JOIN submitters ss (ON a.article_id = ss.submission_id)
 			WHERE	r.article_id = a.article_id AND
-				a.user_id = ?' .
+				ss.user_id = ?' .
 				($status !== null?' AND r.status = ?':'') . '
 			ORDER BY r.date_added',
 			$params,

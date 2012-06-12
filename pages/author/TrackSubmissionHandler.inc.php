@@ -101,6 +101,10 @@ class TrackSubmissionHandler extends AuthorHandler {
 		$section =& $sectionDao->getSection($submission->getSectionId());
 		$templateMgr->assign_by_ref('section', $section);
 
+		$submitterDao =& DAORegistry::getDAO('SubmitterDAO');
+		$submitters =& $submitterDao->getBySubmissionId($submission->getId());
+		$templateMgr->assign_by_ref('submitters', $submitters);
+
 		$templateMgr->assign_by_ref('journalSettings', $journalSettings);
 		$templateMgr->assign_by_ref('submission', $submission);
 		$templateMgr->assign_by_ref('publishedArticle', $publishedArticle);
@@ -641,6 +645,7 @@ class TrackSubmissionHandler extends AuthorHandler {
 
 		$authorSubmissionDao =& DAORegistry::getDAO('AuthorSubmissionDAO');
 		$roleDao =& DAORegistry::getDAO('RoleDAO');
+		$submitterDao =& DAORegistry::getDAO('SubmitterDAO');
 		$journal =& $request->getJournal();
 		$user =& $request->getUser();
 
@@ -648,14 +653,12 @@ class TrackSubmissionHandler extends AuthorHandler {
 
 		$authorSubmission =& $authorSubmissionDao->getAuthorSubmission($articleId);
 
-		if ($authorSubmission == null) {
+		if(!$submitterDao->submitterExists($user->getId(), $articleId)) {
+			$isValid = false;
+		} else if ($authorSubmission == null) {
 			$isValid = false;
 		} else if ($authorSubmission->getJournalId() != $journal->getId()) {
 			$isValid = false;
-		} else {
-			if ($authorSubmission->getUserId() != $user->getId()) {
-				$isValid = false;
-			}
 		}
 
 		if (!$isValid) {

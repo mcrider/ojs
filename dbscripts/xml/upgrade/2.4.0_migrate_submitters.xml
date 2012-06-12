@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE data SYSTEM "../../../lib/pkp/dtd/xmlData.dtd">
+
+<!--
+  * 2.4.0_migrate_submitters.xml
+  *
+  * Copyright (c) 2003-2012 John Willinsky
+  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+  *
+  * 2.4.0 Move submission user_ids to the 'submitters' table
+  *
+  -->
+
+<data>
+	<sql>
+		<query>
+			INSERT INTO submitters (user_id, submission_id) SELECT user_id, article_id FROM articles
+		</query>
+	</sql>
+</data>

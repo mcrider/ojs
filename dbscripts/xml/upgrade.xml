@@ -89,8 +89,9 @@
 		<data file="dbscripts/xml/upgrade/2.2.1_preupdate.xml" />
 	</upgrade>
 
-	<!-- Create signoffs table before migration occurs -->
+	<!-- Create signoffs and submitters tables before migration occurs -->
 	<schema file="lib/pkp/xml/schema/signoff.xml" />
+	<schema file="lib/pkp/xml/schema/submitters.xml" />
 
 	<upgrade minversion="2.0.0.0" maxversion="2.2.9.0">
 		<!-- 2.x to 2.3 -->
@@ -132,6 +133,7 @@
 
 	<upgrade minversion="2.0.0.0" maxversion="2.3.9.9">
 		<!-- 2.x to 2.4 -->
+		<data file="dbscripts/xml/upgrade/2.4.0_migrate_submitters.xml" condition="return $installer->columnExists('submitters', 'user_id');" />
 		<data file="dbscripts/xml/upgrade/2.4.0_preupdate.xml" />
 		<data file="dbscripts/xml/upgrade/2.4.0_preupdate_emaillog.xml" condition="return $installer->columnExists('article_email_log', 'log_id');" />
 		<data file="dbscripts/xml/upgrade/2.4.0_preupdate_reviewrounds.xml" condition="return !$installer->columnExists('review_rounds', 'review_round_id');" />

@@ -203,6 +203,8 @@ switch ($op) {
 	case 'setEditorFlags':
 	case 'deleteEditAssignment':
 	case 'assignEditor':
+	case 'assignSubmitter':
+	case 'deleteSubmitter':
 	case 'deleteSubmission':
 	case 'instructions':
 		define('HANDLER_CLASS', 'EditorHandler');
