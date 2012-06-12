@@ -969,4 +969,15 @@ Submission URL: {$submissionUrl}
 {$editorialContactSignature}</body>
         <description>This email is automatically sent to the assigned editor when author uploads a revised version of an article.</description>
     </email_text>
+   <email_text key="SUBMITTER_ASSIGNED">
+        <subject>A submission has been assigned to you</subject>
+        <body>The submission, "{$articleTitle}," to {$journalName} has been assigned to you as a submitter.  You can now interact with the submission as if you were the submitting author.  
+
+Submission URL: {$submissionUrl}
+Username: {$submitterUsername}
+
+Thank you,
+{$editorialContactSignature}</body>
+        <description>This email notifies a user that they have been assigned as a submitter for a submission.</description>
+    </email_text>
 </email_texts>

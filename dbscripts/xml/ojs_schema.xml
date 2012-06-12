@@ -550,6 +550,26 @@
 
 	<!--
 	  *
+	  * TABLE submitters
+	  *
+	  -->
+	<table name="submitters">
+		<field name="user_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="submission_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<descr>Links multiple authors to a submission.</descr>
+		<index name="submitters_pkey">
+			<col>user_id</col>
+			<col>submission_id</col>
+			<UNIQUE />
+		</index>
+	</table>
+
+	<!--
+	  *
 	  * TABLE articles
 	  *
 	  -->
