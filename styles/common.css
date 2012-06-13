@@ -320,11 +320,23 @@ pre {
  * Table styles
  */
 
-table.listing tr.highlight {
-	background: yellow;
+.highlightA {
+	background: #EDEBC4;
+}
+.highlightB {
+	background: #D8E9BD;
+}
+.highlightC {
+	background: #C6EBE4;
+}
+.highlightD {
+	background: #9DD1E6;
+}
+.highlightE {
+	background: #74C5D8;
 }
 
-table.listing tr.fastTracked {
+.fastTracked {
 	background-color: #ABA;
 }
 

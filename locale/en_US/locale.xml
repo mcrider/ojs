@@ -478,7 +478,16 @@ You may optionally provide the user with a reason for disabling their account.</
 
 	<!-- Editor -->
 	<message key="editor.submissionReview.notes"><![CDATA[<ol>
-	<li>Highlighted items indicate action is required by editor.</li>
+	<![CDATA[<ol>
+	<li>Highlighted items indicate action is required by editor, labelled as follows:
+		<ul>
+			<li class="highlightA">When a Reviewer has been assigned but not notified by email</li>
+			<li class="highlightB">When all Reviewers have returned with their comments, but no decision is recorded</li>
+			<li class="highlightC">Author has uploaded a revised manuscript</li>
+			<li class="highlightD">Reviewer is overdue to confirm peer review invitation</li>
+			<li class="highlightE">Reviewer is overdue to complete review</li>
+		</ul>
+	</li>
 	<li>"Due" is filled in when reviewer accepts request to review; it displays number of weeks to review's due date or (-) weeks that it is overdue.</li>
 </ol>]]></message>
 

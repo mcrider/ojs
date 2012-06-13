@@ -693,11 +693,11 @@ class SectionEditorSubmission extends Article {
 					$reviewAssignment =& $reviewAssignments[$i];
 
 					// If the reviewer has not been notified, highlight.
-					if ($reviewAssignment->getDateNotified() === null) return $highlightClass;
+					if ($reviewAssignment->getDateNotified() === null) return 'highlightA';
 
 					// Check review status.
 					if (!$reviewAssignment->getCancelled() && !$reviewAssignment->getDeclined()) {
-						if (!$reviewAssignment->getDateCompleted()) $allReviewsComplete = false;
+						if (!$reviewAssignment->getDateCompleted() && !$reviewAssignment->getCancelled()) $allReviewsComplete = false;
 
 						$dateReminded = $reviewAssignment->getDateReminded() ?
 							strtotime($reviewAssignment->getDateReminded()) : 0;
@@ -707,24 +707,23 @@ class SectionEditorSubmission extends Article {
 							strtotime($reviewAssignment->getDateConfirmed()) : 0;
 
 						// Check whether a reviewer is overdue to confirm invitation
-						if (	!$reviewAssignment->getDateCompleted() &&
+						if (!$reviewAssignment->getDateCompleted() &&
 							!$dateConfirmed &&
 							!$journal->getSetting('remindForInvite') &&
 							max($dateReminded, $dateNotified) + $overdueSeconds < time()
-						) return $highlightClass;
-
+						) return 'highlightD';
 						// Check whether a reviewer is overdue to complete review
-						if (	!$reviewAssignment->getDateCompleted() &&
+						if (!$reviewAssignment->getDateCompleted() &&
 							$dateConfirmed &&
 							!$journal->getSetting('remindForSubmit') &&
 							max($dateReminded, $dateConfirmed) + $overdueSeconds < time()
-						) return $highlightClass;
+						) return 'highlightE';
 					}
 
 					unset($reviewAssignment);
 				}
 				// If all reviews are complete but no decision is recorded, highlight.
-				if ($allReviewsComplete && $decisionsEmpty) return $highlightClass;
+				if ($allReviewsComplete && $decisionsEmpty) return 'highlightB';
 
 				// If the author's last file upload hasn't been taken into account in
 				// the most recent decision or author/editor correspondence, highlight.
@@ -739,7 +738,7 @@ class SectionEditorSubmission extends Article {
 				if (	($lastDecisionDate || $commentDate) &&
 					$authorFileDate &&
 					$authorFileDate > max($lastDecisionDate, $commentDate)
-				) return $highlightClass;
+				) return 'highlightC';
 			}
 		}
 		return null;
