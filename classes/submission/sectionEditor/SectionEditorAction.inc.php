@@ -185,7 +185,14 @@ class SectionEditorAction extends Action {
 
 		import('classes.mail.ArticleMailTemplate');
 
-		$email = new ArticleMailTemplate($sectionEditorSubmission, $isEmailBasedReview?'REVIEW_REQUEST_ATTACHED':($reviewerAccessKeysEnabled?'REVIEW_REQUEST_ONECLICK':'REVIEW_REQUEST'), null, $isEmailBasedReview?true:null);
+		$emailTemplate = 'REVIEW_REQUEST';
+		if ($isEmailBasedReview) $emailTemplate = 'REVIEW_REQUEST_ATTACHED';
+		elseif ($reviewerAccessKeysEnabled) $emailTemplate = 'REVIEW_REQUEST_ONECLICK';
+
+		// Use a different email template for review requests after the first round
+		if($reviewAssignment->getRound() > 1) $emailTemplate .= '_SUBSEQUENT';
+
+		$email = new ArticleMailTemplate($sectionEditorSubmission, $emailTemplate, null, $isEmailBasedReview?true:null);
 
 		if ($preventAddressChanges) {
 			$email->setAddressFieldsEnabled(false);
