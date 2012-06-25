@@ -159,12 +159,12 @@ class ArticleHandler extends Handler {
 			$templateMgr->assign('citationFactory', $citationFactory);
 
 			// Increment the published article's abstract views count
-			if (!$request->isBot()) {
+			if (!$request->isBot() && !HookRegistry::call('ArticleHandler::incrementAbstractViewCount', array(&$article))) {
 				$publishedArticleDao =& DAORegistry::getDAO('PublishedArticleDAO');
 				$publishedArticleDao->incrementViewsByArticleId($article->getId());
 			}
 		} else {
-			if (!$request->isBot() && !$galley->isPdfGalley()) {
+			if (!$request->isBot() && !$galley->isPdfGalley() && !HookRegistry::call('ArticleHandler::incrementGalleyViewCount', array(&$galley))) {
 				// Increment the galley's views count.
 				// PDF galley views are counted in viewFile.
 				$galleyDao->incrementViews($galley->getId());
@@ -341,7 +341,7 @@ class ArticleHandler extends Handler {
 		if (!$galley) $request->redirect(null, null, 'view', $articleId);
 
 		if (!$fileId) {
-			$galleyDao->incrementViews($galley->getId());
+			if(!$request->isBot() && !HookRegistry::call('ArticleHandler::incrementGalleyViewCount', array(&$galley))) $galleyDao->incrementViews($galley->getId());
 			$fileId = $galley->getFileId();
 		} else {
 			if (!$galley->isDependentFile($fileId)) {
@@ -374,7 +374,7 @@ class ArticleHandler extends Handler {
 		} else {
 			$galley =& $galleyDao->getGalley($galleyId, $article->getId());
 		}
-		if ($galley) $galleyDao->incrementViews($galley->getId());
+		if (!$request->isBot() && $galley && !HookRegistry::call('ArticleHandler::incrementGalleyViewCount', array(&$galley))) $galleyDao->incrementViews($galley->getId());
 
 		if ($article && $galley && !HookRegistry::call('ArticleHandler::downloadFile', array(&$article, &$galley))) {
 			import('classes.file.ArticleFileManager');
