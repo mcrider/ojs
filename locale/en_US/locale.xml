@@ -108,6 +108,8 @@
 	<message key="section.title">Section title</message>
 	<message key="section.abbreviation">Abbreviation</message>
 	<message key="section.abbreviation.example">(For example, Articles=ART)</message>
+	<message key="section.category">Section Category</message>
+	<message key="section.category.unassigned">Unassigned</message>
 
 	<!-- Common Article Terms -->
 	<message key="article.article">Article</message>

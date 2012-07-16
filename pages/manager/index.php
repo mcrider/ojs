@@ -57,6 +57,12 @@ switch ($op) {
 	case 'updateSection':
 	case 'deleteSection':
 	case 'moveSection':
+	// Section category management
+	case 'sectionCategories':
+	case 'createSectionCategory':
+	case 'editSectionCategory':
+	case 'updateSectionCategory':
+	case 'deleteSectionCategory':
 		define('HANDLER_CLASS', 'SectionHandler');
 		import('pages.manager.SectionHandler');
 		break;

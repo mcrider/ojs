@@ -441,7 +441,6 @@ class IssueHandler extends Handler {
 				// Published articles
 				$publishedArticleDao =& DAORegistry::getDAO('PublishedArticleDAO');
 				$publishedArticles =& $publishedArticleDao->getPublishedArticlesInSections($issue->getId(), true);
-
 				$publicFileManager = new PublicFileManager();
 				$templateMgr->assign_by_ref('publishedArticles', $publishedArticles);
 				$showToc = true;

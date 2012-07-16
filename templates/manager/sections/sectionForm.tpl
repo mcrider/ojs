@@ -81,6 +81,17 @@ function checkEditorAssignments() {
 	<td class="value"><input type="text" name="abbrev[{$formLocale|escape}]" id="abbrev" value="{$abbrev[$formLocale]|escape}" size="20" maxlength="20" class="textField" />&nbsp;&nbsp;{translate key="section.abbreviation.example"}</td>
 </tr>
 <tr valign="top">
+	<td class="label">{fieldLabel name="sectionCategory" key="section.category"}</td>
+	<td class="value">
+		<select name="sectionCategory" size="1" id="sectionCategory" class="selectMenu">
+			<option value="0"{if $sectionCategory == 0}selected='selected'{/if}>{translate key="section.category.unassigned"}</option>
+			{foreach from=$sectionCategories item=categoryOption key=categoryId}
+				<option value="{$categoryId}"{if $sectionCategory == $categoryId}selected='selected'{/if}>{$categoryOption.name|escape}</option>
+			{/foreach}
+		</select>
+	</td>
+</tr>
+<tr valign="top">
 	<td class="label">{fieldLabel name="policy" key="manager.sections.policy"}</td>
 	<td class="value"><textarea name="policy[{$formLocale|escape}]" rows="4" cols="40" id="policy" class="textArea">{$policy[$formLocale]|escape}</textarea></td>
 </tr>

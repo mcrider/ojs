@@ -168,6 +168,7 @@ class SectionDAO extends DAO {
 		$section->setHideAbout($row['hide_about']);
 		$section->setDisableComments($row['disable_comments']);
 		$section->setAbstractWordCount($row['abstract_word_count']);
+		$section->setCategoryId($row['category_id']);
 
 		$this->getDataObjectSettings('section_settings', 'section_id', $row['section_id'], $section);
 
@@ -201,9 +202,9 @@ class SectionDAO extends DAO {
 	function insertSection(&$section) {
 		$this->update(
 			'INSERT INTO sections
-				(journal_id, review_form_id, seq, meta_indexed, meta_reviewed, abstracts_not_required, editor_restricted, hide_title, hide_author, hide_about, disable_comments, abstract_word_count)
+				(journal_id, review_form_id, seq, meta_indexed, meta_reviewed, abstracts_not_required, editor_restricted, hide_title, hide_author, hide_about, disable_comments, abstract_word_count, category_id)
 				VALUES
-				(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+				(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
 			array(
 				(int)$section->getJournalId(),
 				(int)$section->getReviewFormId(),
@@ -216,7 +217,8 @@ class SectionDAO extends DAO {
 				$section->getHideAuthor() ? 1 : 0,
 				$section->getHideAbout() ? 1 : 0,
 				$section->getDisableComments() ? 1 : 0,
-				(int) $section->getAbstractWordCount()
+				(int) $section->getAbstractWordCount(),
+				(int) $section->setCategoryId()
 			)
 		);
 
@@ -243,7 +245,8 @@ class SectionDAO extends DAO {
 					hide_author = ?,
 					hide_about = ?,
 					disable_comments = ?,
-					abstract_word_count = ?
+					abstract_word_count = ?,
+					category_id = ?
 				WHERE section_id = ?',
 			array(
 				(int)$section->getReviewFormId(),
@@ -257,6 +260,7 @@ class SectionDAO extends DAO {
 				(int)$section->getHideAbout(),
 				(int)$section->getDisableComments(),
 				$this->nullOrInt($section->getAbstractWordCount()),
+				(int)$section->getCategoryId(),
 				(int)$section->getId()
 			)
 		);
@@ -376,6 +380,45 @@ class SectionDAO extends DAO {
 
 		$returner = new DAOResultFactory($result, $this, '_returnSectionFromRow');
 		return $returner;
+	}
+
+	/** 
+	 * Retrieve an array of categories that contain each category's sections
+	 * @param $journalId int
+	 * @return array
+	 */
+	function getSectionsGroupedByCategory($journalId) {
+		$result =& $this->retrieve(
+			'SELECT s.section_id, ss.setting_value as section_name, s.category_id, sc.category_name
+			FROM sections s
+			LEFT JOIN section_settings ss ON (s.section_id = ss.section_id AND ss.setting_name = ? AND ss.locale = ?)
+			LEFT JOIN section_categories sc ON (s.category_id = sc.category_id)
+			WHERE s.journal_id = ?',
+			array('title', AppLocale::getLocale(), (int) $journalId)
+		);
+
+		$groupedSections = array();
+		while (!$result->EOF) {
+			$row = $result->GetRowAssoc(false);
+
+			$categoryId = $row['category_id'];
+			$categoryName = $row['category_name'];
+			$sectionId = $row['section_id'];
+			$sectionName = $row['section_name'];
+
+			if (!isset($groupedSections[$categoryId])) {
+				$groupedSections[$categoryId] = array('title' => $categoryName, 'sections' => array($sectionId => $sectionName));
+			} else {
+				$groupedSections[$categoryId]['sections'][$sectionId] = $sectionName;
+			}
+
+			$result->moveNext();
+		}
+
+		$result->Close();
+		unset($result);
+		
+		return $groupedSections;
 	}
 
 	/**
@@ -620,6 +663,112 @@ class SectionDAO extends DAO {
 			array($newPos, $issueId, $sectionId)
 		);
 		$this->resequenceCustomSectionOrders($issueId);
+	}
+
+	/**
+	 * Get all section categories for a journal
+	 * @param $journalId int
+	 */
+	function getSectionCategories($journalId) {
+		$result =& $this->retrieveRange(
+			'SELECT * FROM section_categories WHERE journal_id = ?',
+			$journalId
+		);
+
+		$returner = array();
+		while (!$result->EOF) {
+			$row = $result->getRowAssoc(false);
+			$returner[$row['category_id']] = array(
+				'name' => $row['category_name']
+			);
+			$result->moveNext();
+		}
+		$result->Close();
+		unset($result);
+
+		return $returner;
+	}
+
+	/**
+	 * Get all names for section categories for a journal
+	 * @param $journalId int
+	 */
+	function getSectionCategoryNames($journalId) {
+		$result =& $this->retrieveRange(
+			'SELECT * FROM section_categories WHERE journal_id = ?',
+			$journalId
+		);
+
+		$returner = array();
+		while (!$result->EOF) {
+			$row = $result->getRowAssoc(false);
+			$returner[] = $row['category_name'];
+			$result->moveNext();
+		}
+		$result->Close();
+		unset($result);
+
+		return $returner;
+	}
+
+	/**
+	 * Get a single section category for a journal
+	 * @param $categoryId int
+	 * @param $journalId int
+	 */
+	function getSectionCategory($categoryId, $journalId) {
+		$result =& $this->retrieveRange(
+			'SELECT * FROM section_categories WHERE journal_id = ? AND category_id = ?',
+			array($journalId, $categoryId)
+		);
+
+		$returner = null;
+		while (!$result->EOF) {
+			$row = $result->getRowAssoc(false);
+			$returner = array(
+				'name' => $row['category_name']
+			);
+			$result->moveNext();
+		}
+		$result->Close();
+		unset($result);
+
+		return $returner;
+	}
+
+	/**
+	 * Add a new section category
+	 * @param $journalId int
+	 * @param $name string
+	 */
+	function insertSectionCategory($journalId, $name) {
+		return $this->update(
+			'INSERT INTO section_categories (journal_id, category_name) VALUES (?, ?)',
+			array(
+				$journalId,
+				$name
+			)
+		);
+	}
+
+	/**
+	 * Update a section category
+	 * @param $categoryId int
+	 * @param $name string
+	 */
+	function updateSectionCategory($categoryId, $name) {
+		return $this->update(
+			'UPDATE section_categories SET category_name = ? WHERE category_id = ?',
+			array($name, $categoryId)
+		);
+	}
+
+	/**
+	 * Delete a section category
+	 * @param $categoryId int
+	 */
+	function deleteSectionCategory($categoryId) {
+		return $this->update('DELETE FROM section_categories WHERE category_id = ?', array($categoryId));
 	}
 }
 

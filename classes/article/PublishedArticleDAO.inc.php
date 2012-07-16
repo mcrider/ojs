@@ -192,7 +192,6 @@ class PublishedArticleDAO extends DAO {
 		$primaryLocale = AppLocale::getPrimaryLocale();
 		$primaryLocale = AppLocale::getPrimaryLocale();
 		$locale = AppLocale::getLocale();
-		$publishedArticles = array();
 
 		$result =& $this->retrieve(
 			'SELECT DISTINCT
@@ -204,7 +203,10 @@ class PublishedArticleDAO extends DAO {
 				s.hide_title AS section_hide_title,
 				s.hide_author AS section_hide_author,
 				COALESCE(o.seq, s.seq) AS section_seq,
-				pa.seq
+				s.category_id as category,
+				pa.seq,
+				s.category_id AS section_category,
+				sc.category_name as section_category_name
 			FROM	published_articles pa,
 				articles a
 				LEFT JOIN sections s ON s.section_id = a.section_id
@@ -213,6 +215,7 @@ class PublishedArticleDAO extends DAO {
 				LEFT JOIN section_settings stl ON (s.section_id = stl.section_id AND stl.setting_name = ? AND stl.locale = ?)
 				LEFT JOIN section_settings sapl ON (s.section_id = sapl.section_id AND sapl.setting_name = ? AND sapl.locale = ?)
 				LEFT JOIN section_settings sal ON (s.section_id = sal.section_id AND sal.setting_name = ? AND sal.locale = ?)
+				LEFT JOIN section_categories sc ON (s.category_id = sc.category_id)
 			WHERE	pa.article_id = a.article_id
 				AND pa.issue_id = ?
 				AND a.status <> ' . STATUS_ARCHIVED . '
@@ -232,23 +235,29 @@ class PublishedArticleDAO extends DAO {
 		);
 
 		$currSectionId = 0;
+		$publishedArticles = array();
+		$sectionDao =& DAORegistry::getDAO('SectionDAO');
 		while (!$result->EOF) {
 			$row =& $result->GetRowAssoc(false);
 			$publishedArticle =& $this->_returnPublishedArticleFromRow($row);
+			$categoryId = (int) $publishedArticle->getSectionCategoryId();
+
 			if ($publishedArticle->getSectionId() != $currSectionId) {
 				$currSectionId = $publishedArticle->getSectionId();
-				$publishedArticles[$currSectionId] = array(
+				$publishedArticles[$categoryId]['sections'][$currSectionId] = array(
 					'articles'=> array(),
 					'title' => '',
 					'abstractsNotRequired' => $row['abstracts_not_required'],
 					'hideAuthor' => $row['section_hide_author']
 				);
 
+				$publishedArticles[$categoryId]['title'] = $publishedArticle->getSectionCategoryName();
+
 				if (!$row['section_hide_title']) {
-					$publishedArticles[$currSectionId]['title'] = $publishedArticle->getSectionTitle();
+					$publishedArticles[$categoryId]['sections'][$currSectionId]['title'] = $publishedArticle->getSectionTitle();
 				}
 			}
-			$publishedArticles[$currSectionId]['articles'][] = $publishedArticle;
+			$publishedArticles[$categoryId]['sections'][$currSectionId]['articles'][] = $publishedArticle;
 			$result->moveNext();
 		}
 
@@ -459,14 +468,17 @@ class PublishedArticleDAO extends DAO {
 		$sql = 'SELECT	pa.*,
 		        	a.*,
 		        	COALESCE(stl.setting_value, stpl.setting_value) AS section_title,
-		        	COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev
+		        	COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev,
+					s.category_id AS section_category,
+					sc.category_name as section_category_name
 		        FROM	published_articles pa
 		        	INNER JOIN articles a ON pa.article_id = a.article_id
 		        	LEFT JOIN sections s ON s.section_id = a.section_id
 		        	LEFT JOIN section_settings stpl ON (s.section_id = stpl.section_id AND stpl.setting_name = ? AND stpl.locale = ?)
 		        	LEFT JOIN section_settings stl ON (s.section_id = stl.section_id AND stl.setting_name = ? AND stl.locale = ?)
 		        	LEFT JOIN section_settings sapl ON (s.section_id = sapl.section_id AND sapl.setting_name = ? AND sapl.locale = ?)
-		        	LEFT JOIN section_settings sal ON (s.section_id = sal.section_id AND sal.setting_name = ? AND sal.locale = ?) ';
+		        	LEFT JOIN section_settings sal ON (s.section_id = sal.section_id AND sal.setting_name = ? AND sal.locale = ?)
+					LEFT JOIN section_categories sc ON (s.category_id = sc.category_id) ';
 		if (is_null($settingValue)) {
 			$sql .= 'LEFT JOIN article_settings ast ON a.article_id = ast.article_id AND ast.setting_name = ?
 			        WHERE	(ast.setting_value IS NULL OR ast.setting_value = "")';

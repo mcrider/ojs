@@ -174,6 +174,38 @@ class Article extends Submission {
 	}
 
 	/**
+	 * Get category ID
+	 * @return string
+	 */
+	function getSectionCategoryId() {
+		return $this->getData('categoryId');
+	}
+
+	/**
+	 * Set category ID
+	 * @param $categoryId string
+	 */
+	function setSectionCategoryId($categoryId) {
+		return $this->setData('categoryId', $categoryId);
+	}
+
+	/**
+	 * Get category name
+	 * @return string
+	 */
+	function getSectionCategoryName() {
+		return $this->getData('categoryName');
+	}
+
+	/**
+	 * Set category name
+	 * @param $categoryName string
+	 */
+	function setSectionCategoryName($categoryName) {
+		return $this->setData('categoryName', $categoryName);
+	}
+
+	/**
 	 * Get section abbreviation.
 	 * @return string
 	 */

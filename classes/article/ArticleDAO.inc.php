@@ -106,13 +106,16 @@ class ArticleDAO extends DAO {
 		);
 		$sql = 'SELECT	a.*,
 				COALESCE(stl.setting_value, stpl.setting_value) AS section_title,
-				COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev
+				COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev,
+				s.category_id AS section_category,
+				sc.category_name as section_category_name
 			FROM	articles a
 				LEFT JOIN sections s ON s.section_id = a.section_id
 				LEFT JOIN section_settings stpl ON (s.section_id = stpl.section_id AND stpl.setting_name = ? AND stpl.locale = ?)
 				LEFT JOIN section_settings stl ON (s.section_id = stl.section_id AND stl.setting_name = ? AND stl.locale = ?)
 				LEFT JOIN section_settings sapl ON (s.section_id = sapl.section_id AND sapl.setting_name = ? AND sapl.locale = ?)
 				LEFT JOIN section_settings sal ON (s.section_id = sal.section_id AND sal.setting_name = ? AND sal.locale = ?)
+				LEFT JOIN section_categories sc ON (s.category_id = sc.category_id)
 			WHERE	article_id = ?';
 		if ($journalId !== null) {
 			$sql .= ' AND a.journal_id = ?';
@@ -173,6 +176,8 @@ class ArticleDAO extends DAO {
 		$article->setFastTracked($row['fast_tracked']);
 		$article->setHideAuthor($row['hide_author']);
 		$article->setCommentsStatus($row['comments_status']);
+		if(isset($row['section_category'])) $article->setSectionCategoryId($row['section_category']);
+		if(isset($row['section_category_name'])) $article->setSectionCategoryName($row['section_category_name']);
 
 		$this->getDataObjectSettings('article_settings', 'article_id', $row['article_id'], $article);
 
@@ -412,13 +417,16 @@ class ArticleDAO extends DAO {
 		$result =& $this->retrieve(
 			'SELECT	a.*,
 				COALESCE(stl.setting_value, stpl.setting_value) AS section_title,
-				COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev
+				COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev,
+				s.category_id AS section_category,
+				sc.category_name as section_category_name
 			FROM	articles a
 				LEFT JOIN sections s ON s.section_id = a.section_id
 				LEFT JOIN section_settings stpl ON (s.section_id = stpl.section_id AND stpl.setting_name = ? AND stpl.locale = ?)
 				LEFT JOIN section_settings stl ON (s.section_id = stl.section_id AND stl.setting_name = ? AND stl.locale = ?)
 				LEFT JOIN section_settings sapl ON (s.section_id = sapl.section_id AND sapl.setting_name = ? AND sapl.locale = ?)
 				LEFT JOIN section_settings sal ON (s.section_id = sal.section_id AND sal.setting_name = ? AND sal.locale = ?)
+				LEFT JOIN section_categories sc ON (s.category_id = sc.category_id)
 			' . ($journalId !== null ? 'WHERE a.journal_id = ?' : ''),
 			$params
 		);
@@ -466,13 +474,16 @@ class ArticleDAO extends DAO {
 		$result =& $this->retrieve(
 			'SELECT	a.*,
 				COALESCE(stl.setting_value, stpl.setting_value) AS section_title,
-				COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev
+				COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev,
+				s.category_id AS section_category,
+				sc.category_name as section_category_name
 			FROM	articles a
 				LEFT JOIN sections s ON s.section_id = a.section_id
 				LEFT JOIN section_settings stpl ON (s.section_id = stpl.section_id AND stpl.setting_name = ? AND stpl.locale = ?)
 				LEFT JOIN section_settings stl ON (s.section_id = stl.section_id AND stl.setting_name = ? AND stl.locale = ?)
 				LEFT JOIN section_settings sapl ON (s.section_id = sapl.section_id AND sapl.setting_name = ? AND sapl.locale = ?)
 				LEFT JOIN section_settings sal ON (s.section_id = sal.section_id AND sal.setting_name = ? AND sal.locale = ?)
+				LEFT JOIN section_categories sc ON (s.category_id = sc.category_id)
 			WHERE	a.user_id = ?' .
 			(isset($journalId)?' AND a.journal_id = ?':''),
 			$params

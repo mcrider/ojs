@@ -48,7 +48,18 @@
 <table class="data" width="100%">
 	<tr valign="top">
 		<td width="20%" class="label">{fieldLabel name="sectionId" required="true" key="section.section"}</td>
-		<td width="80%" class="value"><select name="sectionId" id="sectionId" size="1" class="selectMenu">{html_options options=$sectionOptions selected=$sectionId}</select></td>
+		<td width="80%" class="value">
+			<select name="sectionId" id="sectionId" size="1" class="selectMenu">
+				<option value="">{translate key="author.submit.selectSection"}</option>
+				{foreach from=$sectionOptions item=category}
+					<optgroup label="{if !$category.title}Uncategorized{else}{$category.title}{/if}"></optgroup>
+					{foreach from=$category.sections item=section key=sectionId}
+						<option value={$sectionId}>{$section}</option>
+					{/foreach}
+					</optgroup>
+				{/foreach}
+			</select>
+		</td>
 	</tr>
 </table>
 

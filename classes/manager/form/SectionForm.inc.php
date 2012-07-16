@@ -142,7 +142,9 @@ class SectionForm extends Form {
 					'policy' => $section->getPolicy(null), // Localized
 					'assignedEditors' => $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $this->sectionId),
 					'unassignedEditors' => $sectionEditorsDao->getEditorsNotInSection($journal->getId(), $this->sectionId),
-					'wordCount' => $section->getAbstractWordCount()
+					'wordCount' => $section->getAbstractWordCount(),
+					'sectionCategories' => $sectionDao->getSectionCategories($journal->getId()),
+					'sectionCategory' => $section->getCategoryId()
 				);
 			}
 		} else {
@@ -156,7 +158,7 @@ class SectionForm extends Form {
 	 * Assign form data to user-submitted data.
 	 */
 	function readInputData() {
-		$this->readUserVars(array('title', 'abbrev', 'policy', 'reviewFormId', 'identifyType', 'metaIndexed', 'metaReviewed', 'abstractsNotRequired', 'editorRestriction', 'hideTitle', 'hideAuthor', 'hideAbout', 'disableComments', 'wordCount'));
+		$this->readUserVars(array('title', 'abbrev', 'policy', 'reviewFormId', 'identifyType', 'metaIndexed', 'metaReviewed', 'abstractsNotRequired', 'editorRestriction', 'hideTitle', 'hideAuthor', 'hideAbout', 'disableComments', 'wordCount', 'sectionCategory'));
 		$assignedEditorIds = Request::getUserVar('assignedEditorIds');
 		if (empty($assignedEditorIds)) $assignedEditorIds = array();
 		elseif (!is_array($assignedEditorIds)) $assignedEditorIds = array($assignedEditorIds);
@@ -221,6 +223,7 @@ class SectionForm extends Form {
 		$section->setDisableComments($this->getData('disableComments') ? 1 : 0);
 		$section->setPolicy($this->getData('policy'), null); // Localized
 		$section->setAbstractWordCount($this->getData('wordCount'));
+		$section->setCategoryId($this->getData('sectionCategory'));
 
 		if ($section->getId() != null) {
 			$sectionDao->updateSection($section);

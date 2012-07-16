@@ -160,6 +160,124 @@ class SectionHandler extends ManagerHandler {
 		}
 	}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/**
+	 * Display a list of the section categories within the current journal.
+	 */
+	function sectionCategories() {
+		$this->validate();
+		$this->setupTemplate();
+
+		$journal =& Request::getJournal();
+
+		$sectionDao =& DAORegistry::getDAO('SectionDAO');
+		$sectionCategories =& $sectionDao->getSectionCategories($journal->getId());
+
+		$templateMgr =& TemplateManager::getManager();
+		$templateMgr->assign('sectionCategories', $sectionCategories);
+		$templateMgr->display('manager/sections/sectionCategories.tpl');
+	}
+
+	/**
+	 * Display form to create a new section category.
+	 */
+	function createSectionCategory() {
+		$this->editSectionCategory();
+	}
+
+	/**
+	 * Display form to create/edit a section category.
+	 * @param $args array optional, if set the first parameter is the ID of the section to edit
+	 */
+	function editSectionCategory($args = array()) {
+		$this->validate();
+		$this->setupTemplate(true);
+
+		import('classes.manager.form.SectionCategoryForm');
+
+		$sectionCategoryForm = new SectionCategoryForm(!isset($args) || empty($args) ? null : ((int) $args[0]));
+		if ($sectionCategoryForm->isLocaleResubmit()) {
+			$sectionCategoryForm->readInputData();
+		} else {
+			$sectionCategoryForm->initData();
+		}
+		$sectionCategoryForm->display();
+	}
+
+	/**
+	 * Save changes to a section category.
+	 */
+	function updateSectionCategory($args) {
+		$this->validate();
+		$this->setupTemplate(true);
+
+		import('classes.manager.form.SectionCategoryForm');
+		$sectionCategoryForm = new SectionCategoryForm(!isset($args) || empty($args) ? null : ((int) $args[0]));
+
+		$sectionCategoryForm->readInputData();
+		if ($sectionCategoryForm->validate()) {
+			$sectionCategoryForm->execute();
+			Request::redirect(null, null, 'sectionCategories');
+		} else {
+			$sectionCategoryForm->display();
+		}
+	}
+
+	/**
+	 * Delete a section category.
+	 * @param $args array first parameter is the ID of the category to delete
+	 */
+	function deleteSectionCategory($args) {
+		$this->validate();
+
+		if (isset($args) && !empty($args)) {
+			$journal =& Request::getJournal();
+
+			$sectionDao =& DAORegistry::getDAO('SectionDAO');
+			$sectionDao->deleteSectionCategory((int) $args[0]);
+
+
+		// TODO: Set all sections with this category ID to 0
+		}
+
+		Request::redirect(null, null, 'sectionCategories');
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	function setupTemplate($subclass = false) {
 		AppLocale::requireComponents(LOCALE_COMPONENT_PKP_SUBMISSION, LOCALE_COMPONENT_PKP_READER);
 		parent::setupTemplate(true);

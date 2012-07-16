@@ -359,6 +359,22 @@ class Section extends DataObject {
 	function setPolicy($policy, $locale) {
 		return $this->setData('policy', $policy, $locale);
 	}
+
+	/**
+	 * Get category Id.
+	 * @return int
+	 */
+	function getCategoryId() {
+		return $this->getData('categoryId');
+	}
+
+	/**
+	 * Set category Id.
+	 * @param $categoryId int
+	 */
+	function setCategoryId($categoryId) {
+		return $this->setData('categoryId', $categoryId);
+	}
 }
 
 ?>
