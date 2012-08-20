@@ -221,10 +221,9 @@ class SubmissionCommentsHandler extends SectionEditorHandler {
 		$articleId = (int) $request->getUserVar('articleId');
 		$this->validate($articleId);
 
-		$send = array_shift($args) == 'send' ? true : false;
-		if (!$send) $this->setupTemplate(true, $articleId, 'editing');
-		if (SectionEditorAction::bccEditorDecisionCommentToReviewers($this->submission, $send, $request)) {
-			$request->redirect(null, null, 'submissionReview', $articleId);
+		$this->setupTemplate(true);
+		if (SectionEditorAction::bccEditorDecisionCommentToReviewers($this->submission, $request->getUserVar('send'), $request)) {
+			$request->redirect(null, null, 'submissionReview', array($articleId));
 		}
 	}
 
