@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE schema SYSTEM "../../../lib/pkp/dtd/xmlSchema.dtd">
+
+<!--
+  * plugins/generic/articleMedia/schema.xml
+  *
+  * Copyright (c) 2003-2012 John Willinsky
+  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+  *
+  * Article Media plugin schema in XML.
+  *
+  -->
+
+<schema version="0.2">
+	<!--
+	 *
+	 * TABLE article_media
+	 *
+	 -->
+	<table name="article_media">
+		<field name="article_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="media_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="type" type="I2">
+			<NOTNULL/>
+		</field>
+		<descr>List of referrals for articles.</descr>
+		<index name="article_media_article_id">
+			<col>article_id</col>
+			<col>media_id</col>
+			<UNIQUE/>
+		</index>
+	</table>
+
+	<!--
+	  *
+	  * TABLE article_media_settings
+	  *
+	  -->
+	<table name="article_media_settings">
+		<field name="media_id" type="I8">
+			<NOTNULL />
+		</field>
+		<field name="locale" type="C2" size="5">
+			<NOTNULL />
+			<DEFAULT VALUE=""/>
+		</field>
+		<field name="setting_name" type="C2" size="255">
+			<NOTNULL />
+		</field>
+		<field name="setting_value" type="X"/>
+		<field name="setting_type" type="C2" size="6">
+			<NOTNULL/>
+		</field>
+		<descr>Article media object settings</descr>
+		<index name="article_media_settings_pkey">
+			<col>article_id</col>
+			<col>media_id</col>
+			<col>locale</col>
+			<col>setting_name</col>
+			<UNIQUE />
+		</index>
+	</table>
+</schema>

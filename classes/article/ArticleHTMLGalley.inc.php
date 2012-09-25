@@ -79,6 +79,9 @@ class ArticleHTMLGalley extends ArticleGalley {
 			$contents
 		);
 
+		// Allow plugins to modify the HTML galley's contents
+		HookRegistry::call('Article::ArticleHTMLGalley::getHTMLContents', array(&$this, &$contents));
+
 		// Perform variable replacement for journal, issue, site info
 		$issueDao =& DAORegistry::getDAO('IssueDAO');
 		$issue =& $issueDao->getIssueByArticleId($this->getArticleId());

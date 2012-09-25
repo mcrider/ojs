@@ -1,0 +1,182 @@
+/**
+ * plugins/generic/articleMedia/css/articleMedia.css
+ *
+ * Copyright (c) 2003-2012 John Willinsky
+ * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+ *
+ * Article Media Plugin stylesheet.
+ *
+ */
+
+.mediaInput {
+	display: inline;
+	margin-right: 10px;
+}
+
+.addItem, .addMetadataItem, .addItem:hover, .addMetadataItem:hover {
+	cursor: pointer;
+	padding-left: 21px;
+	background: url(../../../../lib/pkp/templates/images/structure/lb_add.png) 0 0 no-repeat;
+	margin-bottom: 10px;
+}
+
+.hideMetadata {
+	cursor: pointer;
+	padding-left: 21px;
+	margin: 10px 0;
+color:#6FBE44;
+text-align:center;
+font-weight:bold;
+
+}
+
+.open {
+	background: url(../../../../lib/pkp/templates/images/structure/carousel_previous.png) 0 0 no-repeat;
+	background-size: 12px;
+}
+.close {
+	background: url(../../../../lib/pkp/templates/images/structure/carousel_next.png) 0 0 no-repeat;
+	background-size: 12px;
+}
+
+td {
+	vertical-align: top;
+}
+.mediaCell {
+	width: 500px;
+}
+.mediaItem {
+	padding-top: 12px;
+	border-top: 1px solid #DDD;
+	margin-top: 16px;
+	margin-bottom: 20px;
+margin-left:auto !important;
+margin-right:auto !important;
+
+
+
+
+}
+
+.mediaItemTemplate, .metadataItemTemplate {
+	display: none;
+}
+
+.mediaIdNote {
+	margin-top: 10px;
+	font-size: .9em;
+}
+
+.metadata{
+	display: none;
+	margin-top: 20px;
+}
+	.addMetadataItem {
+		margin-left: 10px;
+	}
+
+	.metadataItem {
+		border-left: 4px solid #DDD;
+		padding-left: 5px;
+		margin-left: 10px;
+		margin-top: 10px;
+	
+	}
+	
+		.metadataDisplayLabel {
+			font-weight: bold;
+		color:#00ADEE;
+		}
+		
+		.metadataDisplayValue {
+		color:#787878;	
+		}
+		
+		.metadataValueContainer {
+			margin-top: 8px;
+		}
+		.metadataValueContainer label {
+			vertical-align: top;
+		}
+	.metadataDisplayContainer {
+	margin-top: 15px;
+	width:80%;
+	margin-left:auto !important;
+	margin-right:auto !important;
+	
+
+	}
+	.deleteMetadata {
+		margin-top: 5px;
+	}
+	.mediaContainer {
+		padding-left: 14px;
+		padding-top: 20px;
+	}
+	.mediaFrame {
+	
+	margin-left:auto !important;
+	margin-right:auto !important;
+	display:block;
+	
+	
+	
+	}
+	
+.display {
+	border-top: none;
+}
+.display .jp-video, .display .jp-audio {
+	float: left;
+	margin-top: 0;
+	margin-right: 20px;
+}
+
+
+/** Jplayer tweaks **/
+.jp-title {
+	display: none;
+}
+.jpContainer {
+	display: none;
+	margin: 20px auto;
+}
+
+.jp-audio, .jp-video {
+	border: 1px solid #333 !important;
+}
+
+.jp-video .jp-interface {
+	border-top: 1px solid #333 !important;
+}
+
+#video_embed {
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:2em;
+	margin-bottom:2em;
+	font-size:1em;
+}
+
+#video_embed div {
+	font-size:0.8em;
+}
+
+@media(max-width: 700px){
+	.metadataDisplayContainer {
+		width:95%;
+	}
+	
+}
+
+@media(max-width: 550px){
+	.mediaFrame {
+		width:400px;		
+	}
+}
+
+@media(max-width: 550px){
+	.mediaFrame {
+		width:350px;		
+	}
+}

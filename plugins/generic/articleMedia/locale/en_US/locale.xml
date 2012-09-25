@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE locale SYSTEM "../../../../../lib/pkp/dtd/locale.dtd">
+
+<!--
+  * @file plugins/generic/googleViewer/locale/en_US/locale.xml
+  *
+  * Copyright (c) 2003-2012 John Willinsky
+  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+  *
+  * Localization strings
+  -->
+
+<locale name="en_US" full_name="U.S. English">
+	<message key="plugins.generic.articleMedia.name">Article Media Embedder plugin</message>
+	<message key="plugins.generic.articleMedia.description">This plugin creates a mini-wizard in the submission wizard to enter links to media (images, audio, and video) and their accompanying metadata, and produces tags for easily entering the media into HTML galleys.</message>
+
+	<message key="plugins.generic.articleMedia.wizard">Article Media Wizard</message>
+	<message key="plugins.generic.articleMedia.addNewMediaItem">Add new media item</message>
+	<message key="plugins.generic.articleMedia.toggleMetadata">Toggle metadata</message>
+	<message key="plugins.generic.articleMedia.mediaIdNote"><![CDATA[Note: Embed this media into your HTML galley using this tag: <code>&lt;mediaItem id="{$mediaId}" /&gt;</code>]]></message>
+
+
+	<message key="plugins.generic.articleMedia.type">Media Type</message>
+	<message key="plugins.generic.articleMedia.audio">Audio</message>
+	<message key="plugins.generic.articleMedia.video">Video</message>
+	<message key="plugins.generic.articleMedia.image">Image</message>
+
+	<message key="plugins.generic.articleMedia.source">Source</message>
+	<message key="plugins.generic.articleMedia.other">Other</message>
+	<message key="plugins.generic.articleMedia.youtube">YouTube</message>
+	<message key="plugins.generic.articleMedia.euscreen">EUscreen</message>
+	<message key="plugins.generic.articleMedia.openimages">OpenImages</message>
+	<message key="plugins.generic.articleMedia.soundcloud">SoundCloud</message>
+	<message key="plugins.generic.articleMedia.id">URL or ID</message>
+	<message key="plugins.generic.articleMedia.test">Load</message>
+	<message key="plugins.generic.articleMedia.save">Save</message>
+
+	<message key="plugins.generic.articleMedia.addNewMetadataField">Add new metadata field</message>
+	<message key="plugins.generic.articleMedia.hideMetadata">Hide metadata</message>
+	<message key="plugins.generic.articleMedia.label">Label</message>
+	<message key="plugins.generic.articleMedia.value">Value</message>
+
+	<message key="plugins.generic.articleMedia.jplayer.play">Play</message>
+	<message key="plugins.generic.articleMedia.jplayer.pause">Pause</message>
+	<message key="plugins.generic.articleMedia.jplayer.stop">Stop</message>
+	<message key="plugins.generic.articleMedia.jplayer.mute">Mute</message>
+	<message key="plugins.generic.articleMedia.jplayer.unmute">Unmute</message>
+	<message key="plugins.generic.articleMedia.jplayer.maxVolume">Max volume</message>
+	<message key="plugins.generic.articleMedia.jplayer.repeat">Repeat</message>
+	<message key="plugins.generic.articleMedia.jplayer.repeatOff">Repeat off</message>
+	<message key="plugins.generic.articleMedia.jplayer.fullScreen">Full Screen</message>
+	<message key="plugins.generic.articleMedia.jplayer.fullScreen">Restore Screen</message>
+	<message key="plugins.generic.articleMedia.jplayer.update"><![CDATA[<span>Update Required</span>
+		<p>To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.</p>]]></message>
+</locale>
