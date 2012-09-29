@@ -186,7 +186,7 @@ class SubscriptionForm extends Form {
 		// If subscription type requires it, start and end dates are provided
 		$nonExpiring = $subscriptionTypeDao->getSubscriptionTypeNonExpiring($this->getData('typeId'));
 
-		if (!$nonExpiring) {
+		if ($nonExpiring != 1) {
 			// Start date is provided and is valid
 			$this->addCheck(new FormValidator($this, 'dateStartYear', 'required', 'manager.subscriptions.form.dateStartRequired'));
 			$this->addCheck(new FormValidatorCustom($this, 'dateStartYear', 'required', 'manager.subscriptions.form.dateStartValid', create_function('$dateStartYear', '$minYear = date(\'Y\') + SUBSCRIPTION_YEAR_OFFSET_PAST; $maxYear = date(\'Y\') + SUBSCRIPTION_YEAR_OFFSET_FUTURE; return ($dateStartYear >= $minYear && $dateStartYear <= $maxYear) ? true : false;')));
@@ -202,7 +202,7 @@ class SubscriptionForm extends Form {
 			$this->addCheck(new FormValidatorCustom($this, 'dateEndYear', 'required', 'manager.subscriptions.form.dateEndValid', create_function('$dateEndYear', '$minYear = date(\'Y\') + SUBSCRIPTION_YEAR_OFFSET_PAST; $maxYear = date(\'Y\') + SUBSCRIPTION_YEAR_OFFSET_FUTURE; return ($dateEndYear >= $minYear && $dateEndYear <= $maxYear) ? true : false;')));
 
 			$this->addCheck(new FormValidator($this, 'dateEndMonth', 'required', 'manager.subscriptions.form.dateEndRequired'));
-		$this->addCheck(new FormValidatorCustom($this, 'dateEndMonth', 'required', 'manager.subscriptions.form.dateEndValid', create_function('$dateEndMonth', 'return ($dateEndMonth >= 1 && $dateEndMonth <= 12) ? true : false;')));
+			$this->addCheck(new FormValidatorCustom($this, 'dateEndMonth', 'required', 'manager.subscriptions.form.dateEndValid', create_function('$dateEndMonth', 'return ($dateEndMonth >= 1 && $dateEndMonth <= 12) ? true : false;')));
 
 			$this->addCheck(new FormValidator($this, 'dateEndDay', 'required', 'manager.subscriptions.form.dateEndRequired'));
 			$this->addCheck(new FormValidatorCustom($this, 'dateEndDay', 'required', 'manager.subscriptions.form.dateEndValid', create_function('$dateEndDay', 'return ($dateEndDay >= 1 && $dateEndDay <= 31) ? true : false;')));
@@ -234,8 +234,8 @@ class SubscriptionForm extends Form {
 
 		$subscriptionTypeDao =& DAORegistry::getDAO('SubscriptionTypeDAO');
 		$nonExpiring = $subscriptionTypeDao->getSubscriptionTypeNonExpiring($this->getData('typeId'));
-		$subscription->setDateStart($nonExpiring ? null : $this->getData('dateStart'));
-		$subscription->setDateEnd($nonExpiring ? null : $this->getData('dateEnd'));
+		$subscription->setDateStart($nonExpiring == 1 ? null : $this->getData('dateStart'));
+		$subscription->setDateEnd($nonExpiring == 1 ? null : $this->getData('dateEnd'));
 
 		$user->setSalutation($this->getData('userSalutation'));
 		$user->setFirstName($this->getData('userFirstName'));

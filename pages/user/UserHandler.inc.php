@@ -790,7 +790,7 @@ class UserHandler extends Handler {
 
 		$subscription =& $subscriptionDao->getSubscription($subscriptionId);
 
-		if ($subscription->isNonExpiring()) $request->redirect(null, 'user');
+		if ($subscription->isNonExpiring() == 1) $request->redirect(null, 'user');
 
 		import('classes.subscription.Subscription');
 		$subscriptionStatus = $subscription->getStatus();

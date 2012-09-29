@@ -189,6 +189,22 @@ class SubscriptionType extends DataObject {
 	}
 
 	/**
+	 * Get subscription type expiration date.
+	 * @return date
+	 */
+	function getExpirationDate() {
+		return $this->getData('expirationDate');
+	}
+
+	/**
+	 * Set subscription type expiration date.
+	 * @param $expirationDate date
+	 */
+	function setExpirationDate($expirationDate) {
+		return $this->setData('expirationDate', $expirationDate);
+	}
+
+	/**
 	 * Get subscription type duration.
 	 * @return int
 	 */
@@ -210,9 +226,15 @@ class SubscriptionType extends DataObject {
 	 * @return string
 	 */
 	function getDurationYearsMonths($locale = null) {
+		if ($this->getData('expirationDate')) {
+			return __('subscriptionTypes.expiresOn', array('date' => date("d/m/y", strtotime($this->getData('expirationDate')))), $locale);
+		}
+
 		if ($this->getData('nonExpiring')) {
 			return __('subscriptionTypes.nonExpiring', null, $locale);
 		}
+
+		
 
 		$years = (int)floor($this->getData('duration')/12);
 		$months = (int)fmod($this->getData('duration'), 12);

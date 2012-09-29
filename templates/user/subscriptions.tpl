@@ -80,7 +80,7 @@
 			<td width="30%">&nbsp;</td>
 			<td width="25%">
 			{assign var="subscriptionStatus" value=$userIndividualSubscription->getStatus()}
-			{assign var="isNonExpiring" value=$userIndividualSubscription->isNonExpiring()}
+			{assign var="isNonExpiring" value=$userIndividualSubscription->isNonExpiring() == 1}
 			{if $journalPaymentsEnabled && $acceptSubscriptionPayments && $subscriptionStatus == $smarty.const.SUBSCRIPTION_STATUS_AWAITING_ONLINE_PAYMENT}
 				<span class="disabled">{translate key="subscriptions.status.awaitingOnlinePayment"}</span>	
 			{elseif $journalPaymentsEnabled && $acceptSubscriptionPayments && $subscriptionStatus == $smarty.const.SUBSCRIPTION_STATUS_AWAITING_MANUAL_PAYMENT}
@@ -134,7 +134,7 @@
 			<td width="30%">{$userInstitutionalSubscription->getInstitutionName()|escape}</td>
 			<td width="25%">
 			{assign var="subscriptionStatus" value=$userInstitutionalSubscription->getStatus()}
-			{assign var="isNonExpiring" value=$userInstitutionalSubscription->isNonExpiring()}
+			{assign var="isNonExpiring" value=$userInstitutionalSubscription->isNonExpiring() == 1}
 			{if $journalPaymentsEnabled && $acceptSubscriptionPayments && $subscriptionStatus == $smarty.const.SUBSCRIPTION_STATUS_AWAITING_ONLINE_PAYMENT}
 				<span class="disabled">{translate key="subscriptions.status.awaitingOnlinePayment"}</span>	
 			{elseif $journalPaymentsEnabled && $acceptSubscriptionPayments && $subscriptionStatus == $smarty.const.SUBSCRIPTION_STATUS_AWAITING_MANUAL_PAYMENT}

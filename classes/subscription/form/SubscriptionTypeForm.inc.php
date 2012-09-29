@@ -60,7 +60,7 @@ class SubscriptionTypeForm extends Form {
 		$this->addCheck(new FormValidatorInSet($this, 'currency', 'required', 'manager.subscriptionTypes.form.currencyValid', array_keys($this->validCurrencies)));
 
 		// Non-expiring flag is valid value
-		$this->addCheck(new FormValidatorInSet($this, 'nonExpiring', 'optional', 'manager.subscriptionTypes.form.nonExpiringValid', array('0', '1')));
+		$this->addCheck(new FormValidatorInSet($this, 'nonExpiring', 'optional', 'manager.subscriptionTypes.form.nonExpiringValid', array('0', '1', '2')));
 
 		// Format is provided and is valid value
 		$this->addCheck(new FormValidator($this, 'format', 'required', 'manager.subscriptionTypes.form.formatRequired'));	
@@ -107,19 +107,30 @@ class SubscriptionTypeForm extends Form {
 			$subscriptionTypeDao =& DAORegistry::getDAO('SubscriptionTypeDAO');
 			$subscriptionType =& $subscriptionTypeDao->getSubscriptionType($this->typeId);
 
+			if($subscriptionType->getNonExpiring() == 1){
+				$expirationType = 1;
+			} else {
+				$expirationType = $subscriptionType->getExpirationDate() ? 2 : 0;
+			}
+
 			if ($subscriptionType != null) {
 				$this->_data = array(
 					'name' => $subscriptionType->getName(null), // Localized
 					'description' => $subscriptionType->getDescription(null), // Localized
 					'cost' => $subscriptionType->getCost(),
 					'currency' => $subscriptionType->getCurrencyCodeAlpha(),
-					'nonExpiring' => $subscriptionType->getNonExpiring(),
+					'nonExpiring' => $expirationType,
+					'expirationDate' => $subscriptionType->getExpirationDate(),
 					'duration' => $subscriptionType->getDuration(),
 					'format' => $subscriptionType->getFormat(),
 					'institutional' => $subscriptionType->getInstitutional(),
 					'membership' => $subscriptionType->getMembership(),
 					'disable_public_display' => $subscriptionType->getDisablePublicDisplay()
 				);
+
+				if($subscriptionType->getExpirationDate()) {
+
+				}
 
 			} else {
 				$this->typeId = null;
@@ -131,12 +142,19 @@ class SubscriptionTypeForm extends Form {
 	 * Assign form data to user-submitted data.
 	 */
 	function readInputData() {
-		$this->readUserVars(array('name', 'description', 'cost', 'currency', 'nonExpiring', 'duration', 'format', 'institutional', 'membership', 'disable_public_display'));
+		$this->readUserVars(array('name', 'description', 'cost', 'currency', 'nonExpiring', 'expirationMonth', 'expirationDay', 'expirationYear', 'duration', 'format', 'institutional', 'membership', 'disable_public_display'));
 
 		// If expiring subscription type, ensure duration is provided and valid
 		if ($this->getData('nonExpiring') === 0) {
 			$this->addCheck(new FormValidator($this, 'duration', 'required', 'manager.subscriptionTypes.form.durationRequired'));	
 			$this->addCheck(new FormValidatorCustom($this, 'duration', 'required', 'manager.subscriptionTypes.form.durationNumeric', create_function('$duration', 'return (is_numeric($duration) && $duration >= 0);')));
+		}
+
+		// If date expiration subscription type, ensure date is provided and valid
+		if ($this->getData('nonExpiring') === 2) {
+			$this->addCheck(new FormValidator($this, 'expirationMonth', 'required', 'manager.subscriptionTypes.form.dateRequired'));	
+			$this->addCheck(new FormValidator($this, 'expirationDay', 'required', 'manager.subscriptionTypes.form.dateRequired'));	
+			$this->addCheck(new FormValidator($this, 'expirationYear', 'required', 'manager.subscriptionTypes.form.dateRequired'));
 		}
 	}
 
@@ -159,13 +177,20 @@ class SubscriptionTypeForm extends Form {
 			$subscriptionType->setInstitutional($this->getData('institutional') == null ? 0 : $this->getData('institutional'));
 		}
 
+		if($this->getData('nonExpiring') == 2 || $subscriptionType->getExpirationDate()) {
+			$expirationMonth = $this->getData('expirationMonth');
+			$expirationDay = $this->getData('expirationDay');
+			$expirationYear = $this->getData('expirationYear');
+			$subscriptionType->setExpirationDate(mktime(0,0,0,$expirationMonth, $expirationDay, $expirationYear));	
+		}
+
 		$subscriptionType->setJournalId($journal->getId());
 		$subscriptionType->setName($this->getData('name'), null); // Localized
 		$subscriptionType->setDescription($this->getData('description'), null); // Localized
 		$subscriptionType->setCost(round($this->getData('cost'), 2));
+		$subscriptionType->setFormat($this->getData('format'));
 		$subscriptionType->setCurrencyCodeAlpha($this->getData('currency'));
 		$subscriptionType->setDuration($nonExpiring ? null : (int)$this->getData('duration'));
-		$subscriptionType->setFormat($this->getData('format'));
 		$subscriptionType->setMembership($this->getData('membership') == null ? 0 : $this->getData('membership'));
 		$subscriptionType->setDisablePublicDisplay($this->getData('disable_public_display') == null ? 0 : $this->getData('disable_public_display'));
 

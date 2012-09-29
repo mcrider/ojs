@@ -15,8 +15,8 @@ function chooseEndDate() {
 	var lengths = {{/literal}
 		{* Build up an array of typeId => Duration in Javascript land *}
 		{foreach from=$subscriptionTypes item=subscriptionType}
-			{if !$subscriptionType->getNonExpiring()}
-				{$subscriptionType->getTypeId()}: "{$subscriptionType->getDuration()|escape:"javascript"}",
+			{if $subscriptionType->getNonExpiring() != 1}
+				{$subscriptionType->getTypeId()}: "{if $subscriptionType->getExpirationDate()}{$subscriptionType->getExpirationDate()|date_format:$dateFormatShort|escape:'javascript'}{else}{$subscriptionType->getDuration()|escape:'javascript'}{/if}",
 			{/if}
 		{/foreach}
 	{literal}};
@@ -33,28 +33,48 @@ function chooseEndDate() {
 			subscriptionForm.dateStartDay.options[subscriptionForm.dateStartDay.selectedIndex].value,
 			0, 0, 0
 		);
-		var dateEnd = dateStart;
 
-		var months = duration % 12;
-		var years = Math.floor(duration / 12);
+		var splitDate = duration.split('-');
 
-		if (months + dateStart.getMonth() > 11) {
-			dateEnd.setFullYear(dateStart.getFullYear()+1);
-		}
-		dateEnd.setFullYear(dateEnd.getFullYear() + years);
-		dateEnd.setMonth((dateStart.getMonth() + months) % 12);
+		if(splitDate.length == 3) {
+			// Using an absolute date
+			var dateEnd = new Date(duration);
 
-		// dateEnd now contains the calculated date of the subscription expiry.
-		subscriptionForm.dateEndDay.selectedIndex = dateEnd.getDate() - 1;
-		subscriptionForm.dateEndMonth.selectedIndex = dateEnd.getMonth();
+			subscriptionForm.dateEndDay.selectedIndex = dateEnd.getDate();
+			subscriptionForm.dateEndMonth.selectedIndex = dateEnd.getMonth();
+			var i;
+			for (i=0; i < subscriptionForm.dateEndYear.length; i++) {
+				if (subscriptionForm.dateEndYear.options[i].value == dateEnd.getFullYear()) {
+					subscriptionForm.dateEndYear.selectedIndex = i;
+					break;
+				}
+			}
+		} else {
+			// Using a date relative to the present
+			var dateEnd = dateStart;
+			var months = duration % 12;
+			var years = Math.floor(duration / 12);
 
-		var i;
-		for (i=0; i < subscriptionForm.dateEndYear.length; i++) {
-			if (subscriptionForm.dateEndYear.options[i].value == dateEnd.getFullYear()) {
-				subscriptionForm.dateEndYear.selectedIndex = i;
-				break;
+			if (months + dateStart.getMonth() > 11) {
+				dateEnd.setFullYear(dateStart.getFullYear()+1);
+			}
+			dateEnd.setFullYear(dateEnd.getFullYear() + years);
+			dateEnd.setMonth((dateStart.getMonth() + months) % 12);
+
+			// dateEnd now contains the calculated date of the subscription expiry.
+			subscriptionForm.dateEndDay.selectedIndex = dateEnd.getDate() - 1;
+			subscriptionForm.dateEndMonth.selectedIndex = dateEnd.getMonth();
+
+			var i;
+			for (i=0; i < subscriptionForm.dateEndYear.length; i++) {
+				if (subscriptionForm.dateEndYear.options[i].value == dateEnd.getFullYear()) {
+					subscriptionForm.dateEndYear.selectedIndex = i;
+					break;
+				}
 			}
 		}
+
+		
 	}
 }
 {/literal}

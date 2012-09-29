@@ -186,6 +186,7 @@ class SubscriptionTypeDAO extends DAO {
 		$subscriptionType->setCost($row['cost']);
 		$subscriptionType->setCurrencyCodeAlpha($row['currency_code_alpha']);
 		$subscriptionType->setNonExpiring($row['non_expiring']);
+		$subscriptionType->setExpirationDate($this->datetimeFromDB($row['date_expire']));
 		$subscriptionType->setDuration($row['duration']);
 		$subscriptionType->setFormat($row['format']);
 		$subscriptionType->setInstitutional($row['institutional']);
@@ -225,10 +226,11 @@ class SubscriptionTypeDAO extends DAO {
 	 */
 	function insertSubscriptionType(&$subscriptionType) {
 		$this->update(
-			'INSERT INTO subscription_types
-				(journal_id, cost, currency_code_alpha, non_expiring, duration, format, institutional, membership, disable_public_display, seq)
+			sprintf('INSERT INTO subscription_types
+				(journal_id, cost, currency_code_alpha, non_expiring, date_expire, duration, format, institutional, membership, disable_public_display, seq)
 				VALUES
-				(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+				(?, ?, ?, ?, %s, ?, ?, ?, ?, ?, ?)',
+			$this->datetimeToDB($subscriptionType->getExpirationDate())),
 			array(
 				$subscriptionType->getJournalId(),
 				$subscriptionType->getCost(),
@@ -255,12 +257,13 @@ class SubscriptionTypeDAO extends DAO {
 	 */
 	function updateSubscriptionType(&$subscriptionType) {
 		$returner = $this->update(
-			'UPDATE subscription_types
+			sprintf('UPDATE subscription_types
 				SET
 					journal_id = ?,
 					cost = ?,
 					currency_code_alpha = ?,
 					non_expiring = ?,
+					date_expire = %s,
 					duration = ?,
 					format = ?,
 					institutional = ?,
@@ -268,6 +271,7 @@ class SubscriptionTypeDAO extends DAO {
 					disable_public_display = ?,
 					seq = ?
 				WHERE type_id = ?',
+			$this->datetimeToDB($subscriptionType->getExpirationDate())),
 			array(
 				$subscriptionType->getJournalId(),
 				$subscriptionType->getCost(),

@@ -274,7 +274,7 @@ class OJSPaymentManager extends PaymentManager {
 					// Still requires approval from JM/SM since includes domain and IP ranges
 					import('classes.subscription.InstitutionalSubscription');
 					$subscription->setStatus(SUBSCRIPTION_STATUS_NEEDS_APPROVAL);
-					if ($subscription->isNonExpiring()) {
+					if ($subscription->isNonExpiring() == 1) {
 						$institutionalSubscriptionDao->updateSubscription($subscription);
 					} else {
 						$institutionalSubscriptionDao->renewSubscription($subscription);
@@ -289,7 +289,7 @@ class OJSPaymentManager extends PaymentManager {
 				} else {
 					import('classes.subscription.IndividualSubscription');
 					$subscription->setStatus(SUBSCRIPTION_STATUS_ACTIVE);
-					if ($subscription->isNonExpiring()) {
+					if ($subscription->isNonExpiring() == 1) {
 						$individualSubscriptionDao->updateSubscription($subscription);
 					} else {
 						$individualSubscriptionDao->renewSubscription($subscription);

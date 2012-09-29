@@ -664,7 +664,7 @@ class InstitutionalSubscriptionDAO extends SubscriptionDAO {
 				$dateSql = sprintf('%s >= s.date_start AND %s <= s.date_end', $checkDate, $checkDate);
 		}
 
-		$nonExpiringSql = "AND ((st.non_expiring = 1) OR (st.non_expiring = 0 AND ($dateSql)))";
+		$nonExpiringSql = "AND ((st.non_expiring = 1) OR (st.non_expiring = 0 AND ($dateSql)) OR (st.non_expiring = 0 AND ($dateSql)))";
 
 		// Check if domain match
 		if (!empty($domain)) {

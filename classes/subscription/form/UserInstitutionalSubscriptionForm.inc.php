@@ -191,8 +191,8 @@ class UserInstitutionalSubscriptionForm extends Form {
 
 		$subscription->setTypeId($typeId);
 		$subscription->setMembership($this->getData('membership') ? $this->getData('membership') : null);
-		$subscription->setDateStart($nonExpiring ? null : $today);
-		$subscription->setDateEnd($nonExpiring ? null : $today);
+		$subscription->setDateStart($nonExpiring == 1 ? null : $today);
+		$subscription->setDateEnd($nonExpiring == 1 ? null : $today);
 		$subscription->setInstitutionName($this->getData('institutionName'));
 		$subscription->setInstitutionMailingAddress($this->getData('institutionMailingAddress'));
 		$subscription->setDomain($this->getData('domain'));

@@ -73,22 +73,36 @@
 <tr valign="top">
 	<td class="label">{fieldLabel name="duration" required="true" key="manager.subscriptionTypes.form.duration"}</td>
 	<td class="value">
-		<input type="radio" name="nonExpiring" id="nonExpiring-0" value="0"{if !$nonExpiring} checked="checked"{/if} />&nbsp;{translate key="manager.subscriptionTypes.form.nonExpiring.expiresAfter"} <input type="text" name="duration" value="{$duration|escape}" size="5" maxlength="10" id="duration" class="textField" /> {translate key="manager.subscriptionTypes.form.nonExpiring.months"}
+		<input type="radio" name="nonExpiring" id="nonExpiring-0" value="0"{if $nonExpiring == 0} checked="checked"{/if} />&nbsp;{translate key="manager.subscriptionTypes.form.nonExpiring.expiresAfter"} <input type="text" name="duration" value="{$duration|escape}" size="5" maxlength="10" id="duration" class="textField" /> {translate key="manager.subscriptionTypes.form.nonExpiring.months"}
 	</td>
 </tr>
 <tr valign="top">
 	<td>&nbsp;</td>
 	<td class="value">
-		<input type="radio" name="nonExpiring" id="nonExpiring-1" value="1"{if $nonExpiring} checked="checked"{/if} />&nbsp;{translate key="manager.subscriptionTypes.form.nonExpiring.neverExpires"}
+		<input type="radio" name="nonExpiring" id="nonExpiring-1" value="1"{if $nonExpiring == 1} checked="checked"{/if} />&nbsp;{translate key="manager.subscriptionTypes.form.nonExpiring.neverExpires"}
 	</td>
 </tr>
-{elseif $typeId && !$nonExpiring}
+<tr valign="top">
+	<td>&nbsp;</td>
+	<td class="value">
+		{if $expiresOnDate}<h1>expires on date</h1>{/if}
+		<input type="radio" name="nonExpiring" id="nonExpiring-2" value="2"{if $nonExpiring == 2} checked="checked"{/if} />&nbsp;{translate key="manager.subscriptionTypes.form.nonExpiring.expiresOnDate"}&nbsp;{html_select_date prefix="expiration" time="--" all_extra="class=\"selectMenu\"" year_empty="" month_empty="" day_empty="" start_year="-0" end_year="+4"}
+	</td>
+</tr>
+{elseif $typeId && !$nonExpiring && !$expirationDate}
 <tr valign="top">
 	<td class="label">{fieldLabel name="duration" required="true" key="manager.subscriptionTypes.form.duration"}</td>
 	<td class="value">
 		<input type="text" name="duration" value="{$duration|escape}" size="5" maxlength="10" id="duration" class="textField" />
 		<br />
 		<span class="instruct">{translate key="manager.subscriptionTypes.form.durationInstructions"}</span>
+	</td>
+</tr>
+{elseif $typeId && $expirationDate}
+<tr valign="top">
+	<td class="label">{translate key="manager.subscriptionTypes.form.nonExpiring.expiresOnDate"}</td>
+	<td class="value">
+		{html_select_date prefix="expiration" time="$expirationDate" all_extra="class=\"selectMenu\"" year_empty="" month_empty="" day_empty="" start_year="-0" end_year="+4"}
 	</td>
 </tr>
 {/if}

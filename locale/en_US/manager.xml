@@ -659,11 +659,13 @@
 	<message key="manager.subscriptionTypes.form.nonExpiring.expiresAfter">Expires after</message>
 	<message key="manager.subscriptionTypes.form.nonExpiring.months">months (e.g. 12)</message>
 	<message key="manager.subscriptionTypes.form.nonExpiring.neverExpires">Never expires</message>
+	<message key="manager.subscriptionTypes.form.nonExpiring.expiresOnDate">Expires On</message>
 	<message key="manager.subscriptionTypes.form.nonExpiringValid">Please use the provided options.</message>
 	<message key="manager.subscriptionTypes.form.duration">Duration</message>
 	<message key="manager.subscriptionTypes.form.durationInstructions">The number of months the subscription lasts (e.g. 12).</message>
 	<message key="manager.subscriptionTypes.form.durationNumeric">The duration must be a positive, numeric value.</message>
 	<message key="manager.subscriptionTypes.form.durationRequired">A duration is required.</message>
+	<message key="manager.subscriptionTypes.form.dateRequired">A subscription end date is required.</message>
 	<message key="manager.subscriptionTypes.form.format">Format</message>
 	<message key="manager.subscriptionTypes.form.formatRequired">A subscription type format is required.</message>
 	<message key="manager.subscriptionTypes.form.formatValid">Please select a valid subscription type format.</message>

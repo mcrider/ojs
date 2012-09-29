@@ -565,7 +565,7 @@ class IndividualSubscriptionDAO extends SubscriptionDAO {
 				$dateSql = sprintf('%s >= s.date_start AND %s <= s.date_end', $checkDate, $checkDate);
 		}
 
-		$nonExpiringSql = "AND ((st.non_expiring = 1) OR (st.non_expiring = 0 AND ($dateSql)))";
+		$nonExpiringSql = "AND ((st.non_expiring = 1) OR (st.non_expiring = 0 AND ($dateSql)) OR (st.non_expiring = 2 AND ($dateSql)))";
 
 		$result =& $this->retrieve('
 			SELECT s.subscription_id

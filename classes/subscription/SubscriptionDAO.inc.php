@@ -427,7 +427,7 @@ class SubscriptionDAO extends DAO {
 	 * @return boolean
 	 */
 	function _renewSubscription(&$subscription) {
-		if ($subscription->isNonExpiring()) return;
+		if ($subscription->isNonExpiring() == 1) return;
 
 		$subscriptionTypeDao =& DAORegistry::getDAO('SubscriptionTypeDAO');
 		$subscriptionType =& $subscriptionTypeDao->getSubscriptionType($subscription->getTypeId());
@@ -435,11 +435,17 @@ class SubscriptionDAO extends DAO {
 		$duration = $subscriptionType->getDuration();
 		$dateEnd = strtotime($subscription->getDateEnd());
 
-		// if the subscription is expired, extend it to today + duration of subscription
-		$time = time();
-		if ($dateEnd < $time ) $dateEnd = $time;
+		if($subscriptionType->getNonExpiring() == 2) {
+			// Add a year
+			$subscription->setDateEnd(mktime(23, 59, 59, date("m", $dateEnd), date("d", $dateEnd), date("Y", $dateEnd)+1));
+		} else {
 
-		$subscription->setDateEnd(mktime(23, 59, 59, date("m", $dateEnd)+$duration, date("d", $dateEnd), date("Y", $dateEnd)));
+			// if the subscription is expired, extend it to today + duration of subscription
+			$time = time();
+			if ($dateEnd < $time ) $dateEnd = $time;
+
+			$subscription->setDateEnd(mktime(23, 59, 59, date("m", $dateEnd)+$duration, date("d", $dateEnd), date("Y", $dateEnd)));
+		}
 		$this->updateSubscription($subscription);
 	}
 }

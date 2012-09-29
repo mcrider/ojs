@@ -160,7 +160,7 @@ class Subscription extends DataObject {
 	 */
 	function isNonExpiring() {
 		$subscriptionTypeDao =& DAORegistry::getDAO('SubscriptionTypeDAO');
-		return $subscriptionTypeDao->getSubscriptionTypeNonExpiring($this->getData('typeId')) ? true : false;
+		return $subscriptionTypeDao->getSubscriptionTypeNonExpiring($this->getData('typeId')) == 1 ? true : false;
 	}
 
 	/**

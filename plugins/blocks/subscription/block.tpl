@@ -24,7 +24,7 @@
 		{elseif $journalPaymentsEnabled && $acceptSubscriptionPayments && $subscriptionStatus == $smarty.const.SUBSCRIPTION_STATUS_AWAITING_MANUAL_PAYMENT}
 			<span class="disabled">{translate key="subscriptions.status.awaitingOnlinePayment"}</span><br />
 		{else}
-			{if $individualSubscription->isNonExpiring()}
+			{if $individualSubscription->isNonExpiring() == 1}
 				{translate key="subscriptionTypes.nonExpiring"}<br />
 			{else}
 				{if $individualSubscription->isExpired()}<span class="disabled">{translate key="user.subscriptions.expired"}: {else}{translate key="plugins.block.subscription.expires"}: {/if}{$individualSubscription->getDateEnd()|date_format:$dateFormatShort}<br />
@@ -42,7 +42,7 @@
 		{elseif $journalPaymentsEnabled && $acceptSubscriptionPayments && $subscriptionStatus == $smarty.const.SUBSCRIPTION_STATUS_AWAITING_MANUAL_PAYMENT}
 			<span class="disabled">{translate key="subscriptions.status.awaitingManualPayment"}</span><br />
 		{else}
-			{if $individualSubscription->isNonExpiring()}
+			{if $individualSubscription->isNonExpiring() == 1}
 				{translate key="subscriptionTypes.nonExpiring"}<br />
 			{else}
 				{if $individualSubscription->isExpired()}<span class="disabled">{translate key="user.subscriptions.expired"}: {else}{translate key="plugins.block.subscription.expires"}: {/if}{$individualSubscription->getDateEnd()|date_format:$dateFormatShort}<br />

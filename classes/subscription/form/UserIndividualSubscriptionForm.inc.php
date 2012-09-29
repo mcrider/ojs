@@ -156,8 +156,8 @@ class UserIndividualSubscriptionForm extends Form {
 
 		$subscription->setTypeId($typeId);
 		$subscription->setMembership($this->getData('membership') ? $this->getData('membership') : null);
-		$subscription->setDateStart($nonExpiring ? null : $today);
-		$subscription->setDateEnd($nonExpiring ? null : $today);
+		$subscription->setDateStart($nonExpiring == 1 ? null : $today);
+		$subscription->setDateEnd($nonExpiring == 1 ? null : $today);
 
 		$individualSubscriptionDao =& DAORegistry::getDAO('IndividualSubscriptionDAO');
 		if ($insert) {

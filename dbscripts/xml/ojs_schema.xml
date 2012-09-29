@@ -1240,6 +1240,7 @@
 			<NOTNULL/>
 			<DEFAULT VALUE="0"/>
 		</field>
+		<field name="date_expire" type="T"></field>
 		<field name="duration" type="I2">
 		</field>
 		<field name="format" type="I2">
