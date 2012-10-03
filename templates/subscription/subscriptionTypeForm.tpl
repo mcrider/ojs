@@ -89,20 +89,21 @@
 		<input type="radio" name="nonExpiring" id="nonExpiring-2" value="2"{if $nonExpiring == 2} checked="checked"{/if} />&nbsp;{translate key="manager.subscriptionTypes.form.nonExpiring.expiresOnDate"}&nbsp;{html_select_date prefix="expiration" time="--" all_extra="class=\"selectMenu\"" year_empty="" month_empty="" day_empty="" start_year="-0" end_year="+4"}
 	</td>
 </tr>
-{elseif $typeId && !$nonExpiring && !$expirationDate}
+{/if}
+{if $typeId && $nonExpiring != 1}
 <tr valign="top">
-	<td class="label">{fieldLabel name="duration" required="true" key="manager.subscriptionTypes.form.duration"}</td>
+	<td class="label">{fieldLabel name="duration" key="manager.subscriptionTypes.form.duration"}</td>
 	<td class="value">
 		<input type="text" name="duration" value="{$duration|escape}" size="5" maxlength="10" id="duration" class="textField" />
 		<br />
 		<span class="instruct">{translate key="manager.subscriptionTypes.form.durationInstructions"}</span>
 	</td>
 </tr>
-{elseif $typeId && $expirationDate}
 <tr valign="top">
 	<td class="label">{translate key="manager.subscriptionTypes.form.nonExpiring.expiresOnDate"}</td>
 	<td class="value">
-		{html_select_date prefix="expiration" time="$expirationDate" all_extra="class=\"selectMenu\"" year_empty="" month_empty="" day_empty="" start_year="-0" end_year="+4"}
+		{if $nonExpiring == 0}{assign var='expiresOn' value='--'}{else}{assign var='expiresOn' value=$expirationDate}{/if}
+		{html_select_date prefix="expiration" time="$expiresOn" all_extra="class=\"selectMenu\"" year_empty="" month_empty="" day_empty="" start_year="-0" end_year="+4"}
 	</td>
 </tr>
 {/if}

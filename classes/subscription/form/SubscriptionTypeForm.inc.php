@@ -170,6 +170,24 @@ class SubscriptionTypeForm extends Form {
 			$nonExpiring = $subscriptionType->getNonExpiring();
 		}
 
+		if(isset($subscriptionType) && $subscriptionType->getNonExpiring() == 0 && $this->getData('expirationYear')) {
+			error_log('aaa');
+			// Reset type to calendar year
+			$subscriptionType->setDuration(null);
+			$expirationMonth = $this->getData('expirationMonth');
+			$expirationDay = $this->getData('expirationDay');
+			$expirationYear = $this->getData('expirationYear');
+			$subscriptionType->setExpirationDate(mktime(0,0,0,$expirationMonth, $expirationDay, $expirationYear));
+			$subscriptionType->setNonExpiring(2);
+			$nonExpiring = 2;
+		} else if(isset($subscriptionType) && $subscriptionType->getNonExpiring() == 2 && $this->getData('duration')) {
+			error_log('bbb');
+			// Reset type to duration expiration type
+			$nonExpiring = 0;
+			$subscriptionType->setExpirationDate(null);
+			$subscriptionType->setNonExpiring(0);
+		}
+
 		if (!isset($subscriptionType)) {
 			$subscriptionType = new SubscriptionType();
 			$nonExpiring = $this->getData('nonExpiring') == null ? 0 : $this->getData('nonExpiring');
@@ -190,7 +208,7 @@ class SubscriptionTypeForm extends Form {
 		$subscriptionType->setCost(round($this->getData('cost'), 2));
 		$subscriptionType->setFormat($this->getData('format'));
 		$subscriptionType->setCurrencyCodeAlpha($this->getData('currency'));
-		$subscriptionType->setDuration($nonExpiring ? null : (int)$this->getData('duration'));
+		$subscriptionType->setDuration($nonExpiring == 0 ? (int)$this->getData('duration') : null);
 		$subscriptionType->setMembership($this->getData('membership') == null ? 0 : $this->getData('membership'));
 		$subscriptionType->setDisablePublicDisplay($this->getData('disable_public_display') == null ? 0 : $this->getData('disable_public_display'));
 

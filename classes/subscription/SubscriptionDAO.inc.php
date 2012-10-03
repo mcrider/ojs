@@ -436,8 +436,8 @@ class SubscriptionDAO extends DAO {
 		$dateEnd = strtotime($subscription->getDateEnd());
 
 		if($subscriptionType->getNonExpiring() == 2) {
-			// Add a year
-			$subscription->setDateEnd(mktime(23, 59, 59, date("m", $dateEnd), date("d", $dateEnd), date("Y", $dateEnd)+1));
+			$expirationDate = $subscriptionType->getExpirationDate();
+			$subscription->setDateEnd($expirationDate);
 		} else {
 
 			// if the subscription is expired, extend it to today + duration of subscription

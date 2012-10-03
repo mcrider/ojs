@@ -80,7 +80,7 @@
 		<td colspan="6" class="headseparator">&nbsp;</td>
 	</tr>
 {iterate from=subscriptions item=subscription}
-	{assign var=isNonExpiring value=$subscription->isNonExpiring() == 1}
+	{if $subscription->isNonExpiring() == 1}{assign var='isNonExpiring' value=true}{else}{assign var='isNonExpiring' value=false}{/if}
 	<tr valign="top">
 		<td>
 			{assign var=emailString value=$subscription->getUserFullName()|concat:" <":$subscription->getUserEmail():">"}
