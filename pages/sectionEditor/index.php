@@ -126,6 +126,7 @@ switch ($op) {
 	case 'editorCompleteLayoutEditor':
 	case 'notifyLayoutEditorProofreader':
 	case 'thankLayoutEditorProofreader':
+	case 'saveEditorNotes':
 	//
 	// Scheduling functions
 	//

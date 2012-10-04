@@ -23,6 +23,11 @@
 
 {include file="sectionEditor/submission/summary.tpl"}
 
+{if $submission->getJournalId()==4}
+<div class="separator"></div>
+
+{include file="sectionEditor/submission/editorNotes.tpl" redirectTo='submissionEditing'}{/if}
+
 <div class="separator"></div>
 
 {include file="sectionEditor/submission/copyedit.tpl"}

@@ -219,4 +219,6 @@
 	<message key="editor.article.removeCoverPage">Remove cover image?</message>
 	<message key="editor.article.remove">Remove</message>
 	<message key="editor.issues.invalidAccessDate">Access date is not valid.</message>
+	<message key="editor.article.notes">Editor Notes</message>
+	<message key="editor.article.notes.description">Use this text box to save notes to share with other editors.</message>
 </locale>

@@ -2748,6 +2748,30 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			$request->redirect(null, null, 'submission', array($articleId));
 		}
 	}
+
+	/**
+	 * Save editor notes
+	 * @param $args array
+	 * @param $request object
+	 */
+	function saveEditorNotes($args, $request) {
+		$articleId = (int) $request->getUserVar('articleId');
+		
+		// Get page to redirect to after saving (and validate against list of possible pages)
+		$redirectTo = $request->getUserVar('redirectTo');
+		$redirectOptions = array('submission','submissionReview','submissionEditing');
+		if(!in_array($redirectTo, $redirectOptions)) $redirectTo = $redirectOptions[0];
+
+		$this->validate($articleId);
+
+		$articleDao =& DAORegistry::getDAO('ArticleDAO');
+		$article =& $articleDao->getArticle($articleId);
+
+		$article->setEditorNotes($request->getUserVar('editorNotes'), null); // Localized
+		$articleDao->updateArticle($article);
+
+		$request->redirect(null, null, $redirectTo, $articleId);
+	}
 }
 
 ?>

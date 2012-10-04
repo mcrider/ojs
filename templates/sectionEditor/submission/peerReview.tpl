@@ -96,6 +96,11 @@
 {/foreach}
 </table>
 
+{if $submission->getJournalId()==4}
+<div class="separator"></div>
+
+{include file="sectionEditor/submission/editorNotes.tpl" redirectTo='submissionReview'}{/if}
+
 <div class="separator"></div>
 </div>
 

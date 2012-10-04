@@ -281,6 +281,14 @@ class TinyMCEPlugin extends GenericPlugin {
 			case 'sectionEditor/submissionNotes':
 				$fields[] = 'note';
 				break;
+			case 'editor/submission':
+			case 'sectionEditor/submission':
+			case 'editor/submissionReview':
+			case 'sectionEditor/submissionReview':
+			case 'editor/submissionEditing':
+			case 'sectionEditor/submissionEditing':
+				$fields[] = 'editorNotes';
+				break;
 			case 'author/viewMetadata':
 			case 'sectionEditor/viewMetadata':
 			case 'editor/viewMetadata':
