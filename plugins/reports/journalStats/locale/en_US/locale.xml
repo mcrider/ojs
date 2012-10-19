@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE locale SYSTEM "../../../../../lib/pkp/dtd/locale.dtd">
+
+<!--
+  * locale.xml
+  *
+  * Copyright (c) 2003-2012 John Willinsky
+  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+  *
+  * Localization strings for the en_US (U.S. English) locale.
+  *
+  * $Id$
+  -->
+
+<locale name="en_US" full_name="U.S. English">
+    <message key="plugins.reports.journalStats.displayName">Journal Stats Report</message>
+    <message key="plugins.reports.journalStats.description">This plugin implements a CSV report containing journal stats by year.</message>
+
+    <message key="plugins.reports.journalStats.numAccepted">Num. accepted</message>
+    <message key="plugins.reports.journalStats.numAcceptedPercent">Num. accepted (percentage)</message>
+    <message key="plugins.reports.journalStats.numDeclined">Num. declined</message>
+    <message key="plugins.reports.journalStats.numDeclinedPercent">Num. declined (percentage)</message>
+    <message key="plugins.reports.journalStats.numResubmitted">Num. resubmitted</message>
+    <message key="plugins.reports.journalStats.numResubmittedPercent">Num. resubmitted (percentage)</message>
+    <message key="plugins.reports.journalStats.totalUsers">Total num. users</message>
+
+</locale>
+

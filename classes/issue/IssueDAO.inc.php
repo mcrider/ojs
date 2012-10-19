@@ -182,6 +182,27 @@ class IssueDAO extends DAO {
 	}
 
 	/**
+	 * Retrieve the first created issue
+	 * @param $journalId int
+	 * @return Issue object
+	 */
+	function &getFirstCreatedIssue($journalId) {
+		$result =& $this->retrieveLimit(
+			'SELECT i.* FROM issues i WHERE journal_id = ? ORDER BY date_published ASC', $journalId
+		);
+
+		$issue = null;
+		if ($result->RecordCount() != 0) {
+			$issue =& $this->_returnIssueFromRow($result->GetRowAssoc(false));
+		}
+
+		$result->Close();
+		unset($result);
+
+		return $issue;
+	}
+
+	/**
 	 * Retrieve current issue
 	 * @param $journalId int
 	 * @param $useCache boolean optional
