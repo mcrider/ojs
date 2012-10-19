@@ -52,30 +52,13 @@ class ReviewReportPlugin extends ReportPlugin {
 		return __('plugins.reports.reviews.description');
 	}
 
-	function display(&$args) {
-		$journal =& Request::getJournal();
-
-		header('content-type: text/comma-separated-values');
-		header('content-disposition: attachment; filename=reviews-' . date('Ymd') . '.csv');
-		AppLocale::requireComponents(array(LOCALE_COMPONENT_PKP_SUBMISSION));
-
-		$reviewReportDao =& DAORegistry::getDAO('ReviewReportDAO');
-		list($commentsIterator, $reviewsIterator) = $reviewReportDao->getReviewReport($journal->getId());
-
-		$comments = array();
-		while ($row =& $commentsIterator->next()) {
-			if (isset($comments[$row['article_id']][$row['author_id']])) {
-				$comments[$row['article_id']][$row['author_id']] .= "; " . $row['comments'];
-			} else {
-				$comments[$row['article_id']][$row['author_id']] = $row['comments'];
-			}
-		}
-
-		$yesnoMessages = array( 0 => __('common.no'), 1 => __('common.yes'));
-
-		import('classes.submission.reviewAssignment.ReviewAssignment');
-		$recommendations = ReviewAssignment::getReviewerRecommendationOptions();
-
+	/**
+	 * Get the columns to be displayed in the report (optionally filtered based on what was selected)
+	 * @param $request PKPRequest
+	 * @param $filterFromRequest bool
+	 * @return array
+	 */
+	function getColumns($request, $filterFromRequest = false) {
 		$columns = array(
 			'round' => __('plugins.reports.reviews.round'),
 			'article' => __('article.articles'),
@@ -95,6 +78,49 @@ class ReviewReportPlugin extends ReportPlugin {
 			'recommendation' => __('reviewer.article.recommendation'),
 			'comments' => __('comments.commentsOnArticle')
 		);
+
+		if($filterFromRequest) {
+			$filteredColumns = array();
+			foreach ($columns as $columnKey => $columnLabel) {
+				$column = $request->getUserVar($columnKey);
+				if(isset($column)) $filteredColumns[$columnKey] = $columnLabel;
+			}
+			$columns = $filteredColumns;
+		}
+
+		return $columns;
+	}
+
+	function display(&$args, $request) {
+		AppLocale::requireComponents(array(LOCALE_COMPONENT_PKP_SUBMISSION));
+		if(!$request->getUserVar('generateReport')) {
+			$this->displayColumnPicker($args, $request);
+			return false;
+		}
+
+		$journal =& Request::getJournal();
+
+		header('content-type: text/comma-separated-values');
+		header('content-disposition: attachment; filename=reviews-' . date('Ymd') . '.csv');
+
+		$reviewReportDao =& DAORegistry::getDAO('ReviewReportDAO');
+		list($commentsIterator, $reviewsIterator) = $reviewReportDao->getReviewReport($journal->getId());
+
+		$comments = array();
+		while ($row =& $commentsIterator->next()) {
+			if (isset($comments[$row['article_id']][$row['author_id']])) {
+				$comments[$row['article_id']][$row['author_id']] .= "; " . $row['comments'];
+			} else {
+				$comments[$row['article_id']][$row['author_id']] = $row['comments'];
+			}
+		}
+
+		$yesnoMessages = array( 0 => __('common.no'), 1 => __('common.yes'));
+
+		import('classes.submission.reviewAssignment.ReviewAssignment');
+		$recommendations = ReviewAssignment::getReviewerRecommendationOptions();
+
+		$columns = $this->getColumns($request, true);
 		$yesNoArray = array('declined', 'cancelled');
 
 		$fp = fopen('php://output', 'wt');

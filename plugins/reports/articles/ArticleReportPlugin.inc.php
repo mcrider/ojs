@@ -52,7 +52,42 @@ class ArticleReportPlugin extends ReportPlugin {
 		return __('plugins.reports.articles.description');
 	}
 
-	function display(&$args) {
+	/**
+	 * Get the columns to be displayed in the report (optionally filtered based on what was selected)
+	 * @param $request PKPRequest
+	 * @param $filterFromRequest bool
+	 * @return array
+	 */
+	function getColumns($request, $filterFromRequest = false) {
+		$columns = array(
+			'article_id' => Locale::translate('article.submissionId'),
+			'title' => Locale::translate('article.title'),
+			'abstract' => Locale::translate('article.abstract'),
+			'section_title' => Locale::translate('section.title'),
+			'language' => Locale::translate('common.language'),
+			'editor_decision' => Locale::translate('submission.editorDecision'),
+			'status' => Locale::translate('common.status')
+		);
+
+		if($filterFromRequest) {
+			$filteredColumns = array();
+			foreach ($columns as $columnKey => $columnLabel) {
+				$column = $request->getUserVar($columnKey);
+				if(isset($column)) $filteredColumns[$columnKey] = $columnLabel;
+			}
+			$columns = $filteredColumns;
+		}
+
+		return $columns;
+	}
+
+	function display(&$args, $request) {
+		AppLocale::requireComponents(array(LOCALE_COMPONENT_OJS_EDITOR, LOCALE_COMPONENT_PKP_SUBMISSION));
+		if(!$request->getUserVar('generateReport')) {
+			$this->displayColumnPicker($args, $request);
+			return false;
+		}
+
 		$journal =& Request::getJournal();
 
 		header('content-type: text/comma-separated-values');
@@ -70,8 +105,6 @@ class ArticleReportPlugin extends ReportPlugin {
 			}
 		}
 
-		AppLocale::requireComponents(array(LOCALE_COMPONENT_OJS_EDITOR, LOCALE_COMPONENT_PKP_SUBMISSION));
-
 		import('classes.article.Article');
 		$decisionMessages = array(
 			SUBMISSION_EDITOR_DECISION_ACCEPT => __('editor.article.decision.accept'),
@@ -81,12 +114,8 @@ class ArticleReportPlugin extends ReportPlugin {
 			null => __('plugins.reports.articles.nodecision')
 		);
 
-		$columns = array(
-			'article_id' => __('article.submissionId'),
-			'title' => __('article.title'),
-			'abstract' => __('article.abstract')
-		);
-			
+		$columns = $this->getColumns($request, true);
+
 		for ($a = 1; $a <= $maxAuthors; $a++) {
 			$columns = array_merge($columns, array(
 				'fname' . $a => __('user.firstName') . " (" . __('user.role.author') . " $a)",
@@ -99,13 +128,6 @@ class ArticleReportPlugin extends ReportPlugin {
 				'biography' . $a => __('user.biography') . " (" . __('user.role.author') . " $a)"
 			));
 		}
-			
-		$columns = array_merge($columns, array(
-			'section_title' => __('section.title'),
-			'language' => __('common.language'),
-			'editor_decision' => __('submission.editorDecision'),
-			'status' => __('common.status')
-		));
 
 		$fp = fopen('php://output', 'wt');
 		String::fputcsv($fp, array_values($columns));

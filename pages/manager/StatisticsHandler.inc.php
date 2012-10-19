@@ -136,7 +136,7 @@ class StatisticsHandler extends ManagerHandler {
 		Request::redirect(null, null, 'statistics', null, array('statisticsYear' => Request::getUserVar('statisticsYear')));
 	}
 
-	function report($args) {
+	function report($args, $request) {
 		$this->validate();
 		$this->setupTemplate();
 
@@ -146,11 +146,11 @@ class StatisticsHandler extends ManagerHandler {
 		$reportPlugins =& PluginRegistry::loadCategory('reports');
 
 		if ($pluginName == '' || !isset($reportPlugins[$pluginName])) {
-			Request::redirect(null, null, 'statistics');
+			$request->redirect(null, null, 'statistics');
 		}
 
 		$plugin =& $reportPlugins[$pluginName];
-		$plugin->display($args);
+		$plugin->display($args, $request);
 	}
 }
 

@@ -53,26 +53,12 @@ class SubscriptionReportPlugin extends ReportPlugin {
 	}
 
 	/**
-	 * Generate the subscription report and write CSV contents to file
-	 * @param $args array Request arguments 
+	 * Get the columns to be displayed in the report (optionally filtered based on what was selected)
+	 * @param $request PKPRequest
+	 * @param $filterFromRequest bool
+	 * @return array
 	 */
-	function display(&$args) {
-		$journal =& Request::getJournal();
-		$journalId = $journal->getId();
-		$userDao =& DAORegistry::getDAO('UserDAO');
-		$countryDao =& DAORegistry::getDAO('CountryDAO');
-		$subscriptionTypeDao =& DAORegistry::getDAO('SubscriptionTypeDAO');
-		$individualSubscriptionDao =& DAORegistry::getDAO('IndividualSubscriptionDAO');
-		$institutionalSubscriptionDao =& DAORegistry::getDAO('InstitutionalSubscriptionDAO');
-
-		header('content-type: text/comma-separated-values');
-		header('content-disposition: attachment; filename=subscriptions-' . date('Ymd') . '.csv');
-		$fp = fopen('php://output', 'wt');
-
-		// Columns for individual subscriptions
-		$columns = array(__('subscriptionManager.individualSubscriptions'));
-		String::fputcsv($fp, array_values($columns));
-
+	function getColumns($request, $filterFromRequest = false) {
 		$columnsCommon = array(
 			'subscription_id' => __('common.id'),
 			'status' => __('subscriptions.status'),
@@ -95,6 +81,46 @@ class SubscriptionReportPlugin extends ReportPlugin {
 		);
 
 		$columns = array_merge($columnsCommon, $columnsIndividual);
+
+		if($filterFromRequest) {
+			$filteredColumns = array();
+			foreach ($columns as $columnKey => $columnLabel) {
+				$column = $request->getUserVar($columnKey);
+				if(isset($column)) $filteredColumns[$columnKey] = $columnLabel;
+			}
+			$columns = $filteredColumns;
+		}
+
+		return $columns;
+	}
+
+	/**
+	 * Generate the subscription report and write CSV contents to file
+	 * @param $args array Request arguments 
+	 */
+	function display(&$args, $request) {
+		if(!$request->getUserVar('generateReport')) {
+			$this->displayColumnPicker($args, $request);
+			return false;
+		}
+
+		$journal =& Request::getJournal();
+		$journalId = $journal->getId();
+		$userDao =& DAORegistry::getDAO('UserDAO');
+		$countryDao =& DAORegistry::getDAO('CountryDAO');
+		$subscriptionTypeDao =& DAORegistry::getDAO('SubscriptionTypeDAO');
+		$individualSubscriptionDao =& DAORegistry::getDAO('IndividualSubscriptionDAO');
+		$institutionalSubscriptionDao =& DAORegistry::getDAO('InstitutionalSubscriptionDAO');
+
+		header('content-type: text/comma-separated-values');
+		header('content-disposition: attachment; filename=subscriptions-' . date('Ymd') . '.csv');
+		$fp = fopen('php://output', 'wt');
+
+		// Columns for individual subscriptions
+		$columns = array(__('subscriptionManager.individualSubscriptions'));
+		String::fputcsv($fp, array_values($columns));
+
+		$columns = $this->getColumns($request, true);
 
 		// Write out individual subscription column headings to file
 		String::fputcsv($fp, array_values($columns));
