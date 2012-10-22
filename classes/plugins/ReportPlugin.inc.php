@@ -94,7 +94,7 @@ class ReportPlugin extends Plugin {
 	function displayColumnPicker(&$args, $request) {
 		$templateMgr =& TemplateManager::getManager();
 		assert(is_array($this->getColumns($request))); // Ensure that the subclass has this method and returns an array
-		$templateMgr->assign('columns', $this->getColumns());
+		$templateMgr->assign('columns', $this->getColumns($request));
 		$templateMgr->display('manager/plugins/reportFilter.tpl');
 	}
 
