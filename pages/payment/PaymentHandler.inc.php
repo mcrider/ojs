@@ -28,7 +28,7 @@ class PaymentHandler extends Handler {
 	/**
 	 * Display scheduled conference view page.
 	 */
-	function plugin($args) {
+	function plugin($args, $request) {
 		$paymentMethodPlugins =& PluginRegistry::loadCategory('paymethod');
 		$paymentMethodPluginName = array_shift($args);
 		if (empty($paymentMethodPluginName) || !isset($paymentMethodPlugins[$paymentMethodPluginName])) {
@@ -40,7 +40,7 @@ class PaymentHandler extends Handler {
 			Request::redirect(null, null, 'index');
 		}
 
-		$paymentMethodPlugin->handle($args);
+		$paymentMethodPlugin->handle($args, $request);
 	}
 }
 

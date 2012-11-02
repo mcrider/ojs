@@ -29,7 +29,7 @@ class DonationsHandler extends Handler {
 	function DonationsHandler() {
 		parent::Handler();
 	}
-	function index( $args ) {
+	function index( $args, &$request ) {
 		import('classes.payment.ojs.OJSPaymentManager');
 		$paymentManager =& OJSPaymentManager::getManager();
 		$journal =& Request::getJournal();
@@ -43,7 +43,7 @@ class DonationsHandler extends Handler {
 		$queuedPayment =& $paymentManager->createQueuedPayment($journal->getId(), PAYMENT_TYPE_DONATION, $user->getId(), 0, 0);
 		$queuedPaymentId = $paymentManager->queuePayment($queuedPayment);
 	
-		$paymentManager->displayPaymentForm($queuedPaymentId, $queuedPayment);		
+		$paymentManager->displayPaymentForm($queuedPaymentId, $queuedPayment, $request);		
 	}	
 	
 	function thankYou( $args ) {

@@ -514,7 +514,7 @@ class ArticleHandler extends Handler {
 							$queuedPaymentId = $paymentManager->queuePayment($queuedPayment);
 
 							$templateMgr =& TemplateManager::getManager();
-							$paymentManager->displayPaymentForm($queuedPaymentId, $queuedPayment);
+							$paymentManager->displayPaymentForm($queuedPaymentId, $queuedPayment, $request);
 							exit;
 						}
 					}

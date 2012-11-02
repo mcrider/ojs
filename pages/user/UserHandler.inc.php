@@ -476,7 +476,7 @@ class UserHandler extends PKPUserHandler {
 		$subscriptionForm->display();
 	}
 
-	function payPurchaseSubscription($args) {
+	function payPurchaseSubscription($args, $request) {
 		$this->validate();
 
 		if (empty($args)) Request::redirect(null, 'user');
@@ -576,7 +576,7 @@ class UserHandler extends PKPUserHandler {
 		}
 	}
 
-	function completePurchaseSubscription($args) {
+	function completePurchaseSubscription($args, $request) {
 		$this->validate();
 
 		if (count($args) != 2) Request::redirect(null, 'user');
@@ -620,10 +620,10 @@ class UserHandler extends PKPUserHandler {
 		$queuedPayment =& $paymentManager->createQueuedPayment($journal->getId(), PAYMENT_TYPE_PURCHASE_SUBSCRIPTION, $user->getId(), $subscriptionId, $subscriptionType->getCost(), $subscriptionType->getCurrencyCodeAlpha());
 		$queuedPaymentId = $paymentManager->queuePayment($queuedPayment);
 
-		$paymentManager->displayPaymentForm($queuedPaymentId, $queuedPayment);
+		$paymentManager->displayPaymentForm($queuedPaymentId, $queuedPayment, $request);
 	}
 
-	function payRenewSubscription($args) {
+	function payRenewSubscription($args, $request) {
 		$this->validate();
 
 		if (count($args) != 2) Request::redirect(null, 'user');
@@ -674,10 +674,10 @@ class UserHandler extends PKPUserHandler {
 		$queuedPayment =& $paymentManager->createQueuedPayment($journal->getId(), PAYMENT_TYPE_RENEW_SUBSCRIPTION, $user->getId(), $subscriptionId, $subscriptionType->getCost(), $subscriptionType->getCurrencyCodeAlpha());
 		$queuedPaymentId = $paymentManager->queuePayment($queuedPayment);
 
-		$paymentManager->displayPaymentForm($queuedPaymentId, $queuedPayment);
+		$paymentManager->displayPaymentForm($queuedPaymentId, $queuedPayment, $request);
 	}
 
-	function payMembership($args) {
+	function payMembership($args, $request) {
 		$this->validate();
 		$this->setupTemplate();
 
@@ -690,7 +690,7 @@ class UserHandler extends PKPUserHandler {
 		$queuedPayment =& $paymentManager->createQueuedPayment($journal->getId(), PAYMENT_TYPE_MEMBERSHIP, $user->getId(), null,  $journal->getSetting('membershipFee'));
 		$queuedPaymentId = $paymentManager->queuePayment($queuedPayment);
 
-		$paymentManager->displayPaymentForm($queuedPaymentId, $queuedPayment);
+		$paymentManager->displayPaymentForm($queuedPaymentId, $queuedPayment, $request);
 	}
 }
 
