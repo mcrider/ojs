@@ -67,6 +67,7 @@ class TimedViewReportForm extends Form {
 	 * Save subscription.
 	 */
 	function execute() {
+		$timedViewReportDao =& DAORegistry::getDAO('TimedViewReportDAO');
 		$journal =& Request::getJournal();
 
 		$columns = array(
@@ -78,12 +79,19 @@ class TimedViewReportForm extends Form {
 			__('plugins.generic.timedView.report.galleyViews'),
 		);
 
+		$countryColumns = $timedViewReportDao->getAllCountryCodes($journal->getId(), $this->getData('dateStart'), $this->getData('dateEnd'));
+		$countryDao =& DAORegistry::getDAO('CountryDAO');
+		$countryLabels = array();
+		foreach($countryColumns as $countryCode) {
+			if(!$countryCode) $countryLabels[] = __('plugins.generic.timedView.report.unknownCountry');
+			else $countryLabels[] = $countryDao->getCountry($countryCode);
+		}
+
 		$articleData = $galleyLabels = $galleyViews = array();
 
 		$issueDao =& DAORegistry::getDAO('IssueDAO');
 		$publishedArticleDao =& DAORegistry::getDAO('PublishedArticleDAO');
 
-		$timedViewReportDao =& DAORegistry::getDAO('TimedViewReportDAO');
 		$abstractViewCounts =& $timedViewReportDao->getAbstractViewCount($journal->getId(), $this->getData('dateStart'), $this->getData('dateEnd'));
 
 		while ($row =& $abstractViewCounts->next()) {
@@ -121,21 +129,30 @@ class TimedViewReportForm extends Form {
 				$galleyViews[$articleId][$i] = $views;
 				$galleyViewTotal += $views;
 			}
-
 			$articleData[$articleId]['galleyViews'] = $galleyViewTotal;
 
+
+			// Get the country codes for all views (galleys and abstracts)
+			$countryCounts = $timedViewReportDao->getCountryViewCountsForArticle($articleId, $this->getData('dateStart'), $this->getData('dateEnd'));
+			$countryViews[$articleId] = array();
+			foreach ($countryColumns as $countryCode) {
+				if(array_key_exists($countryCode, $countryCounts)) {
+					$countryViews[$articleId][] = $countryCounts[$countryCode];
+				} else $countryViews[$articleId][] = null;
+			}
+
 			// Clean up
-			unset($row, $galleys);
+			unset($row, $galleyCounts, $countryCounts);
 		}
 
 		header('content-type: text/comma-separated-values');
 		header('content-disposition: attachment; filename=report.csv');
 		$fp = fopen('php://output', 'wt');
-		fputcsv($fp, array_merge($columns, $galleyLabels));
+		fputcsv($fp, array_merge($columns, $galleyLabels, $countryLabels));
 
 		$dateFormatShort = Config::getVar('general', 'date_format_short');
 		foreach ($articleData as $articleId => $article) {
-			fputcsv($fp, array_merge($articleData[$articleId], $galleyViews[$articleId]));
+			fputcsv($fp, array_merge($articleData[$articleId], $galleyViews[$articleId], $countryViews[$articleId]));
 		}
 
 		fclose($fp);

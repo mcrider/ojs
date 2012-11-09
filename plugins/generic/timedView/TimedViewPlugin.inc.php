@@ -132,11 +132,15 @@ class TimedViewPlugin extends GenericPlugin {
 	 * @param $request PKPRequest
 	 */
 	function incrementAbstractViewCount($article, $request) {
-		$ip = $request->getRemoteAddr();
+		$ip = '66.91.50.203'; //$request->getRemoteAddr();
 		$userAgent = $request->getUserAgent();
 
+		if(function_exists('geoip_country_code_by_name')) {
+			$countryCode = geoip_country_code_by_name($ip);
+		} else $countryCode = null;
+
 		$timedViewReportDao =& DAORegistry::getDAO('TimedViewReportDAO');
-		$timedViewReportDao->incrementViewCount($article->getJournalId(), $article->getId(), null, $ip, $userAgent);
+		$timedViewReportDao->incrementViewCount($article->getJournalId(), $article->getId(), null, $ip, $userAgent, $countryCode);
 
 		// Also increment view count in the regular location
 		$publishedArticleDao =& DAORegistry::getDAO('PublishedArticleDAO');
@@ -150,8 +154,12 @@ class TimedViewPlugin extends GenericPlugin {
 	 * @param $request PKPRequest
 	 */
 	function incrementGalleyViewCount($article, $galley, $request) {
-		$ip = $request->getRemoteAddr();
+		$ip = '66.91.50.203'; //$request->getRemoteAddr();
 		$userAgent = $request->getUserAgent();
+
+		if(function_exists('geoip_country_code_by_name')) {
+			$countryCode = geoip_country_code_by_name($ip);
+		} else $countryCode = null;
 
 		$timedViewReportDao =& DAORegistry::getDAO('TimedViewReportDAO');
 		$timedViewReportDao->incrementViewCount($article->getJournalId(), $article->getId(), $galley->getId(), $ip, $userAgent);

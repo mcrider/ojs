@@ -28,4 +28,5 @@
 	<message key="plugins.generic.timedView.report.datePublished">Date Published</message>
 	<message key="plugins.generic.timedView.report.abstractViews">Abstract Views</message>
 	<message key="plugins.generic.timedView.report.galleyViews">Total Galley Views</message>
+	<message key="plugins.generic.timedView.report.unknownCountry">Unknown Country</message>
 </locale>

@@ -55,7 +55,7 @@ class TimedViewReportDAO extends DAO {
 
 	/**
 	 * Get the view count for each article's galleys.
-	 * @param $journalId int
+	 * @param $articleId int
 	 * @param $startDate int
 	 * @param $endDate int
 	 * @return array
@@ -93,25 +93,115 @@ class TimedViewReportDAO extends DAO {
 	}
 
 	/**
+	 * Get an array of country_code => views for an article
+	 * @param $articleId int
+	 * @param $startDate int
+	 * @param $endDate int
+	 * @return array
+	 */
+	function getCountryViewCountsForArticle($articleId, $startDate = null, $endDate = null) {
+		if ($startDate && $endDate) {
+			$result =& $this->retrieve(
+				sprintf('SELECT COUNT(*) AS total_views, country_code
+					FROM timed_views_log tvl
+					WHERE tvl.date >= %s
+						AND tvl.date <= %s
+						AND tvl.article_id = ?
+					GROUP BY country_code',
+					$this->datetimeToDB($startDate),
+					$this->datetimeToDB($endDate)),
+					array((int) $articleId)
+				);
+		} else {
+			$result =& $this->retrieve(
+				'SELECT COUNT(*) AS total_views, country_code
+					FROM timed_views_log tvl
+					WHERE tvl.article_id = ?
+					GROUP BY country_code',
+				array((int) $articleId)
+			);
+		}
+
+		$viewCount = array();
+		while (!$result->EOF) {
+			$row =& $result->getRowAssoc(false);
+			$code = $row['country_code'];
+			$viewCount[$code] = $row['total_views'];
+			$result->moveNext();
+			unset($row);
+		}
+
+		$result->Close();
+		unset($result);
+	
+		return $viewCount;
+	}
+
+	/**
+	 * Get an array of country codes that have visited a journal's articles
+	 * @param $journalId int
+	 * @param $startDate int
+	 * @param $endDate int
+	 * @return array
+	 */
+	function getAllCountryCodes($journalId, $startDate = null, $endDate = null) {
+		if ($startDate && $endDate) {
+			$result =& $this->retrieve(
+				sprintf('SELECT country_code
+					FROM timed_views_log tvl
+					WHERE tvl.journal_id = ?
+						AND tvl.date >= %s
+						AND tvl.date <= %s
+					GROUP BY country_code',
+					$this->datetimeToDB($startDate),
+					$this->datetimeToDB($endDate)),
+					array((int) $journalId)
+				);
+		} else {
+			$result =& $this->retrieve(
+				'SELECT country_code
+					FROM timed_views_log tvl
+					WHERE tvl.journal_id = ?
+					GROUP BY country_code',
+				array((int) $journalId)
+			);
+		}
+
+		$countries = array();
+		while (!$result->EOF) {
+			$row =& $result->getRowAssoc(false);
+			$countries[] = empty($row['country_code']) ? null : $row['country_code'];
+			$result->moveNext();
+			unset($row);
+		}
+
+		$result->Close();
+		unset($result);
+	
+		return $countries;
+	}
+
+	/**
 	 * Increment the view count for a published article
 	 * @param $journalId int
 	 * @param $pubId int
 	 * @param $ipAddress string
 	 * @param $userAgent string
 	 */
-	function incrementViewCount($journalId, $articleId, $galleyId = null, $ipAddress = null, $userAgent = null) {
+	function incrementViewCount($journalId, $articleId, $galleyId = null, $ipAddress = null, $userAgent = null, $countryCode = null) {
 		$this->update(
 			sprintf('INSERT INTO timed_views_log
-				(article_id, galley_id, journal_id, date, ip_address, user_agent)
+				(article_id, galley_id, journal_id, date, ip_address, user_agent, country_code)
 				VALUES
-				(?, ?, ?, %s, ?, ?)',
+				(?, ?, ?, %s, ?, ?, ?)',
 				$this->datetimeToDB(Core::getCurrentDate())),
 			array(
 				(int) $articleId,
 				isset($galleyId) ? (int) $galleyId : null,
 				(int) $journalId,
 				$ipAddress,
-				$userAgent
+				$userAgent,
+				$countryCode
 			)
 		);
 	}

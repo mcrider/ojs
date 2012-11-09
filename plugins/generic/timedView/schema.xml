@@ -28,9 +28,9 @@
     <field name="date" type="T">
       <NOTNULL/>
     </field>
-    <field name="ip_address" type="C2" size="15">
-    </field>
+    <field name="ip_address" type="C2" size="15" />
     <field name="user_agent" type="C2" size="255"/>
+    <field name="country_code" type="C2" size="2" />
     <descr>Periodized article views log</descr>
   </table>
 </schema>
