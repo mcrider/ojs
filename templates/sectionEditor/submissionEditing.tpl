@@ -34,6 +34,8 @@
 
 <div class="separator"></div>
 
+{call_hook name="Templates::SectionEditor::SubmissionEditing::PreLayout"}
+
 {include file="sectionEditor/submission/layout.tpl"}
 
 <div class="separator"></div>
