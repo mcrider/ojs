@@ -109,5 +109,42 @@
 </tr>
 </table>
 
+<br /><br />
+<h4>Review History</h4>
+<table width="100%" class="listing">
+	<tr>
+		<td colspan="6" class="headseparator">&nbsp;</td>
+	</tr>
+	<tr class="heading" valign="bottom">
+		<td>&nbsp;</td>
+		<td>Article</td>
+		<td>Assigned</td>
+		<td>Confirmed</td>
+		<td>Completed</td>
+		<td>Recommendation</td>
+	</tr>
+	<tr>
+		<td colspan="6" class="headseparator">&nbsp;</td>
+	</tr>
+{foreach name=reviewAssignments from=$reviewAssignments key=reviewAssignmentNum item=reviewAssignment}
+	<tr>
+		<td>{$reviewAssignmentNum+1}.</td>
+		<td><a href="{url op='submissionReview' path=$reviewAssignment->getSubmissionId()}" class="action">{$reviewAssignment->getLocalizedSubmissionTitle()|strip_tags|truncate:40:"..."}</a></td>
+		<td>{$reviewAssignment->getDateAssigned()}</td>
+		<td>{if $reviewAssignment->getCancelled()}Cancelled
+			{elseif $reviewAssignment->getDeclined()}Declined
+			{elseif $reviewAssignment->getDateConfirmed()}{$reviewAssignment->getDateConfirmed()}
+			{else}&mdash;{/if}</td>
+		<td>{if $reviewAssignment->getDateCompleted()}{$reviewAssignment->getDateCompleted()}
+			{else}&mdash;{/if}</td>
+		<td>{if $reviewAssignment->getRecommendation()}
+				{assign var="recommendation" value=$reviewAssignment->getRecommendation()}
+				{translate key=$reviewerRecommendationOptions.$recommendation}
+				<a href="javascript:openComments('{url op="viewPeerReviewComments" path=$reviewAssignment->getSubmissionId()|to_array:$reviewAssignment->getId()}');" class="icon">{icon name="comment"}</a>
+			{else}&mdash;{/if}
+	</tr>
+{/foreach}
+</table>
+
 {include file="common/footer.tpl"}
 

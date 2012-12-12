@@ -737,7 +737,7 @@ class SectionEditorSubmissionDAO extends DAO {
 	 * @param $rangeInfo RangeInfo optional
 	 * @return DAOResultFactory containing matching Users
 	 */
-	function &getReviewersForArticle($journalId, $articleId, $round, $searchType = null, $search = null, $searchMatch = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getReviewersForArticle($journalId, $articleId, $round, $searchType = null, $search = null, $searchMatch = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC, $country = null) {
 		// Convert the field being searched for to a DB element to select on
 		$searchTypeMap = array(
 			USER_FIELD_FIRSTNAME => 'u.first_name',
@@ -785,6 +785,11 @@ class SectionEditorSubmissionDAO extends DAO {
 				$paramArray[] = $search . '%';
 				$paramArray[] = $search . '%';
 				break;
+		}
+
+		if(!empty($country)) {
+			$searchSql .= 'AND u.country = ?';
+			$paramArray[] = $country;
 		}
 
 

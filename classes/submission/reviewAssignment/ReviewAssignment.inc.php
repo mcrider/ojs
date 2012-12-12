@@ -83,6 +83,21 @@ class ReviewAssignment extends PKPReviewAssignment {
 		);
 		return $reviewerRatingOptions;
 	}
+
+
+
+	//
+	// Helpers
+	//
+	/**
+	 * Get the submission's title
+	 * @param $peerReviewComment ArticleComment
+	 */
+	function getLocalizedSubmissionTitle() {
+		$articleDao =& DAORegistry::getDAO('ArticleDAO');
+		$article =& $articleDao->getArticle($this->getSubmissionId());
+		return $article->getLocalizedTitle();
+	}
 }
 
 ?>

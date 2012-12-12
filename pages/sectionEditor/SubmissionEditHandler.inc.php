@@ -442,8 +442,10 @@ class SubmissionEditHandler extends SectionEditorHandler {
 				$search = $searchInitial;
 			}
 
+			$country = Request::getUserVar('country');
+
 			$rangeInfo =& Handler::getRangeInfo('reviewers');
-			$reviewers = $sectionEditorSubmissionDao->getReviewersForArticle($journal->getId(), $articleId, $submission->getCurrentRound(), $searchType, $search, $searchMatch, $rangeInfo, $sort, $sortDirection); /* @var $reviewers DAOResultFactory */
+			$reviewers = $sectionEditorSubmissionDao->getReviewersForArticle($journal->getId(), $articleId, $submission->getCurrentRound(), $searchType, $search, $searchMatch, $rangeInfo, $sort, $sortDirection, $country); /* @var $reviewers DAOResultFactory */
 
 			$journal = Request::getJournal();
 			$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
@@ -453,6 +455,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			$templateMgr->assign('searchField', $searchType);
 			$templateMgr->assign('searchMatch', $searchMatch);
 			$templateMgr->assign('search', $searchQuery);
+			$templateMgr->assign('country', $country);
 			$templateMgr->assign('searchInitial', Request::getUserVar('searchInitial'));
 
 			$templateMgr->assign_by_ref('reviewers', $reviewers);
@@ -468,6 +471,10 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			$templateMgr->assign('completedReviewCounts', $reviewAssignmentDao->getCompletedReviewCounts($journal->getId()));
 			$templateMgr->assign('rateReviewerOnQuality', $journal->getSetting('rateReviewerOnQuality'));
 			$templateMgr->assign('averageQualityRatings', $reviewAssignmentDao->getAverageQualityRatings($journal->getId()));
+
+			$countryDao =& DAORegistry::getDAO('CountryDAO');
+			$countries =& $countryDao->getCountries();
+			$templateMgr->assign_by_ref('countries', $countries);
 
 			$templateMgr->assign('helpTopicId', 'journal.roles.reviewer');
 			$templateMgr->assign('alphaList', explode(' ', __('common.alphaList')));
@@ -835,7 +842,12 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 			$templateMgr->assign('userInterests', $user->getInterestString());
 
+			$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
+			$reviewAssignments = $reviewAssignmentDao->getByUserId($user->getId());
+
 			$templateMgr->assign_by_ref('user', $user);
+			$templateMgr->assign('reviewerRecommendationOptions', ReviewAssignment::getReviewerRecommendationOptions());
+			$templateMgr->assign('reviewAssignments', $reviewAssignments);
 			$templateMgr->assign('localeNames', AppLocale::getAllLocales());
 			$templateMgr->assign('helpTopicId', 'journal.roles.index');
 			$templateMgr->display('sectionEditor/userProfile.tpl');

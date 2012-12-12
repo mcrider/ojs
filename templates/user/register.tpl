@@ -168,7 +168,7 @@
 		</tr>
 
 		<tr valign="top">
-			<td class="label">{fieldLabel name="country" key="common.country"}</td>
+			<td class="label">{fieldLabel name="country" required="true" key="common.country"}</td>
 			<td class="value">
 				<select name="country" id="country" class="selectMenu">
 					<option value=""></option>
