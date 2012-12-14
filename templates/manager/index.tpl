@@ -34,6 +34,7 @@
 	{/if}
 	<li>&#187; <a href="{url op="plugins"}">{translate key="manager.plugins"}</a></li>
 	<li>&#187; <a href="{url op="importexport"}">{translate key="manager.importExport"}</a></li>
+	<li>&#187; <a href="{url op="mailLog"}">{translate key="manager.mailLog"}</a></li>
 	{call_hook name="Templates::Manager::Index::ManagementPages"}
 </ul>
 </div>

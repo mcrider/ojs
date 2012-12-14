@@ -162,7 +162,31 @@ class MailTemplate extends PKPMailTemplate {
 			if (!empty($envelopeSender) && Config::getVar('email', 'allow_envelope_sender')) $this->setEnvelopeSender($envelopeSender);
 		}
 
+		// Create a log entry
+		$this->logEmail();
+
 		return parent::send($clearAttachments);
+	}
+
+	// We log all emails for the journal (as well as article emails)
+	function logEmail() {
+		import('classes.mail.log.EmailLogEntry');
+		$entry = new EmailLogEntry();
+
+		$journal =& $this->journal;
+
+		// Email data
+		$entry->setJournalId($journal->getId());
+		$entry->setSubject($this->getSubject());
+		$entry->setBody($this->getBody());
+		$entry->setFrom($this->getFromString(false));
+		$entry->setRecipients($this->getRecipientString());
+		$entry->setCcs($this->getCcString());
+		$entry->setBccs($this->getBccString());
+
+		// Add log entry
+		import('classes.mail.log.EmailLog');
+		EmailLog::logEmailEntry($journal->getId(), $entry);
 	}
 }
 

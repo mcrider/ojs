@@ -91,6 +91,7 @@ class Application extends PKPApplication {
 			'CopyeditorSubmissionDAO' => 'classes.submission.copyeditor.CopyeditorSubmissionDAO',
 			'EditAssignmentDAO' => 'classes.submission.editAssignment.EditAssignmentDAO',
 			'EditorSubmissionDAO' => 'classes.submission.editor.EditorSubmissionDAO',
+			'EmailLogDAO' => 'classes.mail.log.EmailLogDAO',
 			'EmailTemplateDAO' => 'classes.mail.EmailTemplateDAO',
 			'FilterDAO' => 'lib.pkp.classes.filter.FilterDAO',
 			'GroupDAO' => 'lib.pkp.classes.group.GroupDAO',

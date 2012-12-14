@@ -98,6 +98,8 @@ switch ($op) {
 	case 'disableEmail':
 	case 'enableEmail':
 	case 'resetAllEmails':
+	case 'mailLog':
+	case 'clearMailLog':
 		define('HANDLER_CLASS', 'EmailHandler');
 		import('pages.manager.EmailHandler');
 		break;

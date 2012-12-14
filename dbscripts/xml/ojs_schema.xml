@@ -886,7 +886,39 @@
 			<col>article_id</col>
 		</index>
 	</table>
-	
+
+	<!--
+	  *
+	  * TABLE email_log
+	  *
+	  -->
+	<table name="email_log">
+		<field name="log_id" type="I8">
+			<KEY />
+			<AUTOINCREMENT/>
+		</field>
+		<field name="journal_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="sender_id" type="I8">
+			<NOTNULL/>
+		</field>
+		<field name="date_sent" type="T">
+			<NOTNULL/>
+		</field>
+		<field name="ip_address" type="C2" size="15"/>
+		<field name="from_address" type="C2" size="255"/>
+		<field name="recipients" type="X"/>
+		<field name="cc_recipients" type="X"/>
+		<field name="bcc_recipients" type="X"/>
+		<field name="subject" type="C2" size="255"/>
+		<field name="body" type="X"/>
+		<descr>A log of all emails sent out by the journal.</descr>
+		<index name="email_log_journal_id">
+			<col>journal_id</col>
+		</index>
+	</table>
+
 	<!--
 	  *
 	  * TABLE article_email_log

@@ -9,7 +9,7 @@
  * @class EmailHandler
  * @ingroup pages_manager
  *
- * @brief Handle requests for email management functions. 
+ * @brief Handle requests for email management functions.
  */
 
 // $Id$
@@ -204,6 +204,59 @@ class EmailHandler extends ManagerHandler {
 		}
 
 		Request::redirect(null, null, 'emails');
+	}
+
+	/**
+	 * Display a log of all emails sent by the journal
+	 */
+	function mailLog($args) {
+		$this->validate();
+		$this->setupTemplate(true);
+
+		$logId = isset($args[0]) ? (int) $args[0] : null;
+
+		AppLocale::requireComponents(array(LOCALE_COMPONENT_PKP_SUBMISSION));
+
+
+		$journal =& Request::getJournal();
+		$emailLogDao =& DAORegistry::getDAO('EmailLogDAO');
+
+		$templateMgr =& TemplateManager::getManager();
+
+		if ($logId) {
+			$logEntry =& $emailLogDao->getLogEntry($logId, $journal->getId());
+			$templateMgr->assign_by_ref('logEntry', $logEntry);
+			$templateMgr->display('manager/emails/emailLogEntry.tpl');
+		} else {
+			xdebug_break();
+			$rangeInfo = Handler::getRangeInfo('emailLogEntries');
+			$emailLogEntries =& $emailLogDao->getLogEntriesByJournalId($journal->getId(), $rangeInfo);
+			$templateMgr->assign('pageHierarchy', array(array(Request::url(null, 'manager'), 'manager.journalManagement')));
+			$templateMgr->assign_by_ref('emailLogEntries', $emailLogEntries);
+			$templateMgr->assign_by_ref('journalId', $journal->getId());
+			$templateMgr->display('manager/emails/emailLog.tpl');
+		}
+	}
+
+	/**
+	 * Display a log of all emails sent by the journal
+	 */
+	function clearMailLog($args) {
+		$journalId = isset($args[0]) ? (int) $args[0] : null;
+		$logId = isset($args[1]) ? (int) $args[1] : null;
+		$this->validate();
+
+		$emailLogDao =& DAORegistry::getDAO('EmailLogDAO');
+
+		if($journalId) {
+			if ($logId) {
+				$emailLogDao->deleteLogEntry($logId, $journalId);
+			} else {
+				$emailLogDao->deleteLogEntries($journalId);
+			}
+		}
+
+		Request::redirect(null, null, 'mailLog');
 	}
 
 }
