@@ -20,7 +20,7 @@
 			<select name="decision" size="1" class="selectMenu"{if not $allowRecommendation} disabled="disabled"{/if}>
 				{html_options_translate options=$editorDecisionOptions selected=$lastDecision}
 			</select>
-			<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmDecision"}')" name="submit" value="{translate key="editor.article.recordDecision"}" {if not $allowRecommendation}disabled="disabled"{/if} class="button" />
+			<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmDecision"}')" name="submit" value="{translate key="editor.article.recordDecision"}" {if !$allowRecommendation || $viewOnly}disabled="disabled"{/if} class="button" />
 			{if not $allowRecommendation}&nbsp;&nbsp;{translate key="editor.article.cannotRecord"}{/if}
 		</form>
 	</td>
@@ -152,7 +152,7 @@
 				{if $copyeditFile && $copyeditFile->getSourceFileId() == $editorFile->getFileId()}
 					{translate key="submission.sent"}&nbsp;&nbsp;{$copyeditFile->getDateUploaded()|date_format:$dateFormatShort}&nbsp;&nbsp;&nbsp;&nbsp;
 				{/if}
-				<a href="{url op="deleteArticleFile" path=$submission->getId()|to_array:$editorFile->getFileId():$editorFile->getRevision()}" class="action">{translate key="common.delete"}</a>
+				{if !$viewOnly}<a href="{url op="deleteArticleFile" path=$submission->getId()|to_array:$editorFile->getFileId():$editorFile->getRevision()}" class="action">{translate key="common.delete"}</a>{/if}
 			</td>
 		</tr>
 	{foreachelse}
@@ -161,13 +161,13 @@
 			<td width="80%" class="nodata">{translate key="common.none"}</td>
 		</tr>
 	{/foreach}
-	<tr valign="top">
+	{if !$viewOnly}<tr valign="top">
 		<td class="label">&nbsp;</td>
 		<td class="value">
 			<input type="file" name="upload" class="uploadField" />
 			<input type="submit" name="submit" value="{translate key="common.upload"}" class="button" />
 		</td>
-	</tr>
+	</tr>{/if}
 
 </table>
 

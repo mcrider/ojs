@@ -11,7 +11,7 @@
  * @see EditAssignmentDAO
  *
  * @brief Describes edit assignment properties.
- * 
+ *
  */
 
 // $Id$
@@ -109,6 +109,24 @@ class EditAssignment extends DataObject {
 	function setCanEdit($canEdit) {
 		return $this->setData('canEdit', $canEdit);
 	}
+
+	/**
+	 * Get flag indicating whether this section editor can modify anything in this article. (Irrelevant if this is an editor.)
+	 * @return boolean
+	 */
+	function getViewOnly() {
+		return $this->getData('viewOnly');
+	}
+
+	/**
+	 * Set flag indicating whether this section editor can modify anything in this article. (Irrelevant if this is an editor.)
+	 * @param $viewOnly boolean
+	 */
+	function setViewOnly($viewOnly) {
+		return $this->setData('viewOnly', $viewOnly);
+	}
+
+
 
 	/**
 	 * Get flag indicating whether this entry is for an editor or a section editor.

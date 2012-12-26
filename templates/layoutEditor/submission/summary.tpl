@@ -35,8 +35,10 @@
 				{assign var=emailString value=$editAssignment->getEditorFullName()|concat:" <":$editAssignment->getEditorEmail():">"}
 				{url|assign:"url" page="user" op="email" to=$emailString|to_array redirectUrl=$currentUrl subject=$submission->getLocalizedTitle()|strip_tags articleId=$submission->getArticleId()}
 				{$editAssignment->getEditorFullName()|escape} {icon name="mail" url=$url}
-				{if !$editAssignment->getCanEdit() || !$editAssignment->getCanReview()}
-					{if $editAssignment->getCanEdit()}
+				{if $editAssignment->getViewOnly() || !$editAssignment->getCanEdit() || !$editAssignment->getCanReview()}
+					{if $editAssignment->getViewOnly()}
+						({translate key="submission.viewOnly"})
+					{elseif $editAssignment->getCanEdit()}
 						({translate key="submission.editing"})
 					{else}
 						({translate key="submission.review"})

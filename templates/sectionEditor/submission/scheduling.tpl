@@ -30,7 +30,7 @@
 				</select>
 			</td>
 			<td width="50%" class="value">
-				<input type="submit" value="{translate key="common.record"}" class="button defaultButton" />&nbsp;
+				<input type="submit" value="{translate key="common.record"}" {if $viewOnly}disabled="disabled" {/if}class="button{if !$viewOnly} defaultButton{/if}" />&nbsp;
 				{if $issueId}
 					{if $isEditor}
 						<a href="{url op="issueToc" path=$issueId}" class="action">{translate key="issue.toc"}</a>
@@ -62,7 +62,7 @@
 					{html_select_date prefix="datePublished" time=$publishedArticle->getDatePublished()|default:"---" all_extra="class=\"selectMenu\"" start_year=$minYear end_year=$maxYear year_empty="-" month_empty="-" day_empty="-"}
 				</td>
 				<td class="value">
-					<input type="submit" value="{translate key="common.record"}" class="button defaultButton" />&nbsp;
+					<input type="submit" value="{translate key="common.record"}" {if $viewOnly}disabled="disabled" {/if}class="button defaultButton" />&nbsp;
 				</td>
 			</tr>
 		</form>
@@ -74,16 +74,16 @@
 			<form action="{url op="waivePublicationFee" path=$submission->getId()}" method="post">
 			<input type="hidden" name="markAsPaid" value=1 />
 			<input type="hidden" name="sendToScheduling" value=1 />
-			<input type="submit" value="{translate key="payment.paymentReceived"}" class="button defaultButton" />&nbsp;
+			<input type="submit" value="{translate key="payment.paymentReceived"}" {if $viewOnly}disabled="disabled" {/if}class="button defaultButton" />&nbsp;
 			</form>
 		</td>
 		{if $isEditor}
 			<td align="left">
 				<form action="{url op="waivePublicationFee" path=$submission->getId()}" method="post">
 					<input type="hidden" name="sendToScheduling" value=1 />
-					<input type="submit" value="{translate key="payment.waive"}" class="button defaultButton" />&nbsp;
+					<input type="submit" value="{translate key="payment.waive"}" {if $viewOnly}disabled="disabled" {/if}class="button defaultButton" />&nbsp;
 				</form>
-			</td>	
+			</td>
 		{/if}
 	</tr>
 {/if}

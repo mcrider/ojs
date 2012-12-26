@@ -81,7 +81,7 @@
 					{icon name="mail" disabled="disable"}
 				{/if}
 			{else}
-				{if !$proofreaderProofreadSignoff->getDateNotified()}
+				{if !$viewOnly && !$proofreaderProofreadSignoff->getDateNotified()}
 					<a href="{url op="editorInitiateProofreader" articleId=$submission->getId()}" class="action">{translate key="common.initiate"}</a>
 				{/if}
 			{/if}
@@ -95,7 +95,7 @@
 			{/if}
 		</td>
 		<td>
-			{if !$useProofreaders && !$proofreaderProofreadSignoff->getDateCompleted() && $proofreaderProofreadSignoff->getDateNotified()}
+			{if !$viewOnly && !$useProofreaders && !$proofreaderProofreadSignoff->getDateCompleted() && $proofreaderProofreadSignoff->getDateNotified()}
 				<a href="{url op="editorCompleteProofreader" articleId=$submission->getId()}" class="action">{translate key="common.complete"}</a>
 			{else}
 				{$proofreaderProofreadSignoff->getDateCompleted()|date_format:$dateFormatShort|default:"&mdash;"}
@@ -134,7 +134,7 @@
 					{icon name="mail" disabled="disable"}
 				{/if}
 			{else}
-				{if !$layoutEditorProofreadSignoff->getDateNotified()}
+				{if !$viewOnly && !$layoutEditorProofreadSignoff->getDateNotified()}
 					<a href="{url op="editorInitiateLayoutEditor" articleId=$submission->getId()}" class="action">{translate key="common.initiate"}</a>
 				{/if}
 			{/if}
@@ -152,7 +152,7 @@
 				{$layoutEditorProofreadSignoff->getDateCompleted()|date_format:$dateFormatShort|default:"&mdash;"}
 			{elseif $layoutEditorProofreadSignoff->getDateCompleted()}
 				{$layoutEditorProofreadSignoff->getDateCompleted()|date_format:$dateFormatShort}
-			{elseif $layoutEditorProofreadSignoff->getDateNotified()}
+			{elseif !$viewOnly && $layoutEditorProofreadSignoff->getDateNotified()}
 				<a href="{url op="editorCompleteLayoutEditor" articleId=$submission->getId()}" class="action">{translate key="common.complete"}</a>
 			{else}
 				&mdash;

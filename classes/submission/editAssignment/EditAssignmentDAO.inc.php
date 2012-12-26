@@ -42,6 +42,28 @@ class EditAssignmentDAO extends DAO {
 	}
 
 	/**
+	 * Retrieve an edit assignment by id.
+	 * @param $editId int
+	 * @return EditAssignment
+	 */
+	function &getEditAssignmentByArticleAndUser($articleId, $userId) {
+		$result =& $this->retrieve(
+			'SELECT e.*, u.first_name, u.last_name, u.email, u.initials, r.role_id AS editor_role_id FROM articles a LEFT JOIN edit_assignments e ON (a.article_id = e.article_id) LEFT JOIN users u ON (e.editor_id = u.user_id) LEFT JOIN roles r ON (r.user_id = e.editor_id AND r.role_id = ' . ROLE_ID_EDITOR . ' AND r.journal_id = a.journal_id) WHERE e.article_id = ? AND e.editor_id = ? AND a.article_id = e.article_id',
+			array($articleId, $userId)
+			);
+
+		$returner = null;
+		if ($result->RecordCount() != 0) {
+			$returner =& $this->_returnEditAssignmentFromRow($result->GetRowAssoc(false));
+		}
+
+		$result->Close();
+		unset($result);
+
+		return $returner;
+	}
+
+	/**
 	 * Retrieve edit assignments by article id.
 	 * @param $articleId int
 	 * @return EditAssignment
@@ -130,6 +152,7 @@ class EditAssignmentDAO extends DAO {
 		$editAssignment->setEditorId($row['editor_id']);
 		$editAssignment->setCanReview($row['can_review']);
 		$editAssignment->setCanEdit($row['can_edit']);
+		$editAssignment->setViewOnly($row['view_only']);
 		$editAssignment->setEditorFullName($row['first_name'].' '.$row['last_name']);
 		$editAssignment->setEditorFirstName($row['first_name']);
 		$editAssignment->setEditorLastName($row['last_name']);
@@ -147,20 +170,21 @@ class EditAssignmentDAO extends DAO {
 	/**
 	 * Insert a new EditAssignment.
 	 * @param $editAssignment EditAssignment
-	 */	
+	 */
 	function insertEditAssignment(&$editAssignment) {
 		$this->update(
 			sprintf('INSERT INTO edit_assignments
-				(article_id, editor_id, can_edit, can_review, date_notified, date_underway)
+				(article_id, editor_id, can_edit, can_review, view_only, date_notified, date_underway)
 				VALUES
-				(?, ?, ?, ?, %s, %s)',
+				(?, ?, ?, ?, ?, %s, %s)',
 				$this->datetimeToDB($editAssignment->getDateNotified()),
 				$this->datetimeToDB($editAssignment->getDateUnderway())),
 			array(
 				$editAssignment->getArticleId(),
 				$editAssignment->getEditorId(),
 				$editAssignment->getCanEdit()?1:0,
-				$editAssignment->getCanReview()?1:0
+				$editAssignment->getCanReview()?1:0,
+				$editAssignment->getViewOnly()?1:0
 			)
 		);
 
@@ -179,6 +203,7 @@ class EditAssignmentDAO extends DAO {
 					editor_id = ?,
 					can_review = ?,
 					can_edit = ?,
+					view_only = ?,
 					date_notified = %s,
 					date_underway = %s
 				WHERE edit_id = ?',
@@ -189,6 +214,7 @@ class EditAssignmentDAO extends DAO {
 				$editAssignment->getEditorId(),
 				$editAssignment->getCanReview() ? 1:0,
 				$editAssignment->getCanEdit() ? 1:0,
+				$editAssignment->getViewOnly() ? 1:0,
 				$editAssignment->getEditId()
 			)
 		);

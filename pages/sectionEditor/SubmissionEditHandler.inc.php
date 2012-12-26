@@ -62,6 +62,13 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 		$templateMgr =& TemplateManager::getManager();
 
+		// Check whether the user is in view only mode
+		$editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
+		$editAssignment =& $editAssignmentDao->getEditAssignmentByArticleAndUser($submission->getId(), $user->getId());
+		$viewOnly = false;
+		if($editAssignment) $viewOnly = $editAssignment->getViewOnly();
+		$templateMgr->assign('viewOnly', $viewOnly);
+
 		$templateMgr->assign_by_ref('submission', $submission);
 		$templateMgr->assign_by_ref('section', $section);
 		$templateMgr->assign_by_ref('submissionFile', $submission->getSubmissionFile());
@@ -227,6 +234,14 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 		$templateMgr =& TemplateManager::getManager();
 
+		// Check whether the user is in view only mode
+		$editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
+		$user =& Request::getUser();
+		$editAssignment =& $editAssignmentDao->getEditAssignmentByArticleAndUser($submission->getId(), $user->getId());
+		$viewOnly = false;
+		if($editAssignment) $viewOnly = $editAssignment->getViewOnly();
+		$templateMgr->assign('viewOnly', $viewOnly);
+
 		$templateMgr->assign_by_ref('submission', $submission);
 		$templateMgr->assign_by_ref('reviewIndexes', $reviewAssignmentDao->getReviewIndexesForRound($articleId, $round));
 		$templateMgr->assign('round', $round);
@@ -338,6 +353,14 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$emailLogEntries =& ArticleLog::getEmailLogEntries($articleId, $rangeInfo);
 
 		$templateMgr =& TemplateManager::getManager();
+
+		// Check whether the user is in view only mode
+		$editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
+		$user = Request::getUser();
+		$editAssignment =& $editAssignmentDao->getEditAssignmentByArticleAndUser($submission->getId(), $user->getId());
+		$viewOnly = false;
+		if($editAssignment) $viewOnly = $editAssignment->getViewOnly();
+		$templateMgr->assign('viewOnly', $viewOnly);
 
 		$templateMgr->assign('isEditor', Validation::isEditor());
 		$templateMgr->assign_by_ref('submission', $submission);
@@ -2554,6 +2577,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 					if ($editAssignment->getEditorId() == $user->getId()) {
 						$templateMgr->assign('canReview', $editAssignment->getCanReview());
 						$templateMgr->assign('canEdit', $editAssignment->getCanEdit());
+						$templateMgr->assign('viewOnly', $editAssignment->getViewOnly());
 						switch ($access) {
 							case SECTION_EDITOR_ACCESS_EDIT:
 								if ($editAssignment->getCanEdit()) {

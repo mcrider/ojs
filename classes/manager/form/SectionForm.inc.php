@@ -176,7 +176,8 @@ class SectionForm extends Form {
 				$assignedEditors[] = array(
 					'user' => &$sectionEditor,
 					'canReview' => (Request::getUserVar('canReview' . $userId)?1:0),
-					'canEdit' => (Request::getUserVar('canEdit' . $userId)?1:0)
+					'canEdit' => (Request::getUserVar('canEdit' . $userId)?1:0),
+					'viewOnly' => (Request::getUserVar('viewOnly' . $userId)?1:0)
 				);
 			} else {
 				$unassignedEditors[] =& $sectionEditor;
@@ -252,7 +253,8 @@ class SectionForm extends Form {
 				$sectionId,
 				$userId,
 				Request::getUserVar('canReview' . $userId),
-				Request::getUserVar('canEdit' . $userId)
+				Request::getUserVar('canEdit' . $userId),
+				Request::getUserVar('viewOnly' . $userId)
 			);
 			unset($sectionEditor);
 		}

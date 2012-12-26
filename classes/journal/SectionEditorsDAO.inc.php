@@ -23,19 +23,21 @@ class SectionEditorsDAO extends DAO {
 	 * @param $userId int
 	 * @param $canReview boolean
 	 * @param $canEdit boolean
+	 * @param $viewOnly boolean
 	 */
-	function insertEditor($journalId, $sectionId, $userId, $canReview, $canEdit) {
+	function insertEditor($journalId, $sectionId, $userId, $canReview, $canEdit, $viewOnly = false) {
 		return $this->update(
 			'INSERT INTO section_editors
-				(journal_id, section_id, user_id, can_review, can_edit)
+				(journal_id, section_id, user_id, can_review, can_edit, view_only)
 				VALUES
-				(?, ?, ?, ?, ?)',
+				(?, ?, ?, ?, ?, ?)',
 			array(
 				$journalId,
 				$sectionId,
 				$userId,
 				$canReview?1:0,
-				$canEdit?1:0
+				$canEdit?1:0,
+				$viewOnly?1:0
 			)
 		);
 	}
@@ -78,7 +80,8 @@ class SectionEditorsDAO extends DAO {
 			$users[] = array(
 				'user' => $userDao->_returnUserFromRow($row),
 				'canReview' => $row['can_review'],
-				'canEdit' => $row['can_edit']
+				'canEdit' => $row['can_edit'],
+				'viewOnly' => $row['view_only']
 			);
 			$result->moveNext();
 		}

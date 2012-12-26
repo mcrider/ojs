@@ -18,6 +18,7 @@
 		<td width="30%">&nbsp;</td>
 		<td width="10%">{translate key="submission.review"}</td>
 		<td width="10%">{translate key="submission.editing"}</td>
+		<td width="10%">{translate key="submission.viewOnly"}</td>
 		<td width="{if $isEditor}20%{else}25%{/if}">{translate key="submission.request"}</td>
 		{if $isEditor}<td width="10%">{translate key="common.action"}</td>{/if}
 	</tr>
@@ -55,6 +56,18 @@
 						disabled="disabled"
 					{else}
 						{if $editAssignment->getCanEdit()} checked="checked"{/if}
+						{if !$isEditor}disabled="disabled"{/if}
+					{/if}
+				/>
+			</td>
+			<td>
+				&nbsp;&nbsp;<input
+					type="checkbox"
+					name="viewOnly-{$editAssignment->getEditId()}"
+					{if $editAssignment->getIsEditor()}
+						disabled="disabled"
+					{else}
+						{if $editAssignment->getViewOnly()} checked="checked"{/if}
 						{if !$isEditor}disabled="disabled"{/if}
 					{/if}
 				/>

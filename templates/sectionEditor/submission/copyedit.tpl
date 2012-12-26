@@ -23,7 +23,7 @@
 
 <table width="100%" class="info">
 	<tr>
-		<td width="28%" colspan="2"><a href="{url op="viewMetadata" path=$submission->getId()}" class="action">{translate key="submission.reviewMetadata"}</a></td>
+		<td width="28%" colspan="2">{if !$viewOnly}<a href="{url op="viewMetadata" path=$submission->getId()}" class="action">{translate key="submission.reviewMetadata"}</a>{else}&nbsp;{/if}</td>
 		<td width="18%" class="heading">{translate key="submission.request"}</td>
 		<td width="18%" class="heading">{translate key="submission.underway"}</td>
 		<td width="18%" class="heading">{translate key="submission.complete"}</td>
@@ -47,7 +47,7 @@
 					{icon name="mail" disabled="disable"}
 				{/if}
 			{else}
-				{if !$initialCopyeditSignoff->getDateNotified() && $initialCopyeditFile}
+				{if !$viewOnly && !$initialCopyeditSignoff->getDateNotified() && $initialCopyeditFile}
 					<a href="{url op="initiateCopyedit" articleId=$submission->getId()}" class="action">{translate key="common.initiate"}</a>
 				{/if}
 			{/if}
@@ -63,7 +63,7 @@
 		<td>
 			{if $initialCopyeditSignoff->getDateCompleted()}
 				{$initialCopyeditSignoff->getDateCompleted()|date_format:$dateFormatShort}
-			{elseif !$useCopyeditors}
+			{elseif !$viewOnly && !$useCopyeditors}
 				<a href="{url op="completeCopyedit" articleId=$submission->getId()}" class="action">{translate key="common.complete"}</a>
 			{else}
 				&mdash;
@@ -173,7 +173,7 @@
 		<td>
 			{if $finalCopyeditSignoff->getDateCompleted()}
 				{$finalCopyeditSignoff->getDateCompleted()|date_format:$dateFormatShort}
-			{elseif !$useCopyeditors}
+			{elseif !$viewOnly && !$useCopyeditors}
 				<a href="{url op="completeFinalCopyedit" articleId=$submission->getId()}" class="action">{translate key="common.complete"}</a>
 			{else}
 				&mdash;
@@ -207,22 +207,24 @@
 	</tr>
 </table>
 
-{if $authorCopyeditSignoff->getDateCompleted()}
-{assign var="canUploadCopyedit" value="3"}
-{elseif $initialCopyeditSignoff->getDateCompleted() && !$authorCopyeditSignoff->getDateCompleted()}
-{assign var="canUploadCopyedit" value="2"}
-{elseif !$initialCopyeditSignoff->getDateCompleted()}
-{assign var="canUploadCopyedit" value="1"}
+{if !$viewOnly}
+	{if $authorCopyeditSignoff->getDateCompleted()}
+	{assign var="canUploadCopyedit" value="3"}
+	{elseif $initialCopyeditSignoff->getDateCompleted() && !$authorCopyeditSignoff->getDateCompleted()}
+	{assign var="canUploadCopyedit" value="2"}
+	{elseif !$initialCopyeditSignoff->getDateCompleted()}
+	{assign var="canUploadCopyedit" value="1"}
+	{/if}
+	<form method="post" action="{url op="uploadCopyeditVersion"}"  enctype="multipart/form-data">
+		<input type="hidden" name="articleId" value="{$submission->getId()}" />
+		{translate key="submission.uploadFileTo"}
+		<input type="radio" name="copyeditStage" id="copyeditStageInitial" value="initial" checked="checked" /><label for="copyeditStageInitial">{translate key="navigation.stepNumber" step=1}</label>,
+		<input type="radio" name="copyeditStage" id="copyeditStageAuthor" value="author"{if $canUploadCopyedit == 1} disabled="disabled"{else} checked="checked"{/if} /><label for="copyeditStageAuthor"{if $canUploadCopyedit == 1} class="disabled"{/if}>{translate key="navigation.stepNumber" step=2}</label>, {translate key="common.or"}
+		<input type="radio" name="copyeditStage" id="copyeditStageFinal" value="final"{if $canUploadCopyedit != 3} disabled="disabled"{else} checked="checked"{/if} /><label for="copyeditStageFinal"{if $canUploadCopyedit != 3} class="disabled"{/if}>{translate key="navigation.stepNumber" step=3}</label>
+		<input type="file" name="upload" size="10" class="uploadField"{if !$canUploadCopyedit} disabled="disabled"{/if} />
+		<input type="submit" value="{translate key="common.upload"}" class="button"{if !$canUploadCopyedit} disabled="disabled"{/if} />
+	</form>
 {/if}
-<form method="post" action="{url op="uploadCopyeditVersion"}"  enctype="multipart/form-data">
-	<input type="hidden" name="articleId" value="{$submission->getId()}" />
-	{translate key="submission.uploadFileTo"}
-	<input type="radio" name="copyeditStage" id="copyeditStageInitial" value="initial" checked="checked" /><label for="copyeditStageInitial">{translate key="navigation.stepNumber" step=1}</label>,
-	<input type="radio" name="copyeditStage" id="copyeditStageAuthor" value="author"{if $canUploadCopyedit == 1} disabled="disabled"{else} checked="checked"{/if} /><label for="copyeditStageAuthor"{if $canUploadCopyedit == 1} class="disabled"{/if}>{translate key="navigation.stepNumber" step=2}</label>, {translate key="common.or"}
-	<input type="radio" name="copyeditStage" id="copyeditStageFinal" value="final"{if $canUploadCopyedit != 3} disabled="disabled"{else} checked="checked"{/if} /><label for="copyeditStageFinal"{if $canUploadCopyedit != 3} class="disabled"{/if}>{translate key="navigation.stepNumber" step=3}</label>
-	<input type="file" name="upload" size="10" class="uploadField"{if !$canUploadCopyedit} disabled="disabled"{/if} />
-	<input type="submit" value="{translate key="common.upload"}" class="button"{if !$canUploadCopyedit} disabled="disabled"{/if} />
-</form>
 
 {translate key="submission.copyedit.copyeditComments"}
 {if $submission->getMostRecentCopyeditComment()}

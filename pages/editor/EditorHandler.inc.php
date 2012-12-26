@@ -352,9 +352,11 @@ class EditorHandler extends SectionEditorHandler {
 
 				$canReview = Request::getUserVar('canReview-' . $editAssignment->getEditId()) ? 1 : 0;
 				$canEdit = Request::getUserVar('canEdit-' . $editAssignment->getEditId()) ? 1 : 0;
+				$viewOnly = Request::getUserVar('viewOnly-' . $editAssignment->getEditId()) ? 1 : 0;
 
 				$editAssignment->setCanReview($canReview);
 				$editAssignment->setCanEdit($canEdit);
+				$editAssignment->setViewOnly($viewOnly);
 
 				$editAssignmentDao->updateEditAssignment($editAssignment);
 			}

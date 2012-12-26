@@ -212,6 +212,7 @@ function checkEditorAssignments() {
 		<td width="40%">{translate key="user.name"}</td>
 		<td width="10%" align="center">{translate key="submission.review"}</td>
 		<td width="10%" align="center">{translate key="submission.editing"}</td>
+		<td width="10%" align="center">{translate key="submission.viewOnly"}</td>
 		<td width="20%" align="right">{translate key="common.action"}</td>
 	</tr>
 	<tr>
@@ -225,6 +226,7 @@ function checkEditorAssignments() {
 			<td>{$editor->getFullName()|escape}</td>
 			<td align="center"><input type="checkbox" {if $editorEntry.canReview}checked="checked"{/if} name="canReview{$editor->getId()}" /></td>
 			<td align="center"><input type="checkbox" {if $editorEntry.canEdit}checked="checked"{/if} name="canEdit{$editor->getId()}" /></td>
+			<td align="center"><input type="checkbox" {if $editorEntry.viewOnly}checked="checked"{/if} name="canEdit{$editor->getId()}" /></td>
 			<td align="right">
 				<a class="action" href="javascript:removeSectionEditor({$editor->getId()})">{translate key="common.remove"}</a>
 			</td>

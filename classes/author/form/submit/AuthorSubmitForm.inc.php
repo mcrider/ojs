@@ -117,6 +117,7 @@ class AuthorSubmitForm extends Form {
 			$editAssignment->setEditorId($sectionEditorEntry['user']->getId());
 			$editAssignment->setCanReview($sectionEditorEntry['canReview']);
 			$editAssignment->setCanEdit($sectionEditorEntry['canEdit']);
+			$editAssignment->setViewOnly($sectionEditorEntry['viewOnly']);
 			$editAssignmentDao->insertEditAssignment($editAssignment);
 			unset($editAssignment);
 		}

@@ -9,7 +9,7 @@
 <div id="metadata">
 <h3>{translate key="submission.metadata"}</h3>
 
-{if $canEditMetadata}
+{if !$viewOnly && $canEditMetadata}
 	<p><a href="{url op="viewMetadata" path=$submission->getId()}" class="action">{translate key="submission.editMetadata"}</a></p>
 	{call_hook name="Templates::Submission::Metadata::Metadata::AdditionalEditItems"}
 {/if}

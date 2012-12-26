@@ -35,8 +35,10 @@
 				{assign var=emailString value=$editAssignment->getEditorFullName()|concat:" <":$editAssignment->getEditorEmail():">"}
 				{url|assign:"url" page="user" op="email" redirectUrl=$currentUrl to=$emailString|to_array subject=$submission->getLocalizedTitle|strip_tags articleId=$submission->getId()}
 				{$editAssignment->getEditorFullName()|escape} {icon name="mail" url=$url}
-				{if !$editAssignment->getCanEdit() || !$editAssignment->getCanReview()}
-					{if $editAssignment->getCanEdit()}
+				{if $editAssignment->getViewOnly() || !$editAssignment->getCanEdit() || !$editAssignment->getCanReview()}
+					{if $editAssignment->getViewOnly()}
+						({translate key="submission.viewOnly"})
+					{elseif $editAssignment->getCanEdit()}
 						({translate key="submission.editing"})
 					{else}
 						({translate key="submission.review"})
@@ -59,7 +61,7 @@
 			<td width="80%" class="nodata">{translate key="common.none"}</td>
 		{/if}
 	</tr>
-	<tr valign="top">
+	{if !$viewOnly}<tr valign="top">
 		<td>&nbsp;</td>
 		<td>
 			<form method="post" action="{url op="uploadReviewVersion"}" enctype="multipart/form-data">
@@ -69,7 +71,7 @@
 				<input type="submit" name="submit" value="{translate key="common.upload"}" class="button" />
 			</form>
 		</td>
-	</tr>
+	</tr>{/if}
 	{foreach from=$suppFiles item=suppFile}
 		<tr valign="top">
 			{if !$notFirstSuppFile}
@@ -106,7 +108,7 @@
 		<td width="22%"><h3>{translate key="submission.peerReview"}</h3></td>
 		<td width="14%"><h4>{translate key="submission.round" round=$round}</h4></td>
 		<td width="64%" class="nowrap">
-			<a href="{url op="selectReviewer" path=$submission->getId()}" class="action">{translate key="editor.article.selectReviewer"}</a>&nbsp;&nbsp;&nbsp;&nbsp;
+			{if !$viewOnly}<a href="{url op="selectReviewer" path=$submission->getId()}" class="action">{translate key="editor.article.selectReviewer"}</a>&nbsp;&nbsp;&nbsp;&nbsp;{/if}
 			<a href="{url op="submissionRegrets" path=$submission->getId()}" class="action">{translate|escape key="sectionEditor.regrets.link"}</a>
 		</td>
 	</tr>
@@ -162,7 +164,9 @@
 				<tr valign="top">
 					<td>
 						{url|assign:"reviewUrl" op="notifyReviewer" reviewId=$reviewAssignment->getId() articleId=$submission->getId()}
-						{if $reviewAssignment->getDateNotified()}
+						{if $viewOnly}
+							{icon name="mail" url=$reviewUrl disabled="disabled"}
+						{elseif $reviewAssignment->getDateNotified()}
 							{$reviewAssignment->getDateNotified()|date_format:$dateFormatShort}
 							{if !$reviewAssignment->getDateCompleted()}
 								{icon name="mail" url=$reviewUrl}
@@ -181,14 +185,18 @@
 						{if $reviewAssignment->getDeclined()}
 							{translate key="sectionEditor.regrets"}
 						{else}
-							<a href="{url op="setDueDate" path=$reviewAssignment->getSubmissionId()|to_array:$reviewAssignment->getId()}">{if $reviewAssignment->getDateDue()}{$reviewAssignment->getDateDue()|date_format:$dateFormatShort}{else}&mdash;{/if}</a>
+							{if $viewOnly}
+								{if $reviewAssignment->getDateDue()}{$reviewAssignment->getDateDue()|date_format:$dateFormatShort}{else}&mdash;{/if}
+							{else}
+								<a href="{url op="setDueDate" path=$reviewAssignment->getSubmissionId()|to_array:$reviewAssignment->getId()}">{if $reviewAssignment->getDateDue()}{$reviewAssignment->getDateDue()|date_format:$dateFormatShort}{else}&mdash;{/if}</a>
+							{/if}
 						{/if}
 					</td>
 					<td>
 						{url|assign:"thankUrl" op="thankReviewer" reviewId=$reviewAssignment->getId() articleId=$submission->getId()}
 						{if $reviewAssignment->getDateAcknowledged()}
 							{$reviewAssignment->getDateAcknowledged()|date_format:$dateFormatShort}
-						{elseif $reviewAssignment->getDateCompleted()}
+						{elseif !$viewOnly && $reviewAssignment->getDateCompleted()}
 							{icon name="mail" url=$thankUrl}
 						{else}
 							{icon name="mail" disabled="disabled" url=$thankUrl}
@@ -208,8 +216,8 @@
 					{translate key=$reviewerRecommendationOptions.$recommendation}
 					&nbsp;&nbsp;{$reviewAssignment->getDateCompleted()|date_format:$dateFormatShort}
 				{else}
-					{translate key="common.none"}&nbsp;&nbsp;&nbsp;&nbsp;
-					<a href="{url op="remindReviewer" articleId=$submission->getId() reviewId=$reviewAssignment->getId()}" class="action">{translate key="reviewer.article.sendReminder"}</a>
+					{translate key="common.none"}{if !$viewOnly}&nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="{url op="remindReviewer" articleId=$submission->getId() reviewId=$reviewAssignment->getId()}" class="action">{translate key="reviewer.article.sendReminder"}</a>{/if}
 					{if $reviewAssignment->getDateReminded()}
 						&nbsp;&nbsp;{$reviewAssignment->getDateReminded()|date_format:$dateFormatShort}
 						{if $reviewAssignment->getReminderWasAutomatic()}
@@ -260,7 +268,7 @@
 								<input type="hidden" name="fileId" value="{$reviewerFile->getFileId()}" />
 								<input type="hidden" name="revision" value="{$reviewerFile->getRevision()}" />
 								{translate key="editor.article.showAuthor"} <input type="checkbox" name="viewable" value="1"{if $reviewerFile->getViewable()} checked="checked"{/if} />
-								<input type="submit" value="{translate key="common.record"}" class="button" />
+								<input type="submit" value="{translate key="common.record"}" {if $viewOnly}disabled="disabled" {/if}class="button" />
 							</form>
 						</td>
 					</tr>
@@ -274,7 +282,7 @@
 		</tr>
 	{/if}
 
-	{if (($reviewAssignment->getRecommendation() === null || $reviewAssignment->getRecommendation() === '') || !$reviewAssignment->getDateConfirmed()) && $reviewAssignment->getDateNotified() && !$reviewAssignment->getDeclined()}
+	{if !$viewOnly && (($reviewAssignment->getRecommendation() === null || $reviewAssignment->getRecommendation() === '') || !$reviewAssignment->getDateConfirmed()) && $reviewAssignment->getDateNotified() && !$reviewAssignment->getDeclined()}
 		<tr valign="top">
 			<td class="label">{translate key="reviewer.article.editorToEnter"}</td>
 			<td>
@@ -305,7 +313,7 @@
 				<select name="quality" size="1" class="selectMenu">
 					{html_options_translate options=$reviewerRatingOptions selected=$reviewAssignment->getQuality()}
 				</select>&nbsp;&nbsp;
-				<input type="submit" value="{translate key="common.record"}" class="button" />
+				<input type="submit" {if $viewOnly}disabled="disabled" {/if}value="{translate key="common.record"}" class="button" />
 				{if $reviewAssignment->getDateRated()}
 					&nbsp;&nbsp;{$reviewAssignment->getDateRated()|date_format:$dateFormatShort}
 				{/if}
